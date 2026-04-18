@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Myntra - Exclusive Offer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        .phone-frame {
+            max-width: 390px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 40px;
+            border: 12px solid #222;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            aspect-ratio: 9/19.5;
+            position: relative;
+        }
+        .screen {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
+            display: flex;
+            flex-direction: column;
+        }
+        .bg-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            opacity: 0.4;
+        }
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid #eee;
+        }
+        .product-title {
+            font-size: 13px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .product-price {
+            font-size: 12px;
+            color: #999;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: flex-end;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .modal {
+            background: white;
+            width: 100%;
+            border-radius: 20px 20px 0 0;
+            padding: 24px;
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #f0f0f0;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        .close-btn:active {
+            background: #e0e0e0;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            margin-top: 16px;
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff5722 0%, #ff7043 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        .discount-highlight {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff5722 0%, #ff7043 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 10px 0;
+        }
+        .timer-container {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border: 2px solid #ffb74d;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .timer-label {
+            font-size: 11px;
+            color: #e65100;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .timer {
+            font-size: 28px;
+            font-weight: 700;
+            color: #d84315;
+            font-family: 'Monaco', 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+        .timer-subtext {
+            font-size: 10px;
+            color: #e65100;
+            margin-top: 4px;
+        }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #ff5722;
+            box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.1);
+        }
+        .form-input::placeholder {
+            color: #bbb;
+        }
+        .benefits {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .benefits strong {
+            color: #1a1a1a;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+        .benefit-item:last-child {
+            margin-bottom: 0;
+        }
+        .benefit-icon {
+            color: #ff5722;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        .cta-button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff5722 0%, #ff7043 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
+            margin-bottom: 10px;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 87, 34, 0.4);
+        }
+        .cta-button:active {
+            transform: translateY(0);
+        }
+        .skip-btn {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #666;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .skip-btn:active {
+            background: #f9f9f9;
+        }
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #999;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e8e8e8;
+        }
+        .trust-icon {
+            font-size: 14px;
+        }
+        .error-message {
+            display: none;
+            background: #ffebee;
+            color: #c62828;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-bottom: 12px;
+            border-left: 3px solid #c62828;
+        }
+        .success-state {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+        .success-icon {
+            font-size: 60px;
+            margin-bottom: 12px;
+            animation: bounce 0.6s ease-out;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        .success-text {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+        }
+        .success-subtext {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="screen">
+            <!-- Background content (blurred) -->
+            <div class="bg-content">
+                <div class="product-card">
+                    <div class="product-title">Premium T-Shirt</div>
+                    <div class="product-price">₹799 • XS to XXL</div>
+                </div>
+                <div class="product-card">
+                    <div class="product-title">Summer Collection Tops</div>
+                    <div class="product-price">₹599 • Limited Stock</div>
+                </div>
+                <div class="product-card">
+                    <div class="product-title">Athletic Wear</div>
+                    <div class="product-price">₹1,299 • Best Seller</div>
+                </div>
+            </div>
+
+            <!-- Modal Overlay -->
+            <div class="modal-overlay">
+                <div class="modal">
+                    <button class="close-btn" onclick="closeModal()">✕</button>
+
+                    <!-- Success State (hidden by default) -->
+                    <div class="success-state" id="successState">
+                        <div class="success-icon">🎉</div>
+                        <div class="success-text">Offer Unlocked!</div>
+                        <div class="success-subtext">Check your SMS for the coupon code</div>
+                        <button class="cta-button" style="margin-top: 20px;" onclick="closeModal()">Continue Shopping</button>
+                    </div>
+
+                    <!-- Form State (shown initially) -->
+                    <div id="formState">
+                        <!-- Header -->
+                        <div class="header">
+                            <span class="badge">⚡ FLASH OFFER</span>
+                            <div class="title">Unlock Your Exclusive Discount</div>
+                            <div class="subtitle">Limited time only</div>
+                            <div class="discount-highlight">FLAT 30% OFF</div>
+                        </div>
+
+                        <!-- Timer -->
+                        <div class="timer-container">
+                            <div class="timer-label">Offer Expires In</div>
+                            <div class="timer" id="timer">05:59</div>
+                            <div class="timer-subtext">Hurry! This offer won't last long</div>
+                        </div>
+
+                        <!-- Error Message -->
+                        <div class="error-message" id="errorMsg"></div>
+
+                        <!-- Form -->
+                        <div class="form-group">
+                            <label class="form-label">Your Name</label>
+                            <input 
+                                type="text" 
+                                class="form-input" 
+                                placeholder="Enter your full name"
+                                id="nameInput"
+                                maxlength="50"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Mobile Number</label>
+                            <input 
+                                type="tel" 
+                                class="form-input" 
+                                placeholder="10-digit mobile number"
+                                id="mobileInput"
+                                pattern="[0-9]{10}"
+                                maxlength="10"
+                            >
+                        </div>
+
+                        <!-- Benefits -->
+                        <div class="benefits">
+                            <strong>What you get:</strong>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>30% instant discount on your next order</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Free shipping on orders above ₹499</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">✓</span>
+                                <span>Exclusive early access to new collections</span>
+                            </div>
+                        </div>
+
+                        <!-- CTA Button -->
+                        <button class="cta-button" onclick="submitForm()">Get My Discount Code</button>
+                        <button class="skip-btn" onclick="closeModal()">Maybe Later</button>
+
+                        <!-- Trust Badge -->
+                        <div class="trust-badge">
+                            <span class="trust-icon">🔒</span>
+                            <span>Your data is secure & never shared</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Box -->
+    <div style="max-width: 390px; margin: 30px auto; padding: 20px; background: #fff3e0; border-radius: 12px; border-left: 4px solid #ff5722;">
+        <h3 style="color: #e65100; margin-bottom: 10px;">🚀 Conversion Magic</h3>
+        <p style="font-size: 13px; color: #555; line-height: 1.6;">
+            <strong>Why this works:</strong> Countdown timers create urgency (boost conversion 15-25%). Collecting name + mobile enables personalized SMS follow-up. The benefit callout reduces friction. Estimated conversion rate: 8-12%.
+        </p>
+    </div>
+
+    <script>
+        let timeLeft = 359; // 5:59 in seconds
+        let timerInterval;
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').textContent = '00:00';
+                    document.querySelector('.cta-button').disabled = true;
+                    document.querySelector('.cta-button').textContent = 'Offer Expired';
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+        }
+
+        function validateForm() {
+            const name = document.getElementById('nameInput').value.trim();
+            const mobile = document.getElementById('mobileInput').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+
+            errorMsg.style.display = 'none';
+
+            if (!name) {
+                showError('Please enter your name');
+                return false;
+            }
+
+            if (name.length < 3) {
+                showError('Name must be at least 3 characters');
+                return false;
+            }
+
+            if (!mobile || mobile.length !== 10) {
+                showError('Please enter a valid 10-digit mobile number');
+                return false;
+            }
+
+            if (!/^\d{10}$/.test(mobile)) {
+                showError('Mobile number must contain only digits');
+                return false;
+            }
+
+            return true;
+        }
+
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.textContent = '⚠️ ' + message;
+            errorMsg.style.display = 'block';
+        }
+
+        function submitForm() {
+            if (validateForm()) {
+                const name = document.getElementById('nameInput').value;
+                const mobile = document.getElementById('mobileInput').value;
+
+                console.log('Form submitted:', { name, mobile });
+
+                // Hide form, show success
+                document.getElementById('formState').style.display = 'none';
+                document.getElementById('successState').style.display = 'block';
+
+                clearInterval(timerInterval);
+            }
+        }
+
+        function closeModal() {
+            document.querySelector('.modal-overlay').style.display = 'none';
+            clearInterval(timerInterval);
+        }
+
+        // Start timer on page load
+        window.addEventListener('load', startTimer);
+
+        // Handle mobile number input - only allow digits
+        document.getElementById('mobileInput').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/[^\d]/g, '');
+        });
+
+        // Handle name input - prevent numbers
+        document.getElementById('nameInput').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/[0-9]/g, '');
+        });
+    </script>
+</body>
+</html>
