@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XL Axiata - Nudge Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        .phone-frame {
+            max-width: 390px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 40px;
+            border: 12px solid #222;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            aspect-ratio: 9/19.5;
+        }
+        .screen {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            background: white;
+        }
+        .header {
+            background: linear-gradient(135deg, #FF6B00 0%, #FF8C00 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .content-block {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+        }
+        .content-block h2 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .content-block p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+        .nudge-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .nudge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .nudge-icon {
+            display: inline-block;
+            font-size: 24px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .nudge-text {
+            margin-bottom: 12px;
+        }
+        .nudge-text h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .nudge-text p {
+            font-size: 13px;
+            opacity: 0.95;
+            line-height: 1.4;
+        }
+        .nudge-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .nudge-btn {
+            flex: 1;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .nudge-btn-primary {
+            background: white;
+            color: #667eea;
+        }
+        .nudge-btn-primary:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+        .nudge-btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .nudge-btn-secondary:active {
+            background: rgba(255,255,255,0.3);
+        }
+        .nudge-close {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nudge-close:active {
+            background: rgba(255,255,255,0.3);
+        }
+        .badge {
+            display: inline-block;
+            background: #FF6B00;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .benefit-list {
+            list-style: none;
+            padding: 10px 0;
+        }
+        .benefit-list li {
+            font-size: 12px;
+            color: #666;
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .benefit-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        .footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="screen">
+            <!-- Header -->
+            <div class="header">
+                <h1>XL Axiata</h1>
+                <p>Welcome Back</p>
+            </div>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- Nudge - The Smart Widget -->
+                <div class="nudge-container">
+                    <button class="nudge-close">✕</button>
+                    <div class="nudge">
+                        <div class="nudge-text">
+                            <h3>🎯 Quick Temporary Hosting Setup</h3>
+                            <p>Lock in exclusive pricing for 3 months. Offer ends today!</p>
+                        </div>
+                        <div class="nudge-buttons">
+                            <button class="nudge-btn nudge-btn-primary">Login & Setup</button>
+                            <button class="nudge-btn nudge-btn-secondary">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regular Content Below -->
+                <div class="content-block">
+                    <h2>Popular Services</h2>
+                    <p>Explore our range of hosting, email, and domain solutions tailored for your business.</p>
+                </div>
+
+                <div class="content-block">
+                    <span class="badge">FEATURED</span>
+                    <h2>Domain Registration</h2>
+                    <p>Register your perfect domain name with premium support.</p>
+                </div>
+
+                <div class="content-block">
+                    <h2>Web Hosting Plans</h2>
+                    <ul class="benefit-list">
+                        <li>99.9% uptime guaranteed</li>
+                        <li>Free SSL certificate</li>
+                        <li>24/7 customer support</li>
+                    </ul>
+                </div>
+
+                <div class="content-block">
+                    <h2>Email Solutions</h2>
+                    <p>Professional email hosting with advanced security features.</p>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>✨ Powered by Netcore Walkie - Smart Customer Nudges</p>
+            </div>
+        </div>
+    </div>
+
+    <div style="max-width: 390px; margin: 30px auto; padding: 20px; background: #f0f4ff; border-radius: 12px; border-left: 4px solid #667eea;">
+        <h3 style="color: #667eea; margin-bottom: 10px;">💡 How This Works</h3>
+        <p style="font-size: 13px; color: #555; line-height: 1.6;">
+            <strong>The Nudge:</strong> A smart in-app widget that appears contextually when users visit the homepage. It identifies logged-out users and prompts them with a time-sensitive offer.
+        </p>
+        <p style="font-size: 13px; color: #555; line-height: 1.6; margin-top: 10px;">
+            <strong>Why It Works:</strong> Users see the CTA without leaving the page. Single tap to login + convert. No friction.
+        </p>
+        <p style="font-size: 13px; color: #555; line-height: 1.6; margin-top: 10px;">
+            <strong>Netcore Walkie:</strong> Rules-driven, A/B testable, and tracks every interaction. Full attribution back to revenue.
+        </p>
+    </div>
+</body>
+</html>

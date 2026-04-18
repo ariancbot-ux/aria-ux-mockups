@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Your Sephora Preferences</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+        .header .logo {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        h2 {
+            font-size: 20px;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .intro-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .preference-section {
+            margin-bottom: 28px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .preference-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        .preference-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 14px;
+            cursor: pointer;
+        }
+        .preference-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #1a1a1a;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .preference-label {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .preference-label .label-text {
+            font-size: 14px;
+            color: #1a1a1a;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .preference-label .label-desc {
+            font-size: 12px;
+            color: #999;
+            line-height: 1.4;
+        }
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+        .warning-box p {
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.5;
+        }
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .btn-primary {
+            background: #1a1a1a;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #000;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #1a1a1a;
+            border: 1px solid #e0e0e0;
+        }
+        .btn-secondary:hover {
+            background: #e8e8e8;
+            transform: translateY(-1px);
+        }
+        .btn-secondary:active {
+            transform: translateY(0);
+        }
+        .footer-note {
+            background: #f9f9f9;
+            padding: 20px 30px;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            line-height: 1.6;
+            border-top: 1px solid #e8e8e8;
+        }
+        .footer-note a {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .footer-note a:hover {
+            text-decoration: underline;
+        }
+        .success-message {
+            display: none;
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .success-message p {
+            font-size: 14px;
+            color: #155724;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">SEPHORA</div>
+            <p>Manage Your Communication Preferences</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="success-message" id="successMsg">
+                <p>✓ Your preferences have been updated</p>
+            </div>
+
+            <p class="intro-text">
+                We'd love to keep you informed about new products, exclusive offers, and beauty tips. However, you're in control! Choose what you want to hear about below.
+            </p>
+
+            <!-- Warning: Full Unsubscribe -->
+            <div class="warning-box">
+                <p><strong>⚠️ Note:</strong> Unsubscribing from all emails means you won't receive order confirmations, shipping updates, or important account notifications. Consider adjusting your preferences instead.</p>
+            </div>
+
+            <!-- Email Categories -->
+            <div class="preference-section">
+                <div class="section-title">Email Preferences</div>
+                
+                <label class="preference-item">
+                    <input type="checkbox" name="exclusive-offers" checked>
+                    <div class="preference-label">
+                        <span class="label-text">Exclusive Offers & Promotions</span>
+                        <span class="label-desc">Member-only sales, flash deals, and VIB early access</span>
+                    </div>
+                </label>
+
+                <label class="preference-item">
+                    <input type="checkbox" name="beauty-tips" checked>
+                    <div class="preference-label">
+                        <span class="label-text">Beauty Tips & Tutorials</span>
+                        <span class="label-desc">Expert makeup guides, skincare advice, and trend reports</span>
+                    </div>
+                </label>
+
+                <label class="preference-item">
+                    <input type="checkbox" name="new-products" checked>
+                    <div class="preference-label">
+                        <span class="label-text">New Product Launches</span>
+                        <span class="label-desc">First to know about exciting new arrivals</span>
+                    </div>
+                </label>
+
+                <label class="preference-item">
+                    <input type="checkbox" name="personalized" checked>
+                    <div class="preference-label">
+                        <span class="label-text">Personalized Recommendations</span>
+                        <span class="label-desc">Products handpicked based on your beauty profile</span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Transactional -->
+            <div class="preference-section">
+                <div class="section-title">Account & Order Updates</div>
+                
+                <label class="preference-item">
+                    <input type="checkbox" name="transactional" checked disabled>
+                    <div class="preference-label">
+                        <span class="label-text">Order Confirmations & Shipping</span>
+                        <span class="label-desc">Essential updates about your purchases (cannot be disabled)</span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Frequency -->
+            <div class="preference-section">
+                <div class="section-title">Email Frequency</div>
+                
+                <label class="preference-item">
+                    <input type="radio" name="frequency" value="daily" checked>
+                    <div class="preference-label">
+                        <span class="label-text">Daily Digest</span>
+                        <span class="label-desc">One email per day with curated content</span>
+                    </div>
+                </label>
+
+                <label class="preference-item">
+                    <input type="radio" name="frequency" value="weekly">
+                    <div class="preference-label">
+                        <span class="label-text">Weekly Summary</span>
+                        <span class="label-desc">Best of the week delivered every Sunday</span>
+                    </div>
+                </label>
+
+                <label class="preference-item">
+                    <input type="radio" name="frequency" value="special">
+                    <div class="preference-label">
+                        <span class="label-text">Special Offers Only</span>
+                        <span class="label-desc">Only major sales and VIB events</span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="savePreferences()">Save Preferences</button>
+                <button class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-note">
+            <p>Questions? <a href="#">View our Privacy Policy</a> or <a href="#">Contact Support</a></p>
+            <p style="margin-top: 8px;">You can update these preferences anytime from your account settings.</p>
+        </div>
+    </div>
+
+    <script>
+        function savePreferences() {
+            const successMsg = document.getElementById('successMsg');
+            successMsg.style.display = 'block';
+            
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+            
+            // Log preferences (in real scenario, send to server)
+            console.log('Preferences saved');
+        }
+    </script>
+</body>
+</html>
