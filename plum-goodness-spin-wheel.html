@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plum Goodness - Spin & Win</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f5f0fa 0%, #fff9f5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            border-radius: 24px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 40px rgba(107, 63, 160, 0.1);
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #6B3FA0;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 30px;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                #FF6B35 0deg 45deg,
+                #6B3FA0 45deg 90deg,
+                #FF6B35 90deg 135deg,
+                #6B3FA0 135deg 180deg,
+                #FF6B35 180deg 225deg,
+                #6B3FA0 225deg 270deg,
+                #FF6B35 270deg 315deg,
+                #6B3FA0 315deg 360deg
+            );
+            box-shadow: 0 8px 25px rgba(107, 63, 160, 0.25);
+            animation: spin 0s linear;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .wheel.spinning {
+            animation: spin 4s cubic-bezier(0.17, 0.67, 0.12, 0.98);
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(1440deg);
+            }
+        }
+
+        .wheel::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #fff;
+            pointer-events: none;
+        }
+
+        .wheel-center {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 20px solid #6B3FA0;
+            z-index: 20;
+        }
+
+        .spin-button {
+            background: linear-gradient(135deg, #FF6B35, #FF8855);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .spin-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .spin-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .results {
+            display: none;
+            margin-top: 20px;
+            padding: 16px;
+            background: #f5f0fa;
+            border-radius: 12px;
+            border-left: 4px solid #FF6B35;
+        }
+
+        .results.show {
+            display: block;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results h3 {
+            color: #6B3FA0;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .results p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .promo-code {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: #FF6B35;
+            font-size: 16px;
+            margin-bottom: 12px;
+            border: 2px dashed #FF6B35;
+        }
+
+        .use-now {
+            background: #6B3FA0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .use-now:hover {
+            background: #5a2f8f;
+        }
+
+        .terms {
+            font-size: 11px;
+            color: #999;
+            margin-top: 16px;
+            line-height: 1.4;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #FF6B35;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Spin & Win! 🎁</h1>
+            <p>Your chance to win exclusive Plum Goodness offers</p>
+        </div>
+
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <div class="wheel" id="wheel">
+                <div class="wheel-center">✨</div>
+            </div>
+        </div>
+
+        <button class="spin-button" id="spinBtn" onclick="spinWheel()">
+            SPIN THE WHEEL
+        </button>
+
+        <div class="results" id="results">
+            <h3 id="resultTitle">You Won! 🎉</h3>
+            <p id="resultDesc"></p>
+            <div class="promo-code" id="promoCode"></div>
+            <button class="use-now" onclick="copyCode()">Copy Code & Shop</button>
+        </div>
+
+        <div class="terms">
+            Valid on orders above ₹499. One offer per customer. Cannot be combined with other promotions.
+            <div class="badge">CODE EXPIRES IN 3 DAYS</div>
+        </div>
+    </div>
+
+    <script>
+        const prizes = [
+            { title: "15% Off Skincare", desc: "Get 15% off your next skincare order", code: "GLOW15" },
+            { title: "Free Face Serum", desc: "Free 15% Vitamin C Serum on orders above ₹799", code: "FRSERUM" },
+            { title: "20% Off Sitewide", desc: "Extra 20% off on your entire purchase", code: "LUCKY20" },
+            { title: "Free Gift Set", desc: "Complimentary travel-size gift set (₹299 value)", code: "GIFTED99" },
+            { title: "Flat ₹300 Off", desc: "Direct ₹300 discount on orders above ₹1299", code: "PLUM300" },
+            { title: "25% Off Bestsellers", desc: "Quarter off our best-selling products", code: "BEST25" },
+            { title: "Free Delivery", desc: "Complimentary shipping on your order", code: "SHIP0" },
+            { title: "Buy 1 Get 1", desc: "Buy any product, get another at 50% off", code: "BOGO50" }
+        ];
+
+        let isSpinning = false;
+
+        function spinWheel() {
+            if (isSpinning) return;
+
+            isSpinning = true;
+            const spinBtn = document.getElementById('spinBtn');
+            spinBtn.disabled = true;
+
+            const wheel = document.getElementById('wheel');
+            const randomDegree = Math.floor(Math.random() * 360);
+            const spinDegrees = 1440 + randomDegree;
+
+            wheel.style.animation = 'none';
+            setTimeout(() => {
+                wheel.style.animation = `spin 4s cubic-bezier(0.17, 0.67, 0.12, 0.98)`;
+                wheel.style.transform = `rotate(${spinDegrees}deg)`;
+            }, 10);
+
+            setTimeout(() => {
+                const prizeIndex = Math.floor(randomDegree / 45);
+                showResult(prizes[prizeIndex]);
+                isSpinning = false;
+                spinBtn.disabled = false;
+            }, 4000);
+        }
+
+        function showResult(prize) {
+            const results = document.getElementById('results');
+            document.getElementById('resultTitle').textContent = prize.title + ' 🎉';
+            document.getElementById('resultDesc').textContent = prize.desc;
+            document.getElementById('promoCode').textContent = prize.code;
+            results.classList.add('show');
+        }
+
+        function copyCode() {
+            const code = document.getElementById('promoCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = event.target;
+                const original = btn.textContent;
+                btn.textContent = 'Copied! ✓';
+                setTimeout(() => {
+                    btn.textContent = original;
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
