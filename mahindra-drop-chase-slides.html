@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahindra 2-Way Drop-Chase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            overflow-x: hidden;
+        }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .slide-container.active {
+            display: flex;
+        }
+        .slide {
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            background: white;
+            border-radius: 12px;
+            padding: 60px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .slide h1 {
+            font-size: 48px;
+            color: #6B3FA0;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+        .slide h2 {
+            font-size: 36px;
+            color: #6B3FA0;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+        .slide h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .slide p, .slide li {
+            font-size: 20px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .slide ul {
+            margin-left: 30px;
+        }
+        .slide li {
+            margin-bottom: 12px;
+        }
+        .metric {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin: 10px 10px 10px 0;
+            font-weight: 600;
+            color: #6B3FA0;
+        }
+        .metric.uplift {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .metric.pain {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .flow-box {
+            background: #f9f9f9;
+            border-left: 4px solid #6B3FA0;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .flow-title {
+            font-weight: 700;
+            color: #6B3FA0;
+            margin-bottom: 10px;
+        }
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+        button {
+            background: #6B3FA0;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #5a2f8a;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .slide-counter {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            font-size: 18px;
+            color: #666;
+            font-weight: 600;
+        }
+        .orange-accent {
+            color: #FF6B35;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+        .comparison-table th {
+            background: #6B3FA0;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .comparison-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .check {
+            color: #2e7d32;
+            font-weight: 700;
+        }
+        .cross {
+            color: #c62828;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 1: Title -->
+<div class="slide-container active">
+    <div class="slide">
+        <div>
+            <h1>Mahindra Automobiles</h1>
+            <h2 style="color: #FF6B35; margin-top: 20px;">2-Way Drop-Chase Strategy</h2>
+            <p style="font-size: 24px; color: #777; margin-top: 40px;">Conversational Engagement Layer for Salesforce CRM</p>
+        </div>
+        <div>
+            <p style="font-size: 18px; color: #999;">WhatsApp + Email + SMS → Intelligent Drop-Chase → +8-10% Conversion Lift</p>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 2: Current State vs Opportunity -->
+<div class="slide-container">
+    <div class="slide">
+        <h2>The Current Gap</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px;">
+            <div>
+                <h3 style="color: #c62828;">Salesforce Today (Strong)</h3>
+                <ul>
+                    <li>✓ Lead capture & routing</li>
+                    <li>✓ Dealer dashboards</li>
+                    <li>✓ Pipeline visibility</li>
+                    <li>✓ Test drive scheduling</li>
+                </ul>
+                <p style="margin-top: 20px; font-size: 18px;"><strong>But:</strong> One-directional dealer → customer outreach</p>
+            </div>
+            <div>
+                <h3 style="color: #2e7d32;">Netcore Adds (New)</h3>
+                <ul>
+                    <li>✓ 2-way WhatsApp conversation</li>
+                    <li>✓ Intelligent channel switching</li>
+                    <li>✓ Behavioral drop-chase triggers</li>
+                    <li>✓ Conversational context</li>
+                </ul>
+                <p style="margin-top: 20px; font-size: 18px;"><strong>Result:</strong> Customer-initiated replies, higher engagement</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 3: The Drop-Chase Flow -->
+<div class="slide-container">
+    <div class="slide">
+        <h2>2-Way Drop-Chase Architecture</h2>
+        <div style="margin-top: 30px;">
+            <div class="flow-box">
+                <div class="flow-title">PHASE 1: Lead Entry → Propensity Score</div>
+                <p>Customer enquires about XUV700 → Netcore captures intent + preference (WhatsApp/Email) → AI scores conversion likelihood</p>
+            </div>
+            <div class="flow-box">
+                <div class="flow-title">PHASE 2: Channel-First Engagement</div>
+                <p>WhatsApp: "Hi Arjun, interested in the XUV700? What's your timeline?" (2-way conversation starts)</p>
+            </div>
+            <div class="flow-box">
+                <div class="flow-title">PHASE 3: Intelligent Drop-Chase</div>
+                <p>No response in 24h → Switch to Email (spec sheet) → Still no click → SMS reminder → If needed, phone handoff to dealer</p>
+            </div>
+            <div class="flow-box">
+                <div class="flow-title">PHASE 4: Closed-Loop Booking</div>
+                <p>Test drive booked → Reminder SMS 24h before → Post-drive re-nurture if not converted</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 4: Business Impact -->
+<div class="slide-container">
+    <div class="slide">
+        <h2>Projected Business Impact</h2>
+        <div style="margin-top: 40px;">
+            <h3>Current State (Salesforce Only)</h3>
+            <div style="margin: 20px 0;">
+                <div class="metric">Enquiry → Test Drive: 70%</div>
+                <div class="metric">Test Drive → Booking: 80%</div>
+                <div class="metric pain">Overall Funnel: 56%</div>
+            </div>
+            
+            <h3 style="margin-top: 40px;">With Netcore 2-Way Drop-Chase</h3>
+            <div style="margin: 20px 0;">
+                <div class="metric uplift">Enquiry → Test Drive: 78% (+8)</div>
+                <div class="metric uplift">Test Drive → Booking: 85% (+5)</div>
+                <div class="metric uplift">Overall Funnel: 66% (+10)</div>
+            </div>
+
+            <div style="background: #f0f7ff; padding: 25px; border-radius: 8px; margin-top: 30px;">
+                <p><strong>On 100K leads/month:</strong></p>
+                <p style="margin-top: 10px;">Current: 56,000 conversions</p>
+                <p>With Netcore: 66,000 conversions</p>
+                <p style="font-weight: 700; color: #FF6B35; margin-top: 10px;">Incremental: 10,000 bookings/month = ₹30 Cr additional annual revenue</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 5: Salesforce + Netcore Integration -->
+<div class="slide-container">
+    <div class="slide">
+        <h2>Salesforce + Netcore: Complementary, Not Duplicate</h2>
+        <div style="margin-top: 40px;">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Capability</th>
+                        <th>Salesforce Role</th>
+                        <th>Netcore Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Lead Routing</strong></td>
+                        <td><span class="check">✓ Master</span></td>
+                        <td>Reads from Salesforce</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Customer Conversation</strong></td>
+                        <td>Not designed</td>
+                        <td><span class="check">✓ Specialized</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Channel Orchestration</strong></td>
+                        <td>Basic (batch email)</td>
+                        <td><span class="check">✓ Intelligent switching</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dealer Dashboard</strong></td>
+                        <td><span class="check">✓ Master</span></td>
+                        <td>Sends context back to SF</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Attribution</strong></td>
+                        <td>Manual tracking</td>
+                        <td><span class="check">✓ Which message drove booking?</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="margin-top: 30px; font-style: italic; color: #666;">Salesforce = Source of truth. Netcore = Engagement engine. Together = Complete customer journey.</p>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 6: Next Steps -->
+<div class="slide-container">
+    <div class="slide">
+        <h2>The Conversation Starter</h2>
+        <div style="margin-top: 40px;">
+            <h3>Key Questions to Ask Mahindra's CRM Team:</h3>
+            <div style="margin-top: 30px;">
+                <p><strong>Q1:</strong> "How many enquiries go unanswered by dealers in the first 24 hours?"</p>
+                <p style="color: #FF6B35; margin-bottom: 20px;">→ Expected: 20-30K of 100K monthly leads</p>
+
+                <p><strong>Q2:</strong> "What's your test-drive no-show rate?"</p>
+                <p style="color: #FF6B35; margin-bottom: 20px;">→ Current: ~20-30% | With SMS/WhatsApp: <5%</p>
+
+                <p><strong>Q3:</strong> "Do you have post-test-drive re-engagement campaigns?"</p>
+                <p style="color: #FF6B35; margin-bottom: 20px;">→ Likely: Inconsistent | With Netcore: Automated, personalized</p>
+            </div>
+
+            <div style="background: #e8f5e9; padding: 25px; border-radius: 8px; margin-top: 40px;">
+                <h3 style="color: #2e7d32;">Proposal:</h3>
+                <p>30-day pilot at 1 dealership (500 leads/month). Measure enquiry→test-drive lift. If 8%+, roll out nationally.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-counter">
+    <span id="current-slide">1</span> / <span id="total-slides">6</span>
+</div>
+
+<div class="controls">
+    <button id="prev-btn" onclick="prevSlide()">← Previous</button>
+    <button id="next-btn" onclick="nextSlide()">Next →</button>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide-container');
+    const totalSlides = slides.length;
+    
+    function showSlide(n) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (n + totalSlides) % totalSlides;
+        slides[currentSlide].classList.add('active');
+        document.getElementById('current-slide').textContent = currentSlide + 1;
+        document.getElementById('prev-btn').disabled = currentSlide === 0;
+        document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+    }
+    
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) showSlide(currentSlide + 1);
+    }
+    
+    function prevSlide() {
+        if (currentSlide > 0) showSlide(currentSlide - 1);
+    }
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') prevSlide();
+    });
+    
+    // Initialize
+    showSlide(0);
+</script>
+
+</body>
+</html>
