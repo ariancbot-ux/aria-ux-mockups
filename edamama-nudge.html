@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edamama Nudge — Free Shipping</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .mobile-frame {
+            width: 100%;
+            max-width: 400px;
+            height: 800px;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .status-bar {
+            background: #1a1a1a;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            height: 30px;
+        }
+        
+        .screen-content {
+            flex: 1;
+            overflow-y: auto;
+            background: white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Ecommerce Background */
+        .ecommerce-bg {
+            padding: 15px;
+            background: #f9f9f9;
+            flex: 1;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .product-item {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .product-img {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #e8d5c4 0%, #f5e6d3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        
+        .product-info {
+            padding: 8px;
+        }
+        
+        .product-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        
+        .product-price {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .product-rating {
+            font-size: 10px;
+            color: #999;
+        }
+        
+        /* Nudge Container */
+        .nudge-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .nudge {
+            background: linear-gradient(135deg, #fff8f0 0%, #ffffff 100%);
+            border-radius: 16px;
+            padding: 0;
+            width: 320px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .nudge-header {
+            background: linear-gradient(135deg, #d4a574 0%, #c9956b 100%);
+            padding: 20px;
+            position: relative;
+            color: white;
+            text-align: center;
+        }
+        
+        .nudge-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .nudge-close:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        .nudge-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+        }
+        
+        .nudge-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .nudge-subtitle {
+            font-size: 13px;
+            opacity: 0.95;
+        }
+        
+        .nudge-body {
+            padding: 24px;
+            text-align: center;
+        }
+        
+        .nudge-message {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        
+        .nudge-highlight {
+            background: #fff4e6;
+            border: 2px solid #d4a574;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #8b6f47;
+            font-size: 15px;
+        }
+        
+        .nudge-code {
+            background: #f0f0f0;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: #d4a574;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+        
+        .nudge-footer {
+            padding: 0 24px 24px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #d4a574 0%, #c9956b 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #c9956b 0%, #b88560 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 165, 116, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #d4a574;
+            border: 2px solid #d4a574;
+        }
+        
+        .btn-secondary:hover {
+            background: #fff8f0;
+        }
+        
+        .nudge-timer {
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            margin-top: 8px;
+        }
+        
+        .timer-icon {
+            color: #d4a574;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-frame">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <span>9:41</span>
+        <span>●●●●●</span>
+    </div>
+    
+    <!-- Screen Content -->
+    <div class="screen-content">
+        <div class="ecommerce-bg">
+            <div class="product-grid">
+                <div class="product-item">
+                    <div class="product-img">👶</div>
+                    <div class="product-info">
+                        <div class="product-name">Diaper Pack</div>
+                        <div class="product-price">₱899</div>
+                        <div class="product-rating">⭐ 4.8 (2.4K)</div>
+                    </div>
+                </div>
+                <div class="product-item">
+                    <div class="product-img">🧴</div>
+                    <div class="product-info">
+                        <div class="product-name">Baby Wash</div>
+                        <div class="product-price">₱349</div>
+                        <div class="product-rating">⭐ 4.9 (1.8K)</div>
+                    </div>
+                </div>
+                <div class="product-item">
+                    <div class="product-img">🧸</div>
+                    <div class="product-info">
+                        <div class="product-name">Toy Set</div>
+                        <div class="product-price">₱599</div>
+                        <div class="product-rating">⭐ 4.7 (950)</div>
+                    </div>
+                </div>
+                <div class="product-item">
+                    <div class="product-img">👕</div>
+                    <div class="product-info">
+                        <div class="product-name">Baby Wear</div>
+                        <div class="product-price">₱449</div>
+                        <div class="product-rating">⭐ 4.9 (3.2K)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Nudge Overlay -->
+<div class="nudge-overlay">
+    <div class="nudge">
+        <div class="nudge-header">
+            <button class="nudge-close" onclick="closeNudge()">×</button>
+            <div class="nudge-icon">🎁</div>
+            <div class="nudge-title">Free Shipping!</div>
+            <div class="nudge-subtitle">On your next order</div>
+        </div>
+        
+        <div class="nudge-body">
+            <div class="nudge-message">
+                Complete your first Mama & Kids order and get
+            </div>
+            
+            <div class="nudge-highlight">
+                FREE SHIPPING Nationwide
+            </div>
+            
+            <div class="nudge-message">
+                Use code at checkout:
+            </div>
+            
+            <div class="nudge-code">
+                FREESHIPPING
+            </div>
+            
+            <div class="nudge-message" style="font-size: 12px; color: #999;">
+                Valid on orders above ₱2,000. Expires in 48 hours.
+            </div>
+        </div>
+        
+        <div class="nudge-footer">
+            <button class="btn btn-secondary" onclick="closeNudge()">Remind Later</button>
+            <button class="btn btn-primary" onclick="shopNow()">Shop Now</button>
+        </div>
+        
+        <div class="nudge-timer">
+            <span class="timer-icon">⏱</span> Offer expires in <strong>47:32</strong>
+        </div>
+    </div>
+</div>
+
+<script>
+    function closeNudge() {
+        document.querySelector('.nudge-overlay').style.display = 'none';
+    }
+    
+    function shopNow() {
+        alert('Redirecting to Edamama shop...');
+        // In real implementation: window.location.href = 'https://www.edamama.ph/shop';
+    }
+    
+    // Countdown timer
+    let timeLeft = 47 * 3600 + 32 * 60; // 47:32 in seconds
+    setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) {
+            timeLeft = 47 * 3600 + 32 * 60; // Reset
+        }
+        const hours = Math.floor(timeLeft / 3600);
+        const mins = Math.floor((timeLeft % 3600) / 60);
+        document.querySelector('.nudge-timer strong').textContent = 
+            `${hours}:${mins.toString().padStart(2, '0')}`;
+    }, 1000);
+    
+    // Auto-close after 30 seconds (optional)
+    // setTimeout(() => closeNudge(), 30000);
+</script>
+
+</body>
+</html>
