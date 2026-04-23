@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlueBella + Netcore: Email Revolution</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #0f0f1e;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 40px;
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            z-index: 10;
+        }
+
+        .slide-content {
+            max-width: 1100px;
+            width: 100%;
+            animation: slideInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(107, 63, 160, 0.5); }
+            50% { box-shadow: 0 0 60px rgba(255, 107, 53, 0.8); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* === SLIDE 1: HERO === */
+        .slide-1 {
+            background: linear-gradient(135deg, #1a0f3a 0%, #2d1b4e 50%, #1a0f3a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide-1::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(107, 63, 160, 0.2) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 107, 53, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .slide-1 .slide-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .slide-1 h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #FF6B35 0%, #6B3FA0 50%, #FF6B35 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .slide-1 .subtitle {
+            font-size: 1.6rem;
+            color: #b0a3d4;
+            margin-bottom: 60px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            animation: slideInUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .logo-duo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+            margin-top: 80px;
+            animation: slideInUp 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .logo-card {
+            width: 150px;
+            height: 150px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            font-size: 2.5rem;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 107, 53, 0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .logo-card:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px rgba(255, 107, 53, 0.6);
+        }
+
+        .logo-card.bb {
+            background: linear-gradient(135deg, rgba(107, 63, 160, 0.3), rgba(107, 63, 160, 0.1));
+            color: #FF6B35;
+        }
+
+        .logo-card.nc {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.3), rgba(255, 107, 53, 0.1));
+            color: #FF6B35;
+        }
+
+        .logo-label {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        .plus-sign {
+            font-size: 2.5rem;
+            color: #FF6B35;
+            animation: rotate 4s linear infinite;
+        }
+
+        /* === SLIDE 2: FORRESTER === */
+        .slide-2 {
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a3a 100%);
+        }
+
+        .slide-2 h2 {
+            font-size: 3rem;
+            color: #FF6B35;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: slideInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .slide-2 .subtitle {
+            text-align: center;
+            color: #b0a3d4;
+            margin-bottom: 60px;
+            font-size: 1.1rem;
+            animation: slideInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .positioning-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .position-card {
+            padding: 35px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(107, 63, 160, 0.2), rgba(255, 107, 53, 0.1));
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: fadeInScale 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            opacity: 0;
+        }
+
+        .position-card:nth-child(1) { animation-delay: 0.1s; }
+        .position-card:nth-child(2) { animation-delay: 0.2s; }
+        .position-card:nth-child(3) { animation-delay: 0.3s; }
+        .position-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .position-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.4);
+            border-color: #FF6B35;
+        }
+
+        .position-card h3 {
+            color: #FF6B35;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+
+        .position-card p {
+            color: #d0c5e8;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* === SLIDE 3: PILLARS === */
+        .slide-3 {
+            background: linear-gradient(135deg, #1a0f3a 0%, #0f0f1e 100%);
+        }
+
+        .slide-3 h2 {
+            font-size: 3rem;
+            color: #FF6B35;
+            margin-bottom: 80px;
+            text-align: center;
+            animation: slideInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .pillar {
+            position: relative;
+            height: 280px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #6B3FA0 0%, #8B5FBF 100%);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            overflow: hidden;
+            animation: slideInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .pillar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0), rgba(255, 107, 53, 0.3));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .pillar:nth-child(1) { animation-delay: 0.1s; }
+        .pillar:nth-child(2) { animation-delay: 0.2s; }
+        .pillar:nth-child(3) { animation-delay: 0.3s; }
+        .pillar:nth-child(4) { animation-delay: 0.4s; }
+        .pillar:nth-child(5) { animation-delay: 0.5s; }
+
+        .pillar:hover {
+            transform: scale(1.05) translateY(-15px);
+            box-shadow: 0 20px 50px rgba(255, 107, 53, 0.6);
+        }
+
+        .pillar:hover::before {
+            opacity: 1;
+        }
+
+        .pillar-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .pillar-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* === SLIDE 4: KPIs === */
+        .slide-4 {
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a3a 100%);
+        }
+
+        .slide-4 h2 {
+            font-size: 3rem;
+            color: #FF6B35;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .kpi-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 80px;
+        }
+
+        .kpi-item {
+            text-align: center;
+            animation: slideInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            opacity: 0;
+        }
+
+        .kpi-item:nth-child(1) { animation-delay: 0.1s; }
+        .kpi-item:nth-child(2) { animation-delay: 0.3s; }
+
+        .kpi-number {
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FF6B35 0%, #FF9A6B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .kpi-label {
+            font-size: 1.1rem;
+            color: #b0a3d4;
+            font-weight: 500;
+        }
+
+        .customer-logos {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding-top: 40px;
+            border-top: 2px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .logo-item {
+            background: linear-gradient(135deg, rgba(107, 63, 160, 0.3), rgba(255, 107, 53, 0.1));
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            padding: 30px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #FF6B35;
+            font-size: 0.95rem;
+            min-height: 120px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: fadeInScale 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            opacity: 0;
+        }
+
+        .logo-item:nth-child(1) { animation-delay: 0.1s; }
+        .logo-item:nth-child(2) { animation-delay: 0.2s; }
+        .logo-item:nth-child(3) { animation-delay: 0.3s; }
+        .logo-item:nth-child(4) { animation-delay: 0.4s; }
+
+        .logo-item:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.5);
+            border-color: #FF6B35;
+        }
+
+        /* === SLIDE 5: 5 REASONS === */
+        .slide-5 {
+            background: linear-gradient(135deg, #1a0f3a 0%, #0f0f1e 100%);
+        }
+
+        .slide-5 h2 {
+            font-size: 3rem;
+            color: #FF6B35;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .reasons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        .reason {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 25px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(107, 63, 160, 0.2), rgba(255, 107, 53, 0.1));
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: slideInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .reason:nth-child(1) { animation-delay: 0.05s; }
+        .reason:nth-child(2) { animation-delay: 0.15s; }
+        .reason:nth-child(3) { animation-delay: 0.25s; }
+        .reason:nth-child(4) { animation-delay: 0.35s; }
+        .reason:nth-child(5) { animation-delay: 0.45s; }
+
+        .reason:hover {
+            transform: translateX(15px);
+            box-shadow: 0 15px 50px rgba(255, 107, 53, 0.4);
+            border-color: #FF6B35;
+        }
+
+        .reason-number {
+            background: linear-gradient(135deg, #FF6B35, #FF9A6B);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .reason-content h3 {
+            color: #FF6B35;
+            margin-bottom: 10px;
+            font-size: 1.15rem;
+        }
+
+        .reason-content p {
+            color: #d0c5e8;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* === SLIDE 6: MIGRATION === */
+        .slide-6 {
+            background: linear-gradient(135deg, #1a0f3a 0%, #2d1b4e 50%, #1a0f3a 100%);
+        }
+
+        .slide-6 h2 {
+            font-size: 3rem;
+            color: #FF6B35;
+            margin-bottom: 70px;
+            text-align: center;
+        }
+
+        .phases {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .phase {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(107, 63, 160, 0.2));
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 107, 53, 0.4);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            animation: fadeInScale 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .phase:nth-child(1) { animation-delay: 0.2s; }
+        .phase:nth-child(2) { animation-delay: 0.4s; }
+
+        .phase:hover {
+            transform: scale(1.05) translateY(-15px);
+            box-shadow: 0 30px 60px rgba(255, 107, 53, 0.5);
+            border-color: #FF6B35;
+        }
+
+        .phase h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #FF6B35;
+            font-weight: 700;
+        }
+
+        .phase ul {
+            list-style: none;
+        }
+
+        .phase li {
+            padding-left: 30px;
+            margin-bottom: 15px;
+            position: relative;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #d0c5e8;
+        }
+
+        .phase li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #FF6B35;
+            font-weight: 900;
+            font-size: 1.2rem;
+        }
+
+        /* === NAVIGATION === */
+        .nav {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+            animation: slideInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s forwards;
+            opacity: 0;
+        }
+
+        .nav button {
+            background: linear-gradient(135deg, #FF6B35, #FF9A6B);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        .nav button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 50px rgba(255, 107, 53, 0.7);
+        }
+
+        .nav button:active {
+            transform: scale(0.95);
+        }
+
+        .slide-indicator {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            background: linear-gradient(135deg, #FF6B35, #FF9A6B);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+            animation: slideInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
+            opacity: 0;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .slide-1 h1 {
+                font-size: 2.5rem;
+            }
+
+            .pillars {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .positioning-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .customer-logos {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .phases {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-container {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-duo {
+                gap: 30px;
+            }
+
+            .reason {
+                grid-template-columns: 60px 1fr;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-hint {
+            position: fixed;
+            bottom: 150px;
+            right: 40px;
+            color: #FF6B35;
+            font-size: 0.85rem;
+            animation: float 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: HERO -->
+<section class="slide slide-1 active">
+    <div class="slide-content">
+        <h1>BlueBella + Netcore</h1>
+        <p class="subtitle">The Partnership That Recovers Your Lost Email Revenue</p>
+        <div class="logo-duo">
+            <div class="logo-card bb">
+                BB
+                <div class="logo-label">BlueBella</div>
+            </div>
+            <div class="plus-sign">⚡</div>
+            <div class="logo-card nc">
+                NC
+                <div class="logo-label">Netcore</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 2: FORRESTER -->
+<section class="slide slide-2">
+    <div class="slide-content">
+        <h2>Why Netcore Leads the Market</h2>
+        <p class="subtitle">Validated by industry leaders. Trusted by Fortune 500s.</p>
+        <div class="positioning-grid">
+            <div class="position-card">
+                <h3>🎯 Forrester Recognition</h3>
+                <p>Named a leader for deliverability, innovation, and customer success.</p>
+            </div>
+            <div class="position-card">
+                <h3>📊 Market Position</h3>
+                <p>96% inboxing rate. Our deliverability speaks for itself.</p>
+            </div>
+            <div class="position-card">
+                <h3>🌍 Global Scale</h3>
+                <p>50B emails monthly. Institutional infrastructure across EU, APAC, MEA.</p>
+            </div>
+            <div class="position-card">
+                <h3>💡 AI-Native</h3>
+                <p>Built from scratch with AI agents for segmentation, insights, optimization.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 3: PILLARS -->
+<section class="slide slide-3">
+    <div class="slide-content">
+        <h2>The 5 Pillars of Email Deliverability</h2>
+        <div class="pillars">
+            <div class="pillar">
+                <div class="pillar-icon">🛡️</div>
+                <div class="pillar-title">Authentication & DKIM</div>
+            </div>
+            <div class="pillar">
+                <div class="pillar-icon">📧</div>
+                <div class="pillar-title">Sender Reputation</div>
+            </div>
+            <div class="pillar">
+                <div class="pillar-icon">🗑️</div>
+                <div class="pillar-title">Clearout Data Hygiene</div>
+            </div>
+            <div class="pillar">
+                <div class="pillar-icon">⚙️</div>
+                <div class="pillar-title">Infrastructure & ISP Relations</div>
+            </div>
+            <div class="pillar">
+                <div class="pillar-icon">📊</div>
+                <div class="pillar-title">Real-Time Monitoring</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 4: KPIs -->
+<section class="slide slide-4">
+    <div class="slide-content">
+        <h2>Netcore by the Numbers</h2>
+        <div class="kpi-container">
+            <div class="kpi-item">
+                <div class="kpi-number">50B</div>
+                <div class="kpi-label">Emails Sent Monthly</div>
+            </div>
+            <div class="kpi-item">
+                <div class="kpi-number">96%</div>
+                <div class="kpi-label">Inboxing Rate</div>
+            </div>
+        </div>
+        <p style="text-align: center; color: #b0a3d4; margin-bottom: 50px; font-size: 1rem;">Trusted by leading brands globally</p>
+        <div class="customer-logos">
+            <div class="logo-item">🏪 Waitrose</div>
+            <div class="logo-item">🌍 Unilever EU</div>
+            <div class="logo-item">👟 Camper</div>
+            <div class="logo-item">🌳 Dobbies</div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 5: 5 REASONS -->
+<section class="slide slide-5">
+    <div class="slide-content">
+        <h2>5 Reasons to Choose Netcore for BlueBella</h2>
+        <div class="reasons">
+            <div class="reason">
+                <div class="reason-number">1</div>
+                <div class="reason-content">
+                    <h3>Confidence on Inboxing & Deliverability</h3>
+                    <p><strong>90-day POC</strong> focused on recovering lost email revenue. Success KPI: improved click rates vs Klaviyo. End-to-end infrastructure ownership = more control, transparency, stability.</p>
+                </div>
+            </div>
+            <div class="reason">
+                <div class="reason-number">2</div>
+                <div class="reason-content">
+                    <h3>AI-First Platform for Efficiency</h3>
+                    <p>Built-in AI agents answer the hard questions: "Why did this campaign perform?" Compare trends, optimize faster. Reduce manual effort. Save time. Get results—all from one dashboard.</p>
+                </div>
+            </div>
+            <div class="reason">
+                <div class="reason-number">3</div>
+                <div class="reason-content">
+                    <h3>Dedicated London-Based Team</h3>
+                    <p>Deliverability experts + CSM aligned to <strong>your revenue goals</strong>. 24/7 support. UK-based Account Manager. We own your success, not just platform adoption.</p>
+                </div>
+            </div>
+            <div class="reason">
+                <div class="reason-number">4</div>
+                <div class="reason-content">
+                    <h3>Advanced Personalization, One Platform</h3>
+                    <p>Real-time personalization across email, web, beyond. Behavior-led engagement. Higher conversion. Higher LTV. No more 7 separate accounts—one unified platform, zero copy errors.</p>
+                </div>
+            </div>
+            <div class="reason">
+                <div class="reason-number">5</div>
+                <div class="reason-content">
+                    <h3>Transparent, Predictable Pricing</h3>
+                    <p>Pay only for what you use. Zero hidden data storage fees. Billing on MTUs (not MAUs). Clearout email validation included. Full transparency from day one.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 6: MIGRATION -->
+<section class="slide slide-6">
+    <div class="slide-content">
+        <h2>Smooth Migration & Onboarding</h2>
+        <div class="phases">
+            <div class="phase">
+                <h3>⚡ Phase 1: Proof of Value</h3>
+                <ul>
+                    <li>Dedicated onboarding specialist from Day 1</li>
+                    <li>Run parallel AB test campaigns</li>
+                    <li>Demonstrate better click rates vs Klaviyo</li>
+                    <li>Manage blacklisted user recovery</li>
+                    <li>Build confidence before full migration</li>
+                </ul>
+            </div>
+            <div class="phase">
+                <h3>🚀 Phase 2: Full Migration</h3>
+                <ul>
+                    <li>Migrate all journeys, data, integrations, events</li>
+                    <li>Heavy lifting handled by specialist (NDA-protected)</li>
+                    <li>Seamless handover to dedicated CSM</li>
+                    <li>CSM drives ongoing optimization</li>
+                    <li>Aligned to your revenue goals</li>
+                </ul>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 60px; font-size: 1.2rem; color: #FF6B35; font-weight: 700;">From day one, you're not a customer. You're a partner.</p>
+    </div>
+</section>
+
+<!-- Navigation -->
+<div class="nav">
+    <button onclick="previousSlide()">← Previous</button>
+    <button onclick="nextSlide()">Next →</button>
+</div>
+
+<div class="slide-indicator">
+    <span id="current-slide">1</span> / 6
+</div>
+
+<script>
+    let currentSlide = 1;
+    const totalSlides = 6;
+
+    function showSlide(n) {
+        const slides = document.querySelectorAll('.slide');
+        if (n > totalSlides) currentSlide = totalSlides;
+        if (n < 1) currentSlide = 1;
+        
+        slides.forEach(slide => slide.classList.remove('active'));
+        slides[currentSlide - 1].classList.add('active');
+        document.getElementById('current-slide').textContent = currentSlide;
+    }
+
+    function nextSlide() {
+        currentSlide++;
+        showSlide(currentSlide);
+    }
+
+    function previousSlide() {
+        currentSlide--;
+        showSlide(currentSlide);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === ' ') {
+            e.preventDefault();
+            nextSlide();
+        }
+    });
+
+    // Initialize
+    showSlide(currentSlide);
+</script>
+
+</body>
+</html>
