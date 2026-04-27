@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traya Hair Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: #fff;
+            border-radius: 40px;
+            border: 12px solid #000;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .status-bar {
+            height: 44px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .screen {
+            flex: 1;
+            overflow-y: auto;
+            background: linear-gradient(180deg, #f8fbfc 0%, #fff 100%);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .quiz-step {
+            display: none;
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        .quiz-step.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1db584 0%, #0cb86f 100%);
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+        
+        .quiz-header {
+            margin-bottom: 20px;
+        }
+        
+        .step-indicator {
+            font-size: 13px;
+            color: #7a8a99;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .quiz-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0d1117;
+            line-height: 1.4;
+        }
+        
+        .quiz-subtitle {
+            font-size: 14px;
+            color: #57636c;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+            flex: 1;
+        }
+        
+        .option-btn {
+            padding: 16px;
+            border: 2px solid #dfe6e9;
+            border-radius: 12px;
+            background: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            color: #0d1117;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .option-btn:hover {
+            border-color: #1db584;
+            background: #f0faf8;
+        }
+        
+        .option-btn.selected {
+            border-color: #1db584;
+            background: linear-gradient(135deg, #f0faf8 0%, #e8f6f3 100%);
+            color: #0d1117;
+        }
+        
+        .option-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #dfe6e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .option-btn.selected .option-icon {
+            background: #1db584;
+            border-color: #1db584;
+            color: #fff;
+        }
+        
+        .cta-section {
+            margin-top: auto;
+            padding-top: 20px;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #1db584 0%, #0cb86f 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(29, 181, 132, 0.3);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .result-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .result-text {
+            font-size: 16px;
+            color: #0d1117;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .result-subtext {
+            font-size: 14px;
+            color: #57636c;
+            text-align: center;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        
+        .btn-secondary {
+            width: 100%;
+            padding: 14px 20px;
+            background: transparent;
+            color: #1db584;
+            border: 2px solid #1db584;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #f0faf8;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>●●●●●</span>
+        </div>
+        
+        <div class="screen">
+            <div class="quiz-container">
+                <!-- Step 1: Hair Type -->
+                <div class="quiz-step active" data-step="1">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 25%;"></div>
+                    </div>
+                    
+                    <div class="quiz-header">
+                        <div class="step-indicator">Question 1 of 4</div>
+                        <div class="quiz-title">What's your hair type?</div>
+                        <div class="quiz-subtitle">Understanding your hair helps us create the perfect plan</div>
+                    </div>
+                    
+                    <div class="options">
+                        <button class="option-btn" onclick="selectOption(this, 1, 'normal')">
+                            <span class="option-icon">◯</span>
+                            <span>Normal & Healthy</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 1, 'oily')">
+                            <span class="option-icon">◯</span>
+                            <span>Oily & Thin</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 1, 'dry')">
+                            <span class="option-icon">◯</span>
+                            <span>Dry & Frizzy</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 1, 'combo')">
+                            <span class="option-icon">◯</span>
+                            <span>Combination</span>
+                        </button>
+                    </div>
+                    
+                    <div class="cta-section">
+                        <button class="btn-primary" id="btn-1" disabled onclick="nextStep(2)">Continue</button>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Hair Fall -->
+                <div class="quiz-step" data-step="2">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 50%;"></div>
+                    </div>
+                    
+                    <div class="quiz-header">
+                        <div class="step-indicator">Question 2 of 4</div>
+                        <div class="quiz-title">How's your hair fall?</div>
+                        <div class="quiz-subtitle">This helps us assess severity</div>
+                    </div>
+                    
+                    <div class="options">
+                        <button class="option-btn" onclick="selectOption(this, 2, 'none')">
+                            <span class="option-icon">◯</span>
+                            <span>Minimal (1-10 strands/day)</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 2, 'mild')">
+                            <span class="option-icon">◯</span>
+                            <span>Mild (10-50 strands/day)</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 2, 'moderate')">
+                            <span class="option-icon">◯</span>
+                            <span>Moderate (50-100 strands/day)</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 2, 'severe')">
+                            <span class="option-icon">◯</span>
+                            <span>Severe (100+ strands/day)</span>
+                        </button>
+                    </div>
+                    
+                    <div class="cta-section">
+                        <button class="btn-primary" id="btn-2" disabled onclick="nextStep(3)">Continue</button>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Scalp Health -->
+                <div class="quiz-step" data-step="3">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%;"></div>
+                    </div>
+                    
+                    <div class="quiz-header">
+                        <div class="step-indicator">Question 3 of 4</div>
+                        <div class="quiz-title">How's your scalp?</div>
+                        <div class="quiz-subtitle">Scalp health is the foundation</div>
+                    </div>
+                    
+                    <div class="options">
+                        <button class="option-btn" onclick="selectOption(this, 3, 'healthy')">
+                            <span class="option-icon">◯</span>
+                            <span>Healthy & Clear</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 3, 'itchy')">
+                            <span class="option-icon">◯</span>
+                            <span>Itchy & Sensitive</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 3, 'flaky')">
+                            <span class="option-icon">◯</span>
+                            <span>Flaky & Dandruff</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 3, 'inflamed')">
+                            <span class="option-icon">◯</span>
+                            <span>Red & Inflamed</span>
+                        </button>
+                    </div>
+                    
+                    <div class="cta-section">
+                        <button class="btn-primary" id="btn-3" disabled onclick="nextStep(4)">Continue</button>
+                    </div>
+                </div>
+                
+                <!-- Step 4: Age & Goals -->
+                <div class="quiz-step" data-step="4">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%;"></div>
+                    </div>
+                    
+                    <div class="quiz-header">
+                        <div class="step-indicator">Question 4 of 4</div>
+                        <div class="quiz-title">What's your main goal?</div>
+                        <div class="quiz-subtitle">Help us personalize your plan</div>
+                    </div>
+                    
+                    <div class="options">
+                        <button class="option-btn" onclick="selectOption(this, 4, 'regrowth')">
+                            <span class="option-icon">◯</span>
+                            <span>Hair Regrowth</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 4, 'thickness')">
+                            <span class="option-icon">◯</span>
+                            <span>Increase Thickness</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 4, 'prevent')">
+                            <span class="option-icon">◯</span>
+                            <span>Prevent Further Loss</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption(this, 4, 'health')">
+                            <span class="option-icon">◯</span>
+                            <span>Overall Health</span>
+                        </button>
+                    </div>
+                    
+                    <div class="cta-section">
+                        <button class="btn-primary" id="btn-4" disabled onclick="showResult()">Get My Plan</button>
+                    </div>
+                </div>
+                
+                <!-- Result Screen -->
+                <div class="quiz-step" data-step="5">
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center;">
+                        <div class="result-icon">✨</div>
+                        <div class="result-text">Your Customized Plan is Ready!</div>
+                        <div class="result-subtext">Based on your profile, we've created a personalized hair care plan tailored for your needs.</div>
+                        <div style="width: 100%; margin-top: 24px; padding: 16px; background: #f0faf8; border-radius: 12px; margin-bottom: 20px;">
+                            <div style="font-size: 13px; color: #57636c; margin-bottom: 8px;">Your Plan Includes:</div>
+                            <div style="font-size: 14px; color: #0d1117; font-weight: 500;">
+                                💊 Customized Supplements<br/>
+                                🥗 Personalized Diet Plan<br/>
+                                💆 Expert Hair Guidance
+                            </div>
+                        </div>
+                        <button class="btn-primary" style="margin-bottom: 10px;" onclick="completePlan()">View Full Plan</button>
+                        <button class="btn-secondary" onclick="resetQuiz()">Take Quiz Again</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const selections = {};
+        
+        function selectOption(btn, step, value) {
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selections[step] = value;
+            document.getElementById(`btn-${step}`).disabled = false;
+        }
+        
+        function nextStep(step) {
+            document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
+            document.querySelector(`[data-step="${step}"]`).classList.add('active');
+        }
+        
+        function showResult() {
+            nextStep(5);
+        }
+        
+        function completePlan() {
+            alert('Redirecting to personalized plan...');
+        }
+        
+        function resetQuiz() {
+            Object.keys(selections).forEach(key => delete selections[key]);
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            document.querySelectorAll('.btn-primary').forEach(b => b.disabled = true);
+            nextStep(1);
+        }
+    </script>
+</body>
+</html>
