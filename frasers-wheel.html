@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frasers Spin the Wheel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .ecommerce-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600"><rect fill="%23f9f9f9" width="400" height="600"/><text x="50" y="100" font-size="14" fill="%23999" font-family="Arial">Discover luxury fashion</text><text x="50" y="130" font-size="12" fill="%23bbb" font-family="Arial">from the worlds finest brands</text><circle cx="350" cy="80" r="15" fill="%23e0e0e0"/><rect x="30" y="200" width="90" height="120" fill="%23f0f0f0" stroke="%23ddd" stroke-width="1"/><text x="75" y="265" font-size="11" fill="%23999" text-anchor="middle" font-family="Arial">Premium Brand</text><rect x="140" y="200" width="90" height="120" fill="%23f0f0f0" stroke="%23ddd" stroke-width="1"/><text x="185" y="265" font-size="11" fill="%23999" text-anchor="middle" font-family="Arial">Luxury Items</text><rect x="250" y="200" width="90" height="120" fill="%23f0f0f0" stroke="%23ddd" stroke-width="1"/><text x="295" y="265" font-size="11" fill="%23999" text-anchor="middle" font-family="Arial">Exclusive Deals</text></svg>') center/cover;
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .popup {
+            background: white;
+            border-radius: 16px;
+            padding: 32px 24px;
+            max-width: 380px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: slideUp 0.4s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            margin-bottom: 24px;
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 24px;
+            color: #000;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .tagline {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .wheel-container {
+            position: relative;
+            width: 240px;
+            height: 240px;
+            margin: 0 auto 28px;
+            perspective: 1000px;
+        }
+        
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                #000 0deg 45deg,
+                #1a1a1a 45deg 90deg,
+                #333 90deg 135deg,
+                #555 135deg 180deg,
+                #777 180deg 225deg,
+                #999 225deg 270deg,
+                #bbb 270deg 315deg,
+                #ddd 315deg 360deg
+            );
+            border: 8px solid #fff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), inset 0 0 0 2px #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: white;
+            animation: spin 4s linear infinite;
+            position: relative;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .wheel::before {
+            content: '🎁';
+            font-size: 48px;
+            opacity: 0.3;
+            position: absolute;
+        }
+        
+        .pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 16px solid #000;
+            z-index: 10;
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 8px;
+        }
+        
+        .description {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        
+        .cta-button {
+            background: #000;
+            color: white;
+            border: none;
+            padding: 13px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        
+        .cta-button:hover {
+            background: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .secondary-button {
+            background: transparent;
+            color: #666;
+            border: 1px solid #e0e0e0;
+            padding: 13px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .secondary-button:hover {
+            border-color: #999;
+            color: #333;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="ecommerce-bg"></div>
+    
+    <div class="popup-overlay">
+        <div class="popup">
+            <div class="header">
+                <div class="logo">FRASERS</div>
+                <div class="tagline">Luxury Reimagined</div>
+            </div>
+            
+            <div class="badge">Limited Time Offer</div>
+            
+            <div class="title">Your Next Treasure Awaits</div>
+            <div class="description">
+                Spin the wheel and unlock an exclusive reward. Every spin brings you closer to luxury.
+            </div>
+            
+            <div class="wheel-container">
+                <div class="pointer"></div>
+                <div class="wheel"></div>
+            </div>
+            
+            <button class="cta-button" onclick="handleSpin()">Spin Now</button>
+            <button class="secondary-button" onclick="handleLater()">Maybe Later</button>
+        </div>
+    </div>
+    
+    <script>
+        let wheelActive = true;
+        
+        function handleSpin() {
+            if (!wheelActive) return;
+            
+            const wheel = document.querySelector('.wheel');
+            const spins = Math.floor(Math.random() * 5) + 5;
+            const degrees = Math.random() * 360 + (spins * 360);
+            
+            wheel.style.animation = 'none';
+            setTimeout(() => {
+                wheel.style.transition = 'transform 3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                wheel.style.transform = `rotate(${degrees}deg)`;
+            }, 10);
+            
+            wheelActive = false;
+            
+            setTimeout(() => {
+                const rewards = [
+                    '15% off your order',
+                    'Free Express Shipping',
+                    '20% off Luxury Brands',
+                    'VIP Loyalty Status',
+                    'Exclusive Preview Access',
+                    'Personal Stylist Session',
+                    '£50 Gift Card',
+                    'Free Returns'
+                ];
+                
+                const randomReward = rewards[Math.floor(Math.random() * rewards.length)];
+                alert('🎉 Congratulations!\n\nYou won: ' + randomReward);
+                wheelActive = true;
+                resetWheel();
+            }, 3000);
+        }
+        
+        function resetWheel() {
+            const wheel = document.querySelector('.wheel');
+            wheel.style.animation = 'spin 4s linear infinite';
+            wheel.style.transform = 'rotate(0deg)';
+            wheel.style.transition = 'none';
+        }
+        
+        function handleLater() {
+            document.querySelector('.popup-overlay').style.opacity = '0.8';
+            setTimeout(() => {
+                alert('We\'ll keep the wheel spinning for you.');
+            }, 200);
+        }
+    </script>
+</body>
+</html>
