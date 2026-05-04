@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penguin Books Reader Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        
+        .header h1 {
+            color: #1a1a1a;
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF6B35 0%, #FF8555 100%);
+            width: 20%;
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+        
+        .step {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        .step.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .step-number {
+            font-size: 12px;
+            color: #FF6B35;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .question {
+            font-size: 18px;
+            color: #1a1a1a;
+            font-weight: 600;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .option {
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 14px;
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+        
+        .option:hover {
+            border-color: #FF6B35;
+            background: #fff8f5;
+        }
+        
+        .option.selected {
+            border-color: #FF6B35;
+            background: #fff8f5;
+            color: #FF6B35;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #FF6B35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-next {
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8555 100%);
+            color: white;
+            flex: 2;
+        }
+        
+        .btn-next:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-next:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-back {
+            background: #f0f0f0;
+            color: #1a1a1a;
+            flex: 1;
+        }
+        
+        .btn-back:hover {
+            background: #e0e0e0;
+        }
+        
+        .results {
+            text-align: center;
+        }
+        
+        .results-emoji {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .results h2 {
+            font-size: 22px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+        
+        .results p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .recommendation {
+            background: #fff8f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #FF6B35;
+        }
+        
+        .recommendation-title {
+            font-weight: 600;
+            color: #FF6B35;
+            margin-bottom: 8px;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+        
+        .recommendation-text {
+            color: #1a1a1a;
+            font-size: 14px;
+        }
+        
+        .btn-restart {
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8555 100%);
+            color: white;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">📚</div>
+            <h1>Your Perfect Read</h1>
+            <p>Discover your next Penguin Books obsession</p>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        
+        <!-- Step 1: Genre Preference -->
+        <div class="step active">
+            <div class="step-number">Step 1 of 5</div>
+            <div class="question">What genre speaks to you?</div>
+            <div class="options">
+                <div class="option" data-value="fiction">📖 Literary Fiction</div>
+                <div class="option" data-value="mystery">🔍 Mystery & Thriller</div>
+                <div class="option" data-value="romance">💕 Romance</div>
+                <div class="option" data-value="scifi">🚀 Sci-Fi & Fantasy</div>
+                <div class="option" data-value="nonfiction">📊 Non-Fiction</div>
+            </div>
+            <div class="buttons">
+                <button class="btn-next" onclick="nextStep()">Next</button>
+            </div>
+        </div>
+        
+        <!-- Step 2: Mood -->
+        <div class="step">
+            <div class="step-number">Step 2 of 5</div>
+            <div class="question">What mood are you in?</div>
+            <div class="options">
+                <div class="option" data-value="light">☀️ Light & Uplifting</div>
+                <div class="option" data-value="intense">⚡ Intense & Gripping</div>
+                <div class="option" data-value="thoughtful">🤔 Thoughtful & Deep</div>
+                <div class="option" data-value="adventurous">🏔️ Adventurous</div>
+                <div class="option" data-value="emotional">😢 Emotional & Moving</div>
+            </div>
+            <div class="buttons">
+                <button class="btn-back" onclick="prevStep()">Back</button>
+                <button class="btn-next" onclick="nextStep()">Next</button>
+            </div>
+        </div>
+        
+        <!-- Step 3: Reading Level -->
+        <div class="step">
+            <div class="step-number">Step 3 of 5</div>
+            <div class="question">How much time do you have?</div>
+            <div class="options">
+                <div class="option" data-value="quick">⏱️ Quick Read (< 300 pages)</div>
+                <div class="option" data-value="medium">📚 Medium (300-500 pages)</div>
+                <div class="option" data-value="epic">🏰 Epic Adventure (500+ pages)</div>
+                <div class="option" data-value="any">✨ Any length is fine</div>
+            </div>
+            <div class="buttons">
+                <button class="btn-back" onclick="prevStep()">Back</button>
+                <button class="btn-next" onclick="nextStep()">Next</button>
+            </div>
+        </div>
+        
+        <!-- Step 4: Budget -->
+        <div class="step">
+            <div class="step-number">Step 4 of 5</div>
+            <div class="question">What's your reading format?</div>
+            <div class="options">
+                <div class="option" data-value="paperback">📕 Paperback</div>
+                <div class="option" data-value="hardcover">📗 Hardcover</div>
+                <div class="option" data-value="ebook">💻 E-Book</div>
+                <div class="option" data-value="audio">🎧 Audiobook</div>
+                <div class="option" data-value="any-format">🎯 Any Format</div>
+            </div>
+            <div class="buttons">
+                <button class="btn-back" onclick="prevStep()">Back</button>
+                <button class="btn-next" onclick="nextStep()">Next</button>
+            </div>
+        </div>
+        
+        <!-- Step 5: Name & Email -->
+        <div class="step">
+            <div class="step-number">Step 5 of 5</div>
+            <div class="question">One last thing!</div>
+            <input type="text" class="input-field" id="userName" placeholder="Your name" />
+            <input type="email" class="input-field" id="userEmail" placeholder="your@email.com" />
+            <div class="buttons">
+                <button class="btn-back" onclick="prevStep()">Back</button>
+                <button class="btn-next" onclick="submitQuiz()">Get Your Recommendation</button>
+            </div>
+        </div>
+        
+        <!-- Results -->
+        <div class="step results">
+            <div class="results-emoji" id="resultEmoji">🎉</div>
+            <h2 id="resultTitle">Your Perfect Read Awaits!</h2>
+            <p id="resultMessage">Based on your preferences, we've found the ideal book for you.</p>
+            <div class="recommendation">
+                <div class="recommendation-title">Your Next Read</div>
+                <div class="recommendation-text" id="recommendedBook">Loading...</div>
+            </div>
+            <p style="color: #999; font-size: 12px; margin-bottom: 20px;">
+                A personalized selection from Penguin Books' finest collection.
+            </p>
+            <button class="btn-restart" onclick="restartQuiz()">Take Quiz Again</button>
+        </div>
+    </div>
+    
+    <script>
+        let currentStep = 0;
+        const answers = {};
+        
+        const recommendations = {
+            fiction: {
+                light: "Tomorrow, and Tomorrow, and Tomorrow by Charles Yu - A dazzling exploration of friendship and creativity",
+                intense: "The Silent Patient by Alex Michaelides - A gripping psychological thriller that will keep you on edge",
+                thoughtful: "Lessons in Chemistry by Bonnie Garmus - A profound story of ambition and resilience",
+                adventurous: "The Midnight Library by Matt Haig - A magical journey through alternative lives",
+                emotional: "Remarkably Bright by Sophie Kinsella - A touching family drama with humor and heart"
+            },
+            mystery: {
+                light: "The 7½ Deaths of Evelyn Hardcastle by Stuart Turton - A clever mystery with a dash of magic",
+                intense: "A Good Girl's Guide to Murder by Holly Jackson - Utterly addictive mystery thriller",
+                thoughtful: "The Woman in Cabin 10 by Ruth Ware - Psychological mystery with stunning twists",
+                adventurous: "The Thursday Murder Club by Richard Osman - A delightful mystery with unforgettable characters",
+                emotional: "In a Dark, Dark Wood by Ruth Ware - Intense, dark, and impossible to put down"
+            },
+            romance: {
+                light: "Beach Read by Emily Henry - Witty, romantic, and absolutely charming",
+                intense: "It Ends with Us by Colleen Hoover - A powerful and emotional romance",
+                thoughtful: "The Rosie Project by Graeme Simsion - Clever romance with heart and humor",
+                adventurous: "People We Meet on Vacation by Emily Henry - A sweeping romantic adventure",
+                emotional: "The Flatshare by Beth O'Leary - A beautiful dual-perspective love story"
+            },
+            scifi: {
+                light: "Project Hail Mary by Andy Weir - A fun, thrilling space adventure",
+                intense: "The Three-Body Problem by Liu Cixin - Epic sci-fi that will blow your mind",
+                thoughtful: "Klara and the Sun by Kazuo Ishiguro - A contemplative AI love story",
+                adventurous: "Dune by Frank Herbert - The ultimate epic sci-fi adventure",
+                emotional: "The Time Traveler's Wife by Audrey Niffenegger - A poignant time-travel romance"
+            },
+            nonfiction: {
+                light: "Amusing Ourselves to Death by Neil Postman - Entertaining media criticism",
+                intense: "Educated by Tara Westover - A gripping memoir of survival and education",
+                thoughtful: "Thinking, Fast and Slow by Daniel Kahneman - Revolutionary insights into human behavior",
+                adventurous: "Sapiens by Yuval Noah Harari - A mind-bending history of humankind",
+                emotional: "The Immortal Life of Henrietta Lacks by Rebecca Skloot - A moving true story of science and ethics"
+            }
+        };
+        
+        function selectOption(element) {
+            const parent = element.parentElement;
+            const siblings = parent.querySelectorAll('.option');
+            siblings.forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            answers[`step${currentStep}`] = element.dataset.value;
+        }
+        
+        function nextStep() {
+            if (!answers[`step${currentStep}`] && currentStep < 4) {
+                alert('Please select an option to continue');
+                return;
+            }
+            currentStep++;
+            updateUI();
+        }
+        
+        function prevStep() {
+            currentStep--;
+            updateUI();
+        }
+        
+        function updateUI() {
+            const steps = document.querySelectorAll('.step');
+            steps.forEach((step, idx) => {
+                step.classList.toggle('active', idx === currentStep);
+            });
+            
+            const progress = ((currentStep + 1) / 5) * 100;
+            document.querySelector('.progress-fill').style.width = progress + '%';
+            
+            // Restore selected options
+            if (currentStep < 5) {
+                const selectedValue = answers[`step${currentStep}`];
+                if (selectedValue) {
+                    const selected = document.querySelectorAll('.step')[currentStep].querySelector(`[data-value="${selectedValue}"]`);
+                    if (selected) selected.classList.add('selected');
+                }
+            }
+        }
+        
+        function submitQuiz() {
+            const name = document.getElementById('userName').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+            
+            if (!name || !email) {
+                alert('Please enter your name and email');
+                return;
+            }
+            
+            const genre = answers.step0;
+            const mood = answers.step1;
+            const recommendation = recommendations[genre][mood];
+            
+            document.getElementById('resultTitle').textContent = `Perfect, ${name}!`;
+            document.getElementById('recommendedBook').textContent = recommendation;
+            
+            currentStep = 5;
+            updateUI();
+        }
+        
+        function restartQuiz() {
+            currentStep = 0;
+            Object.keys(answers).forEach(key => delete answers[key]);
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById('userName').value = '';
+            document.getElementById('userEmail').value = '';
+            updateUI();
+        }
+        
+        // Add click handlers to options
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectOption(this);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
