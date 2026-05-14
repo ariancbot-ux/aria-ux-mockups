@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NNNOW – Tommy Hilfiger PLP Personalized</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter','Helvetica Neue',sans-serif; background:#fff; color:#1a1a1a; }
+  .back { position:fixed; top:14px; left:14px;
+    background:#fff; color:#000; text-decoration:none;
+    padding:8px 14px; border:1px solid #000; font-size:12px; font-weight:800;
+    z-index:200; letter-spacing:1px; }
+
+  .nc-badge {
+    position:absolute; top:8px; right:8px;
+    background:#A4E830; color:#000;
+    font-size:9px; font-weight:900; letter-spacing:1px;
+    padding:3px 7px; z-index:5; box-shadow:0 2px 6px rgba(0,0,0,.15);
+  }
+  .nc-block { position:relative; }
+  .nc-block::before {
+    content:""; position:absolute; inset:-3px;
+    border:2px dashed #A4E830; pointer-events:none; opacity:.7;
+  }
+
+  .topbar { background:#000; color:#fff; text-align:center;
+    padding:8px; font-size:11px; letter-spacing:2px; text-transform:uppercase; }
+  .topbar b { color:#FF3366; }
+  .nav { background:#fff; padding:18px 40px;
+    display:flex; align-items:center; gap:30px;
+    border-bottom:1px solid #000; position:sticky; top:0; z-index:50; }
+  .brand { font-weight:900; font-size:24px; color:#000; letter-spacing:-1px; }
+  .brand .dot { color:#FF3366; }
+  .menu { display:flex; gap:24px; font-size:12px; font-weight:600; color:#000;
+    text-transform:uppercase; letter-spacing:2px; margin-left:20px; }
+  .menu .active { border-bottom:2px solid #FF3366; padding-bottom:4px; }
+  .icons { margin-left:auto; display:flex; gap:18px; font-size:18px; align-items:center; }
+  .greeting { background:#000; color:#fff; padding:8px 14px;
+    font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; }
+
+  /* Brand banner */
+  .brand-hero {
+    background:linear-gradient(135deg,#0a2a3f,#1a4060);
+    color:#fff; padding:50px 40px;
+    position:relative; overflow:hidden;
+  }
+  .brand-hero::after {
+    content:""; position:absolute; left:0; right:0; bottom:0; height:4px;
+    background:linear-gradient(90deg,#FF3366,#FFCC00,#fff,#3366FF);
+  }
+  .brand-hero .kicker { font-size:11px; letter-spacing:6px;
+    color:#FFCC00; text-transform:uppercase; }
+  .brand-hero h1 { font-size:48px; font-weight:900; margin-top:12px; letter-spacing:-1px; }
+  .brand-hero p { margin-top:8px; opacity:.85; font-size:14px; }
+  .brand-hero .count {
+    margin-top:20px; font-size:11px; letter-spacing:1px;
+    color:#A4E830; background:rgba(0,0,0,.3);
+    padding:6px 14px; display:inline-block;
+  }
+
+  /* Personalized greeting strip */
+  .greet-strip {
+    background:#fff8d6; padding:14px 40px;
+    display:flex; align-items:center; gap:14px;
+    border-bottom:1px solid #e7c34c; position:relative;
+  }
+  .greet-strip .ic { font-size:24px; }
+  .greet-strip .txt { flex:1; font-size:13px; line-height:1.5; }
+  .greet-strip .txt b { color:#FF3366; }
+  .greet-strip button {
+    background:#000; color:#fff; padding:8px 16px;
+    border:none; font-weight:800; font-size:11px;
+    letter-spacing:1.5px; cursor:pointer; text-transform:uppercase;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    background:#fff; padding:16px 40px;
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    border-bottom:1px solid #eee;
+  }
+  .pill {
+    padding:7px 14px; border:1px solid #ddd;
+    font-size:12px; font-weight:600; cursor:pointer;
+    background:#fff; color:#444; letter-spacing:.5px;
+  }
+  .pill.active { background:#000; color:#fff; border-color:#000; }
+  .pill.ai { background:#A4E830; color:#000; border:0; font-weight:800; }
+  .pill.ai::before { content:"✨ "; }
+  .filter-bar .right {
+    margin-left:auto; font-size:12px; color:#666;
+  }
+  .filter-bar .right b { color:#1a1a1a; }
+
+  /* Top picks hero */
+  .for-you {
+    max-width:1280px; margin:30px auto 0; padding:0 40px;
+  }
+  .for-you-card {
+    background:linear-gradient(135deg,#FF3366 0%,#000 100%);
+    color:#fff; display:flex; align-items:center; gap:30px;
+    padding:28px;
+    position:relative; overflow:hidden;
+  }
+  .for-you-card .lhs { flex:1; }
+  .for-you-card .kicker {
+    background:#A4E830; color:#000; padding:4px 10px;
+    font-size:10px; letter-spacing:2px; font-weight:900;
+    display:inline-block;
+  }
+  .for-you-card h2 { font-size:28px; font-weight:900; margin-top:10px; line-height:1.2; letter-spacing:-.5px; }
+  .for-you-card .why {
+    margin-top:6px; font-size:12px; color:#FFCC00; font-style:italic;
+  }
+  .for-you-card .price {
+    margin-top:16px; font-size:18px; font-weight:700;
+  }
+  .for-you-card .price .big { font-size:34px; color:#FFCC00; font-weight:900; }
+  .for-you-card .price s { color:#aaa; font-weight:400; font-size:16px; margin-left:8px; }
+  .for-you-card .save { font-size:12px; margin-top:4px; }
+  .for-you-card .save b { color:#A4E830; }
+  .for-you-card .stockbar {
+    margin-top:14px; background:rgba(0,0,0,.4); padding:10px;
+    font-size:11px; color:#fff;
+  }
+  .for-you-card .stockbar b { color:#A4E830; }
+  .for-you-card .size-row {
+    margin-top:8px; display:flex; gap:6px;
+  }
+  .for-you-card .size-row .s {
+    width:34px; height:34px; border:1px solid rgba(255,255,255,.3);
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700;
+  }
+  .for-you-card .size-row .s.your {
+    background:#A4E830; color:#000; border-color:#A4E830;
+    box-shadow:0 0 0 2px rgba(164,232,48,.4);
+  }
+  .for-you-card .ctas { margin-top:18px; display:flex; gap:10px; }
+  .for-you-card .btn-p, .for-you-card .btn-g {
+    padding:12px 22px; border:none; cursor:pointer;
+    font-weight:900; font-size:12px; letter-spacing:1.5px;
+    text-transform:uppercase;
+  }
+  .for-you-card .btn-p { background:#fff; color:#000; }
+  .for-you-card .btn-g { background:transparent; color:#fff; border:2px solid #fff; }
+  .for-you-card .img { font-size:120px; opacity:.95; flex-shrink:0; }
+
+  .section { max-width:1280px; margin:0 auto; padding:30px 40px; }
+  .section-head {
+    display:flex; align-items:baseline; gap:14px; margin-bottom:14px;
+    position:relative;
+  }
+  .section-head h2 { font-size:22px; font-weight:800; letter-spacing:-.5px; }
+  .section-head .why-ai { font-size:11px; color:#666; font-style:italic; }
+  .row { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+  .pcard { background:#fff; position:relative; }
+  .pcard .img { height:280px; display:flex; align-items:center; justify-content:center;
+    font-size:70px; position:relative; }
+  .pcard .img.bg1 { background:linear-gradient(135deg,#0a2a3f,#1a4060); color:#fff; }
+  .pcard .img.bg2 { background:linear-gradient(135deg,#1a1a1a,#3a3a3a); color:#fff; }
+  .pcard .img.bg3 { background:linear-gradient(135deg,#dfe5ea,#a6b5c4); color:#000; }
+  .pcard .img.bg4 { background:linear-gradient(135deg,#fae3a7,#e9c477); color:#000; }
+  .pcard .img.bg5 { background:linear-gradient(135deg,#f8e4dd,#e6c2b0); color:#000; }
+  .pcard .img.bg6 { background:linear-gradient(135deg,#2b1818,#4a2828); color:#fff; }
+  .pcard .img.bg7 { background:linear-gradient(135deg,#e8f4dd,#a8d18a); color:#000; }
+  .pcard .img.bg8 { background:linear-gradient(135deg,#fff8d6,#e7c34c); color:#000; }
+
+  .pcard .badge {
+    position:absolute; top:10px; left:10px;
+    background:#FF3366; color:#fff;
+    font-size:9px; padding:4px 8px; font-weight:800; letter-spacing:1px;
+  }
+  .pcard .badge.deal { background:#A4E830; color:#000; }
+  .pcard .badge.score {
+    top:10px; right:10px; left:auto;
+    background:#000; color:#A4E830;
+  }
+  .pcard .body { padding:12px 0; }
+  .pcard .brand-tag { font-size:11px; font-weight:800; color:#000; letter-spacing:1px;
+    text-transform:uppercase; }
+  .pcard .name { font-size:13px; color:#444; line-height:1.4; height:34px; overflow:hidden; margin-top:3px; }
+  .pcard .price { margin-top:6px; font-weight:800; font-size:15px; }
+  .pcard .price s { color:#999; font-weight:400; margin-left:5px; font-size:12px; }
+  .pcard .price em { color:#FF3366; font-style:normal; font-size:11px; margin-left:5px; font-weight:800; }
+  .pcard .why-row {
+    background:#fff8d6; color:#5a4400;
+    padding:6px 10px; font-size:10px; line-height:1.3;
+    border-top:1px solid #e7c34c;
+  }
+  .pcard .why-row b { color:#000; }
+
+  .panel-explainer {
+    margin:40px auto 60px; max-width:1280px; padding:30px 40px;
+    background:#000; color:#fff;
+  }
+  .panel-explainer h3 { color:#A4E830; font-size:14px; letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:14px; }
+  .panel-explainer .grid3 {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
+  }
+  .panel-explainer .item b { color:#FFCC00; }
+  .panel-explainer .item { font-size:13px; line-height:1.6; color:#ccc; }
+
+  @media (max-width:900px){
+    .for-you-card { flex-direction:column; padding:22px; }
+    .for-you-card .img { font-size:80px; }
+    .for-you-card h2 { font-size:24px; }
+    .row { grid-template-columns:repeat(2,1fr); }
+    .nav { padding:14px 20px; gap:14px; } .menu { display:none; }
+    .brand-hero, .section, .filter-bar, .greet-strip { padding-left:20px; padding-right:20px; }
+    .panel-explainer .grid3 { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<a class="back" href="nnnow-index.html">‹ Back</a>
+
+<div class="topbar">FREE SHIPPING ON ALL ORDERS · <b>EXTRA 15% OFF</b> FOR NEW USERS · EASY 30-DAY RETURNS</div>
+<div class="nav">
+  <div class="brand">NNNOW<span class="dot">.</span></div>
+  <div class="menu"><span>Men</span><span>Women</span><span>Kids</span><span>Beauty</span><span class="active">Brands</span><span>Sale</span></div>
+  <div class="icons">
+    <div class="greeting">👋 Hi Sourabh</div>
+    🔍 ♡ 🛍
+  </div>
+</div>
+
+<!-- Brand hero -->
+<div class="brand-hero">
+  <div class="kicker">Tommy Hilfiger · The Iconic American Brand</div>
+  <h1>Tommy Hilfiger Men</h1>
+  <p>Sailing-inspired classics · Slim & regular fits · 30–50% off this week</p>
+  <div class="count">412 STYLES · 18 NEW THIS WEEK</div>
+</div>
+
+<!-- Personalized greeting strip -->
+<div class="greet-strip nc-block">
+  <span class="nc-badge" style="top:14px; right:14px;">PERSONALIZED · BRAND #1</span>
+  <div class="ic">⭐</div>
+  <div class="txt">
+    <b>Tommy is your top brand on NNNOW</b> — 3 of your last 5 buys 👏 We've re-sorted this page so your fits and favourite styles show first. Skip the scrolling.
+  </div>
+  <button>SEE MY FITS →</button>
+</div>
+
+<!-- Filter bar -->
+<div class="filter-bar">
+  <span class="pill ai">For You</span>
+  <span class="pill active">All</span>
+  <span class="pill">Slim Fit</span>
+  <span class="pill">Polos</span>
+  <span class="pill">Chinos</span>
+  <span class="pill">T-Shirts</span>
+  <span class="pill">Shirts</span>
+  <span class="pill">Sweatshirts</span>
+  <span class="pill">Size 32 only</span>
+  <div class="right">Showing <b>412 styles</b> · Sorted by <b>Best for you</b> ▾</div>
+</div>
+
+<!-- TOP PICK -->
+<div class="for-you nc-block" style="margin-top:40px;">
+  <span class="nc-badge" style="top:14px; right:14px;">PERSONALIZED · #1 MATCH</span>
+  <div class="for-you-card">
+    <div class="lhs">
+      <span class="kicker">✦ TOP PICK FOR SOURABH</span>
+      <h2>The Tommy Slim Chinos you've been eyeing 👔</h2>
+      <div class="why">✨ You viewed this 2× this week · 97/100 fit match for you</div>
+      <div class="price"><span class="big">₹3,499</span><s>₹6,999</s></div>
+      <div class="save">You save <b>₹3,500 (50%)</b> · Free shipping · 30-day returns</div>
+      <div class="stockbar">
+        ⚡ <b>Your size 32 just restocked</b> · 4 pairs left across all NNNOW warehouses
+        <div class="size-row">
+          <div class="s">28</div><div class="s">30</div>
+          <div class="s your">32</div><div class="s">34</div><div class="s">36</div>
+        </div>
+      </div>
+      <div class="ctas">
+        <button class="btn-p">ADD TO CART →</button>
+        <button class="btn-g">Save for Later</button>
+      </div>
+    </div>
+    <div class="img">👔</div>
+  </div>
+</div>
+
+<!-- Rail 1: top matches -->
+<div class="section">
+  <div class="section-head nc-block" style="padding:6px 10px;">
+    <span class="nc-badge">PERSONALIZED · STYLE MATCH</span>
+    <h2>Picks that fit your style</h2>
+    <span class="why-ai">· Ranked by AI match score · Size 32 available on all</span>
+  </div>
+  <div class="row">
+    <div class="pcard">
+      <div class="img bg1">⛵<span class="badge">YOUR FIT</span><span class="badge score">✨ 94</span></div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Sailing Stripe Polo Navy</div>
+        <div class="price">₹2,799 <s>₹4,999</s> <em>44% OFF</em></div></div>
+      <div class="why-row">✨ <b>Why for you:</b> matches your "slim navy" pattern · 92% of Tommy chinos buyers also wear polos</div>
+    </div>
+    <div class="pcard">
+      <div class="img bg2">👔<span class="badge">YOUR FIT</span><span class="badge score">✨ 91</span></div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Slim Stretch Denim Indigo</div>
+        <div class="price">₹3,999 <s>₹7,999</s> <em>50% OFF</em></div></div>
+      <div class="why-row">✨ <b>Why for you:</b> same slim fit + size 32 as your viewed chinos · 50% off ends today</div>
+    </div>
+    <div class="pcard">
+      <div class="img bg3">👕<span class="badge deal">RESTOCK</span><span class="badge score">✨ 88</span></div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Flag Logo Tee White</div>
+        <div class="price">₹1,499 <s>₹2,999</s> <em>50% OFF</em></div></div>
+      <div class="why-row">✨ <b>Why for you:</b> staple tee · pairs with the chinos you're viewing · M restocked yesterday</div>
+    </div>
+    <div class="pcard">
+      <div class="img bg4">🧥<span class="badge score">✨ 84</span></div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Pique Polo Yellow</div>
+        <div class="price">₹2,799 <s>₹4,999</s> <em>44% OFF</em></div></div>
+      <div class="why-row">✨ <b>Why for you:</b> top-seller in size 32 this month · matches GAP hoodie tone you wear</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bundle suggestion -->
+<div class="greet-strip nc-block" style="background:#0a2a3f; color:#fff; border-color:#000; margin:0 40px;">
+  <span class="nc-badge" style="top:14px; right:14px;">PERSONALIZED · BUNDLE BUILDER</span>
+  <div class="ic">🎁</div>
+  <div class="txt">
+    Build the <b>Tommy Summer Outfit</b> — chinos + polo + tee — and unlock <b>extra 10% off + free monogramming</b>. Avg saving: ₹890.
+  </div>
+  <button style="background:#FFCC00; color:#000;">BUILD BUNDLE →</button>
+</div>
+
+<!-- Rail 2: new in -->
+<div class="section">
+  <div class="section-head nc-block" style="padding:6px 10px;">
+    <span class="nc-badge">RANKED · NEW IN FOR YOU</span>
+    <h2>New from Tommy this week</h2>
+    <span class="why-ai">· Filtered to size 32 + your colour preferences (navy, white, indigo)</span>
+  </div>
+  <div class="row">
+    <div class="pcard">
+      <div class="img bg5">👕<span class="badge">NEW</span><span class="badge score">✨ 82</span></div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Linen Blend Shirt Coral</div>
+        <div class="price">₹3,299 <s>₹5,499</s> <em>40% OFF</em></div></div>
+    </div>
+    <div class="pcard">
+      <div class="img bg6">👔<span class="badge">NEW</span><span class="badge score">✨ 78</span></div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Slim Oxford Shirt Burgundy</div>
+        <div class="price">₹2,999 <s>₹5,499</s> <em>45% OFF</em></div></div>
+    </div>
+    <div class="pcard">
+      <div class="img bg7">🧦<span class="badge">NEW</span><span class="badge score">✨ 72</span></div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Stripe Sock Pack of 3</div>
+        <div class="price">₹699 <s>₹1,199</s> <em>42% OFF</em></div></div>
+    </div>
+    <div class="pcard">
+      <div class="img bg8">👔<span class="badge">NEW</span><span class="badge score">✨ 68</span></div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Cargo Shorts Khaki</div>
+        <div class="price">₹2,499 <s>₹3,999</s> <em>38% OFF</em></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Lower-match section -->
+<div class="section">
+  <div class="section-head nc-block" style="padding:6px 10px;">
+    <span class="nc-badge">DE-PRIORITIZED · OUTSIDE YOUR STYLE</span>
+    <h2>Other Tommy styles</h2>
+    <span class="why-ai">· Lower match score for your profile — shown for completeness</span>
+  </div>
+  <div class="row">
+    <div class="pcard"><div class="img bg3">🎒<span class="badge score">✨ 54</span></div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Logo Backpack Black</div>
+        <div class="price">₹5,499 <s>₹8,999</s> <em>39% OFF</em></div></div></div>
+    <div class="pcard"><div class="img bg5">⌚<span class="badge score">✨ 48</span></div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Chronograph Watch Steel</div>
+        <div class="price">₹9,999 <s>₹14,999</s> <em>33% OFF</em></div></div></div>
+    <div class="pcard"><div class="img bg7">🩳<span class="badge score">✨ 44</span></div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Swim Trunks Floral Print</div>
+        <div class="price">₹2,799 <s>₹4,999</s> <em>44% OFF</em></div></div></div>
+    <div class="pcard"><div class="img bg2">👒<span class="badge score">✨ 38</span></div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Bucket Hat Reversible</div>
+        <div class="price">₹1,799 <s>₹2,999</s> <em>40% OFF</em></div></div></div>
+  </div>
+</div>
+
+<div class="panel-explainer">
+  <h3>How Netcore is personalizing this PLP</h3>
+  <div class="grid3">
+    <div class="item"><b>Page ranking</b><br>Default Tommy Men shows 412 styles by newness. For Sourabh, Raman AI re-ranks by match score — top SKU is the chinos he viewed twice, not a generic seller.</div>
+    <div class="item"><b>Match scores (#94, #91)</b><br>Composite of fit history + colour pattern + browse + similar-shopper signals. Visible badges build trust in the recommendation.</div>
+    <div class="item"><b>"Why for you" lines</b><br>Explainable AI — every recommendation shows the reason. Builds trust, reduces "creepy" feeling, and converts at 2× the rate of unexplained recs.</div>
+    <div class="item"><b>Size 32 pre-filter</b><br>Auto-applied because Sourabh's last 4 Tommy purchases were size 32. Saves 6+ clicks. Same logic surfaces on all PLP pages.</div>
+    <div class="item"><b>Restock badges on TOP PICK</b><br>Real-time inventory — "Your size 32 just restocked" + "4 pairs left" creates urgency without fake scarcity.</div>
+    <div class="item"><b>De-prioritized rail</b><br>Low-match SKUs (watches, hats, swim trunks) still shown but bottom-of-page. Netcore doesn't hide products; it just orders them right per shopper.</div>
+  </div>
+</div>
+
+</body>
+</html>

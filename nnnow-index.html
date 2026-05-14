@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NNNOW – Personalization Demo by Netcore</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter','Helvetica Neue',Arial,sans-serif;
+    background:#fff; color:#1a1a1a; min-height:100vh; }
+  .header {
+    background:#000; color:#fff; padding:50px 40px; text-align:center;
+    position:relative;
+  }
+  .header::after {
+    content:""; position:absolute; left:0; right:0; bottom:0; height:4px;
+    background:linear-gradient(90deg,#FF3366,#FFCC00,#00CCAA,#3366FF);
+  }
+  .header .small { font-size:11px; letter-spacing:6px;
+    text-transform:uppercase; opacity:.7; }
+  .header h1 { font-size:42px; font-weight:900; margin-top:10px; letter-spacing:-1px; }
+  .header h1 .dot { color:#FF3366; }
+  .header p { margin-top:12px; font-size:16px; opacity:.85; }
+  .container { max-width:1100px; margin:0 auto; padding:50px 30px 80px; }
+  .intro {
+    background:#fafafa; border-left:4px solid #000;
+    padding:20px 24px; border-radius:8px; margin-bottom:30px;
+  }
+  .intro b { color:#1a1a1a; }
+  .intro .persona {
+    margin-top:12px; padding:14px;
+    background:#fff; border:1px dashed #ddd; border-radius:8px;
+    font-size:14px; line-height:1.6;
+  }
+  h2 { font-size:24px; color:#000; margin:30px 0 16px; font-weight:800;
+    letter-spacing:-.5px; }
+  .grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:20px;
+  }
+  .card {
+    background:#fff; border:1px solid #e5e5e5; border-radius:0;
+    overflow:hidden; transition:transform .2s, box-shadow .2s;
+    cursor:pointer; display:block; text-decoration:none; color:inherit;
+  }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 30px rgba(0,0,0,.12); }
+  .card .preview {
+    height:140px; display:flex; align-items:center; justify-content:center;
+    font-size:56px; color:#fff;
+  }
+  .p1 { background:linear-gradient(135deg,#FF3366,#000); }
+  .p2 { background:linear-gradient(135deg,#000,#3a3a3a); }
+  .p3 { background:linear-gradient(135deg,#00CCAA,#000); }
+  .p4 { background:linear-gradient(135deg,#FFCC00,#FF3366); }
+  .p5 { background:linear-gradient(135deg,#3366FF,#000); }
+  .p6 { background:linear-gradient(135deg,#FF3366,#FFCC00); }
+  .card .body { padding:18px; }
+  .card .label {
+    font-size:10px; letter-spacing:2px; color:#FF3366;
+    text-transform:uppercase; font-weight:800;
+  }
+  .card h3 { font-size:17px; margin-top:6px; line-height:1.3; font-weight:800; }
+  .card p { font-size:13px; color:#666; margin-top:8px; line-height:1.5; }
+  .stack { margin-top:10px; display:flex; flex-wrap:wrap; gap:6px; }
+  .stack span {
+    font-size:10px; padding:3px 8px;
+    background:#000; color:#fff; font-weight:700;
+  }
+  .footer {
+    text-align:center; color:#888; font-size:12px;
+    margin-top:50px; padding-top:20px; border-top:1px solid #eee;
+  }
+  .footer b { color:#000; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="small">Netcore Cloud · Personalization Showcase</div>
+  <h1>NNNOW<span class="dot">.</span> × Netcore</h1>
+  <p>Five personalization moments — across one shopper's branded fashion journey.</p>
+</div>
+
+<div class="container">
+  <div class="intro">
+    <b>The Persona</b>
+    <div class="persona">
+      <b>Sourabh, 34, Bengaluru</b> — NNNOW shopper for 14 months · Tommy Hilfiger + CK loyalist.<br>
+      Last purchase: GAP Oversized Hoodie (₹3,499) — 90 days ago.<br>
+      Browsed twice this week: Tommy Hilfiger Slim Fit Chinos, Calvin Klein Eternity for Men.<br>
+      Currently in cart, not checked out: Arrow Sport Shirt (₹2,099).<br>
+      Channel affinity: WhatsApp ▸ Email ▸ Push. AOV: ₹3,800. Premium brand seeker, value-conscious.
+    </div>
+  </div>
+
+  <h2>The 5 Personalization Moments + Bonus</h2>
+  <div class="grid">
+
+    <a class="card" href="nnnow-spin.html">
+      <div class="preview p1">🎡</div>
+      <div class="body">
+        <div class="label">Mockup 1</div>
+        <h3>Spin & Win Popup</h3>
+        <p>First-time visitor acquisition — captures email + WhatsApp opt-in via gamified branded coupon.</p>
+        <div class="stack"><span>Acquisition</span><span>Web Popup</span></div>
+      </div>
+    </a>
+
+    <a class="card" href="nnnow-homepage.html">
+      <div class="preview p2">🛒</div>
+      <div class="body">
+        <div class="label">Mockup 2</div>
+        <h3>Personalized Homepage</h3>
+        <p>Brand-tile hero, "continue where you left off" rail, and dynamic banners by browse history.</p>
+        <div class="stack"><span>Web Personalization</span><span>Raman AI</span></div>
+      </div>
+    </a>
+
+    <a class="card" href="nnnow-nudges.html">
+      <div class="preview p3">🔔</div>
+      <div class="body">
+        <div class="label">Mockup 3</div>
+        <h3>Nudge Series</h3>
+        <p>Three live nudges: cart abandon, size-back-in-stock alert, brand-loyalty drop.</p>
+        <div class="stack"><span>Nudges</span><span>Journey AI</span></div>
+      </div>
+    </a>
+
+    <a class="card" href="nnnow-email.html">
+      <div class="preview p4">📧</div>
+      <div class="body">
+        <div class="label">Mockup 4</div>
+        <h3>Personalized Email</h3>
+        <p>Cart-recovery email with name, brand favorite, dynamic price, AI-recommended outfit add-ons.</p>
+        <div class="stack"><span>Email</span><span>Dynamic Content</span></div>
+      </div>
+    </a>
+
+    <a class="card" href="nnnow-journey.html">
+      <div class="preview p5">🎯</div>
+      <div class="body">
+        <div class="label">Mockup 5</div>
+        <h3>Full Personalization Journey</h3>
+        <p>Day-by-day view of 5 touchpoints — channel, timing, and content all AI-optimized.</p>
+        <div class="stack"><span>Multichannel</span><span>Path Optimizer</span></div>
+      </div>
+    </a>
+
+    <a class="card" href="nnnow-plp.html">
+      <div class="preview p6">🔥</div>
+      <div class="body">
+        <div class="label">Bonus · PLP page</div>
+        <h3>Personalized Brand Page</h3>
+        <p>Tommy Hilfiger listing page re-ranked by Raman AI — top picks pinned, "Why for you" reasoning, match scores.</p>
+        <div class="stack"><span>Page Ranking</span><span>Explainable AI</span></div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="footer">
+    Powered by <b>Netcore Cloud</b> · Customer Engagement + Raman AI<br>
+    All mockups are illustrative — built to showcase platform capability.
+  </div>
+</div>
+
+</body>
+</html>

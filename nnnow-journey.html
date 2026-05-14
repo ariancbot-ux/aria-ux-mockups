@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NNNOW – Personalization Journey</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter','Helvetica Neue',sans-serif;
+    background:#0a0a0a; color:#fff; min-height:100vh;
+    background-image:
+      radial-gradient(circle at 15% 30%, rgba(255,51,102,.15), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(255,204,0,.07), transparent 50%);
+  }
+  .back { position:fixed; top:14px; left:14px;
+    background:#fff; color:#000; text-decoration:none;
+    padding:8px 14px; border:1px solid #000; font-size:12px; font-weight:800;
+    z-index:200; letter-spacing:1px; }
+
+  .head { text-align:center; padding:50px 20px 30px; }
+  .head .small { font-size:11px; letter-spacing:6px; color:#A4E830; text-transform:uppercase; }
+  .head h1 { font-size:36px; font-weight:900; margin-top:10px; letter-spacing:-1px; }
+  .head p { margin-top:10px; color:#aaa; font-size:14px;
+    max-width:600px; margin-left:auto; margin-right:auto; line-height:1.6; }
+
+  .persona-strip {
+    max-width:900px; margin:0 auto 30px;
+    background:rgba(255,255,255,.04); border:1px solid #2a2a2a;
+    padding:18px 24px;
+    display:flex; align-items:center; gap:20px;
+    font-size:13px; color:#ccc;
+  }
+  .persona-strip .avatar {
+    width:50px; height:50px; border-radius:50%;
+    background:linear-gradient(135deg,#FF3366,#000);
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:22px; font-weight:900;
+  }
+  .persona-strip b { color:#FFCC00; }
+
+  .timeline {
+    max-width:900px; margin:30px auto 80px; padding:0 20px;
+    position:relative;
+  }
+  .timeline::before {
+    content:""; position:absolute; top:30px; bottom:30px; left:40px;
+    width:2px; background:linear-gradient(180deg, #A4E830, #FF3366, #FFCC00, #A4E830);
+    opacity:.4;
+  }
+  .step { position:relative; padding-left:90px; padding-bottom:50px; }
+  .step .dot {
+    position:absolute; left:24px; top:6px;
+    width:36px; height:36px; border-radius:50%;
+    background:#0a0a0a; border:3px solid #A4E830;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; font-weight:900;
+    box-shadow:0 0 20px rgba(164,232,48,.4); z-index:2;
+  }
+  .step .when {
+    font-size:11px; color:#A4E830; letter-spacing:2px; font-weight:800;
+  }
+  .step h3 { font-size:20px; margin-top:6px; letter-spacing:-.5px; }
+  .step .why {
+    margin-top:6px; color:#888; font-size:12px; font-style:italic;
+  }
+
+  .touchpoint {
+    margin-top:16px; background:#1a1a1a;
+    border:1px solid #2a2a2a; padding:18px;
+    display:flex; gap:16px; align-items:center;
+  }
+  .touchpoint .chan {
+    width:54px; height:54px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; flex-shrink:0;
+  }
+  .tp-wa .chan { background:#005c4b; }
+  .tp-push .chan { background:#FF3366; }
+  .tp-web .chan { background:#FFCC00; color:#000; }
+  .tp-email .chan { background:#3366FF; }
+  .tp-app .chan { background:#A4E830; color:#000; }
+
+  .touchpoint .body { flex:1; }
+  .touchpoint .label {
+    font-size:10px; letter-spacing:2px; color:#FFCC00; font-weight:800;
+  }
+  .touchpoint .msg { font-size:14px; margin-top:6px; line-height:1.5; color:#eee; }
+  .touchpoint .msg b { color:#fff; }
+  .touchpoint .meta {
+    margin-top:8px; display:flex; flex-wrap:wrap; gap:6px;
+  }
+  .touchpoint .meta span {
+    font-size:10px; padding:3px 8px;
+    background:rgba(164,232,48,.15); color:#A4E830; font-weight:700;
+  }
+
+  .outcome {
+    max-width:900px; margin:0 auto 80px; padding:0 20px;
+  }
+  .outcome-card {
+    background:linear-gradient(135deg, rgba(164,232,48,.1), rgba(255,51,102,.1));
+    border:1px solid #A4E830;
+    padding:30px;
+    text-align:center;
+    box-shadow:0 0 40px rgba(164,232,48,.1);
+  }
+  .outcome-card .l { font-size:11px; letter-spacing:3px; color:#A4E830; }
+  .outcome-card h2 {
+    font-size:32px; font-weight:900; margin-top:8px; color:#fff; letter-spacing:-.5px;
+  }
+  .outcome-card h2 .num { color:#A4E830; }
+  .outcome-card .stats {
+    margin-top:20px; display:grid; grid-template-columns:repeat(4,1fr);
+    gap:14px;
+  }
+  .outcome-card .stat {
+    background:rgba(0,0,0,.4); padding:16px 10px;
+    border:1px solid #2a2a2a;
+  }
+  .outcome-card .stat .big { font-size:24px; font-weight:900; color:#A4E830; }
+  .outcome-card .stat .lbl { font-size:11px; color:#aaa; margin-top:4px; line-height:1.3; }
+
+  .footer { text-align:center; color:#666; font-size:12px;
+    padding:30px 20px 50px; }
+  .footer b { color:#A4E830; }
+
+  @media (max-width:700px){
+    .persona-strip { flex-direction:column; text-align:center; }
+    .timeline::before { left:24px; }
+    .step { padding-left:70px; }
+    .step .dot { left:8px; }
+    .outcome-card .stats { grid-template-columns:repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+<a class="back" href="nnnow-index.html">‹ Back</a>
+
+<div class="head">
+  <div class="small">NNNOW × Netcore · 7-day journey</div>
+  <h1>From Browser → Cart → Repeat Buyer</h1>
+  <p>Sourabh's lifecycle from cart abandon to brand champion — every channel, message, and timing chosen by Netcore's AI based on brand affinity + browse signals + price drops.</p>
+</div>
+
+<div class="persona-strip">
+  <div class="avatar">S</div>
+  <div>
+    <b>Sourabh, 34 · Bengaluru</b> · NNNOW shopper 14 months · WhatsApp affinity 38% open · AOV ₹3,800<br>
+    <span style="color:#888;">Tommy + CK loyalist · cart has Arrow shirt · viewed Tommy chinos 2× · last buy GAP hoodie 90 days ago</span>
+  </div>
+</div>
+
+<div class="timeline">
+
+  <div class="step">
+    <div class="dot">1</div>
+    <div class="when">DAY 0 · 7:30 PM · CART ABANDON</div>
+    <h3>Sourabh adds Arrow shirt to cart, exits without paying</h3>
+    <div class="why">Trigger fires under 5 seconds. AI evaluates: best channel for Sourabh right now? App is live → push.</div>
+    <div class="touchpoint tp-push">
+      <div class="chan">🔔</div>
+      <div class="body">
+        <div class="label">CHANNEL: PUSH · T+60min</div>
+        <div class="msg"><b>Your Arrow shirt is reserved 👕</b><br>Hi Sourabh — ₹2,099 with free shipping locked in. 3 left in your size (M). Checkout in 30 seconds.</div>
+        <div class="meta"><span>App push affinity</span><span>Size-aware copy</span><span>Real-time</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="dot">2</div>
+    <div class="when">DAY 1 · 9:24 AM · PUSH NOT CONVERTED</div>
+    <h3>Push didn't convert. AI escalates to email at Sourabh's open peak.</h3>
+    <div class="why">Send-Time AI picked 9:24 AM. Email adds Tommy outfit-complete recs because Sourabh = Tommy loyalist.</div>
+    <div class="touchpoint tp-email">
+      <div class="chan">📧</div>
+      <div class="body">
+        <div class="label">CHANNEL: EMAIL · DAY 1 · 9:24 AM</div>
+        <div class="msg"><b>Subject:</b> "Sourabh, your Arrow shirt is waiting — ₹2,099 + free shipping 👕"<br>Dynamic email with cart item, "You're a Tommy guy" banner, and Tommy chinos + US Polo loafers outfit-complete recs.</div>
+        <div class="meta"><span>Send-Time AI</span><span>Tommy affinity</span><span>Outfit recs</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="dot">3</div>
+    <div class="when">DAY 2 · 6:18 PM · CK WISHLIST DROP</div>
+    <h3>CK Eternity (on Sourabh's wishlist 3 weeks) drops 23% — independent trigger</h3>
+    <div class="why">Real-time price-monitoring journey fires. WhatsApp picked because CK = Sourabh's #2 brand; WA = his fastest channel.</div>
+    <div class="touchpoint tp-wa">
+      <div class="chan">💬</div>
+      <div class="body">
+        <div class="label">CHANNEL: WHATSAPP · DAY 2 · 6:20 PM</div>
+        <div class="msg"><b>NNNOW Official:</b> "Hi Sourabh 👋 Your CK Eternity wishlist item just dropped to its lowest ever (₹4,999). As a CK loyalist, here's an extra ₹500 off. Code: <b>CKLOVER500</b>."</div>
+        <div class="meta"><span>Wishlist trigger</span><span>WA affinity 38%</span><span>Loyalty bonus</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="dot">4</div>
+    <div class="when">DAY 3 · 9:42 AM · DOUBLE PURCHASE</div>
+    <h3>Sourabh buys both — Arrow shirt + CK Eternity with bonus code</h3>
+    <div class="why">Order events flow back in <5s. Cart-abandon journey exits. AI now enrols post-purchase + replenishment paths.</div>
+    <div class="touchpoint tp-wa">
+      <div class="chan">💬</div>
+      <div class="body">
+        <div class="label">CHANNEL: WHATSAPP · DAY 3 · 9:43 AM</div>
+        <div class="msg"><b>🎉 Two great picks, Sourabh!</b> Your Arrow Sport shirt + CK Eternity is on the way. Estimated delivery: <b>Saturday, May 18</b>. Track ↗ · Earn 460 NNNOW points on this order.</div>
+        <div class="meta"><span>Transactional</span><span>Real-time</span><span>Loyalty points</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="dot">5</div>
+    <div class="when">DAY 7 · POST-PURCHASE → BRAND ELEVATION</div>
+    <h3>App opens with personalized "Style your new look" experience</h3>
+    <div class="why">Post-purchase journey suggests complementary Tommy chinos + accessories to complete the look. AI converts a one-shirt buyer into outfit-buyer.</div>
+    <div class="touchpoint tp-app">
+      <div class="chan">📱</div>
+      <div class="body">
+        <div class="label">CHANNEL: APP IN-APP MESSAGE · DAY 7</div>
+        <div class="msg"><b>Style your new Arrow shirt 👔</b> "We picked Tommy slim chinos (₹3,499) + US Polo loafers (₹2,499) to complete the look. Order both → get 10% off."</div>
+        <div class="meta"><span>Outfit AI</span><span>Bundle uplift</span><span>Repeat purchase</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="outcome">
+  <div class="outcome-card">
+    <div class="l">PROJECTED OUTCOME · BENCHMARK</div>
+    <h2>From <span class="num">1 shirt</span> → <span class="num">outfit + fragrance</span></h2>
+    <div class="stats">
+      <div class="stat"><div class="big">+62%</div><div class="lbl">Cart recovery uplift (vs static journey)</div></div>
+      <div class="stat"><div class="big">2.4x</div><div class="lbl">Wishlist conversion via real-time drop alerts</div></div>
+      <div class="stat"><div class="big">+71%</div><div class="lbl">Combined revenue per shopper</div></div>
+      <div class="stat"><div class="big">0</div><div class="lbl">Manual A/B setup required</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Every channel, timing, and message above was <b>decided by Netcore AI</b> — not hand-coded. Marketing defines the rules; Raman AI personalizes the execution per shopper, per moment.
+</div>
+
+</body>
+</html>

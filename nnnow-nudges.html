@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NNNOW – Nudge Series</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter','Helvetica Neue',sans-serif;
+    background:#0a0a0a; min-height:100vh; color:#fff;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(255,51,102,.12), transparent 50%),
+      radial-gradient(circle at 80% 60%, rgba(255,204,0,.08), transparent 50%);
+  }
+  .back { position:fixed; top:14px; left:14px;
+    background:#fff; color:#000; text-decoration:none;
+    padding:8px 14px; border:1px solid #000; font-size:12px; font-weight:800;
+    z-index:200; letter-spacing:1px; }
+
+  .head { text-align:center; padding:40px 20px 20px; }
+  .head .small { font-size:11px; letter-spacing:6px; color:#FF3366; text-transform:uppercase; }
+  .head h1 { font-size:32px; font-weight:900; margin-top:8px; letter-spacing:-.5px; }
+  .head p { margin-top:8px; color:#aaa; font-size:14px; }
+
+  .row {
+    display:flex; flex-wrap:wrap; justify-content:center;
+    gap:30px; padding:30px 20px 60px;
+  }
+  .col { width:340px; display:flex; flex-direction:column; align-items:center; gap:14px; }
+  .col-title { font-size:13px; letter-spacing:2px;
+    background:#A4E830; color:#000;
+    padding:6px 12px; font-weight:800; }
+  .col-desc { color:#aaa; font-size:12px; text-align:center; line-height:1.5; }
+
+  .phone {
+    width:320px; height:640px; background:#000;
+    border-radius:38px; padding:14px;
+    border:2px solid #2a2a2a;
+    box-shadow:0 24px 60px rgba(0,0,0,.5), 0 0 0 6px #1a1a1a;
+    position:relative; overflow:hidden;
+  }
+  .phone .screen { width:100%; height:100%; background:#fff;
+    border-radius:24px; overflow:hidden; position:relative; color:#1a1a1a; }
+  .status { height:30px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 18px; font-size:11px; font-weight:600; color:#000; background:#fff; }
+
+  /* NUDGE 1: PUSH (CART ABANDON) */
+  .lock-screen {
+    height:100%; background:linear-gradient(135deg,#1a1a1a 0%,#3a1a28 60%,#5a2238 100%);
+    color:#fff; padding:50px 14px 14px; display:flex; flex-direction:column;
+  }
+  .lock-time { text-align:center; padding:20px 0 30px; }
+  .lock-time .t { font-size:64px; font-weight:300; line-height:1; }
+  .lock-time .d { font-size:14px; margin-top:6px; opacity:.85; }
+  .push {
+    background:rgba(255,255,255,.18);
+    backdrop-filter:blur(20px);
+    border-radius:14px; padding:12px;
+    display:flex; gap:10px;
+    animation:slideIn .5s ease both .8s;
+  }
+  @keyframes slideIn { 0% { transform:translateY(-20px); opacity:0; }
+    100% { transform:translateY(0); opacity:1; } }
+  .push .icon { width:36px; height:36px; border-radius:8px;
+    background:#000; color:#FF3366; display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:900; flex-shrink:0;
+    letter-spacing:-1px; }
+  .push .meta { font-size:10px; opacity:.8; margin-bottom:2px;
+    display:flex; justify-content:space-between; }
+  .push .title { font-size:13px; font-weight:700; }
+  .push .body-txt { font-size:12px; margin-top:2px; line-height:1.35; }
+
+  /* NUDGE 2: SIZE-BACK-IN-STOCK */
+  .web-bg { height:100%; background:#fff; position:relative; }
+  .pdp-hero {
+    background:linear-gradient(135deg,#0a2a3f,#1a4060);
+    color:#fff; padding:30px 14px;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .pdp-hero .em { font-size:64px; }
+  .pdp-hero .brand { font-size:11px; letter-spacing:2px; margin-top:8px; }
+  .pdp-hero .name { font-size:14px; font-weight:700; margin-top:4px; text-align:center; }
+  .pdp-price { padding:14px; }
+  .pdp-price .pr { font-size:18px; font-weight:800; }
+  .pdp-price .pr s { color:#999; font-weight:400; margin-left:6px; font-size:13px; }
+  .pdp-price .pr em { color:#FF3366; font-style:normal; font-size:11px; margin-left:5px; font-weight:800; }
+  .pdp-sizes { padding:0 14px 14px; }
+  .pdp-sizes .lbl { font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#666; margin-bottom:8px; }
+  .pdp-sizes .sizes { display:flex; gap:8px; flex-wrap:wrap; }
+  .pdp-sizes .s {
+    width:42px; height:42px; border:1px solid #eee;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:700; cursor:pointer; position:relative;
+  }
+  .pdp-sizes .s.oos { color:#bbb; position:relative; }
+  .pdp-sizes .s.oos::after {
+    content:""; position:absolute; left:6px; right:6px; top:50%;
+    height:1px; background:#bbb;
+  }
+  .pdp-sizes .s.your {
+    background:#A4E830; color:#000; border-color:#A4E830;
+    box-shadow:0 0 0 3px rgba(164,232,48,.3);
+  }
+  .pdp-btn {
+    margin:14px; padding:14px; width:calc(100% - 28px);
+    background:#000; color:#fff; border:none; font-weight:800;
+    font-size:13px; letter-spacing:2px;
+  }
+
+  .web-nudge {
+    position:absolute; left:10px; right:10px; bottom:14px;
+    background:#1a1a1a; color:#fff; padding:14px;
+    border-radius:14px;
+    box-shadow:0 10px 30px rgba(0,0,0,.4);
+    border:1px solid #A4E830;
+    animation:nudgeSlide .6s cubic-bezier(.2,.9,.3,1.3) both 1s;
+  }
+  @keyframes nudgeSlide { 0% { transform:translateY(150px); opacity:0; }
+    100% { transform:translateY(0); opacity:1; } }
+  .web-nudge .close-x { position:absolute; top:6px; right:8px;
+    color:#666; font-size:14px; cursor:pointer; }
+  .web-nudge .label { font-size:9px; letter-spacing:2px; color:#A4E830; font-weight:900; }
+  .web-nudge h3 { font-size:14px; font-weight:800; margin-top:4px; line-height:1.3; }
+  .web-nudge p { font-size:11px; color:#bbb; margin-top:4px; line-height:1.4; }
+  .web-nudge .item {
+    margin-top:10px; background:rgba(255,255,255,.06);
+    padding:8px; border-radius:8px;
+    display:flex; align-items:center; gap:8px; font-size:11px;
+  }
+  .web-nudge .item .ic { font-size:22px; }
+  .web-nudge .item b { color:#A4E830; }
+  .web-nudge .btn { margin-top:10px; width:100%;
+    padding:10px; background:#FF3366; color:#fff;
+    border:none; font-size:11px; font-weight:900; letter-spacing:1.5px; cursor:pointer;
+    text-transform:uppercase; }
+
+  /* NUDGE 3: BRAND LOYALTY DROP — WhatsApp */
+  .wa-bg {
+    height:100%; background:#0b141a;
+    padding:0; display:flex; flex-direction:column;
+  }
+  .wa-head {
+    background:#202c33; color:#fff; padding:10px 14px;
+    display:flex; align-items:center; gap:10px;
+    border-bottom:1px solid #2a3942;
+  }
+  .wa-avatar { width:36px; height:36px; border-radius:50%;
+    background:#000; color:#FF3366;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:900; font-size:11px; }
+  .wa-name { font-size:14px; font-weight:600; }
+  .wa-sub { font-size:10px; color:#A4E830; margin-top:1px; }
+  .wa-icons { margin-left:auto; display:flex; gap:14px; color:#aebac1; font-size:14px; }
+  .wa-msgs { flex:1; padding:14px 10px; overflow:hidden; }
+  .wa-day { text-align:center; }
+  .wa-day span {
+    background:#182229; color:#aebac1;
+    font-size:9px; padding:4px 10px; border-radius:8px; letter-spacing:.5px;
+  }
+  .wa-msg {
+    background:#202c33; align-self:flex-start; color:#fff;
+    max-width:90%; padding:10px;
+    border-radius:8px; margin-top:14px;
+    font-size:12px; line-height:1.5;
+    animation:msgIn .4s ease both;
+    margin-right:auto;
+  }
+  @keyframes msgIn { from { opacity:0; transform:translateY(8px); }
+    to { opacity:1; transform:translateY(0); } }
+  .wa-msg .img {
+    background:linear-gradient(135deg,#FFCC00,#FF3366);
+    color:#fff; border-radius:6px; margin:-6px -6px 6px;
+    padding:18px; text-align:center; font-size:32px;
+  }
+  .wa-msg .img-cap {
+    font-size:11px; font-weight:700; margin-top:-2px; margin-bottom:6px;
+  }
+  .wa-msg .time {
+    font-size:9px; color:rgba(255,255,255,.6);
+    text-align:right; margin-top:4px;
+  }
+  .wa-btn-row {
+    display:flex; flex-direction:column; gap:1px; margin-top:8px;
+    border-top:1px solid rgba(255,255,255,.15); padding-top:8px;
+  }
+  .wa-btn {
+    background:transparent; border:none; color:#A4E830;
+    text-align:center; padding:7px; font-size:12px; font-weight:700; cursor:pointer;
+  }
+  .wa-input {
+    background:#202c33; padding:8px 12px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .wa-input .box {
+    flex:1; background:#2a3942; border-radius:18px;
+    padding:7px 12px; color:#8696a0; font-size:12px;
+  }
+  .wa-input .send {
+    width:36px; height:36px; border-radius:50%;
+    background:#00a884; color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:14px;
+  }
+
+  .footer { text-align:center; color:#777; font-size:12px;
+    padding:40px 20px; border-top:1px solid #2a2a2a; margin-top:20px; }
+  .footer b { color:#A4E830; }
+  @media (max-width:1100px){ .row { flex-direction:column; align-items:center; } }
+</style>
+</head>
+<body>
+<a class="back" href="nnnow-index.html">‹ Back</a>
+
+<div class="head">
+  <div class="small">Netcore · Live Nudge Series</div>
+  <h1>3 Right-Time Nudges for Sourabh</h1>
+  <p>Channel and timing chosen per user by Raman AI · Same journey definition, different execution per shopper</p>
+</div>
+
+<div class="row">
+
+  <!-- NUDGE 1: PUSH (CART ABANDON) -->
+  <div class="col">
+    <div class="col-title">1 · CART ABANDON</div>
+    <div class="col-desc">Push notification · T+60 minutes · Channel chosen because Sourabh's NNNOW app open rate is 31%</div>
+    <div class="phone">
+      <div class="screen">
+        <div class="lock-screen">
+          <div class="lock-time"><div class="t">7:42</div><div class="d">Thursday, May 15</div></div>
+          <div class="push">
+            <div class="icon">N.</div>
+            <div class="content" style="flex:1;">
+              <div class="meta"><span>NNNOW</span><span>now</span></div>
+              <div class="title">Your Arrow shirt is reserved 👕</div>
+              <div class="body-txt">Hi Sourabh — ₹2,099 with free shipping locked in. 3 left in your size (M). Checkout in 30 seconds.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUDGE 2: SIZE BACK IN STOCK -->
+  <div class="col">
+    <div class="col-title">2 · SIZE BACK-IN-STOCK</div>
+    <div class="col-desc">Web nudge on PDP · Triggered when Sourabh's size restocks on a viewed SKU · Converts at 24%</div>
+    <div class="phone">
+      <div class="screen">
+        <div class="status"><span>9:14</span><span>•••• 5G</span></div>
+        <div class="web-bg">
+          <div class="pdp-hero">
+            <div class="em">👔</div>
+            <div class="brand">TOMMY HILFIGER</div>
+            <div class="name">Slim Fit Chino Trousers</div>
+          </div>
+          <div class="pdp-price">
+            <div class="pr">₹3,499 <s>₹6,999</s> <em>50% OFF</em></div>
+          </div>
+          <div class="pdp-sizes">
+            <div class="lbl">SELECT SIZE</div>
+            <div class="sizes">
+              <div class="s oos">28</div>
+              <div class="s oos">30</div>
+              <div class="s your">32</div>
+              <div class="s">34</div>
+              <div class="s oos">36</div>
+            </div>
+          </div>
+          <button class="pdp-btn">ADD TO CART</button>
+
+          <div class="web-nudge">
+            <span class="close-x">×</span>
+            <div class="label">✨ BACK IN STOCK FOR YOU</div>
+            <h3>Your size (32) just came back</h3>
+            <p>You viewed these Tommy chinos last Tuesday — size 32 was sold out. It restocked 2 hours ago. Only 4 pairs left.</p>
+            <div class="item">
+              <div class="ic">📏</div>
+              <div><b>Size 32 · 4 left</b> · Same colour, same fit</div>
+            </div>
+            <button class="btn">GRAB SIZE 32 NOW</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUDGE 3: BRAND-LOYALTY DROP — WhatsApp -->
+  <div class="col">
+    <div class="col-title">3 · BRAND LOYALTY DROP</div>
+    <div class="col-desc">WhatsApp · Triggered when CK Eternity (wishlist item) drops 20%+ · WA picked: 38% open, fastest channel for Sourabh</div>
+    <div class="phone">
+      <div class="screen">
+        <div class="status"><span>9:14</span><span>•••• 5G</span></div>
+        <div class="wa-bg">
+          <div class="wa-head">
+            <div class="wa-avatar">N.</div>
+            <div>
+              <div class="wa-name">NNNOW Official</div>
+              <div class="wa-sub">✓ verified · online</div>
+            </div>
+            <div class="wa-icons">📞 ⋮</div>
+          </div>
+          <div class="wa-msgs">
+            <div class="wa-day"><span>TODAY</span></div>
+            <div class="wa-msg">
+              <div class="img">💎</div>
+              <div class="img-cap">Your CK Eternity just dropped to its lowest ever</div>
+              Hi Sourabh 👋<br><br>
+              The <b>Calvin Klein Eternity For Men EDP</b> you've had on your wishlist for 3 weeks just dropped from ₹5,999 to <b>₹4,999</b>.<br><br>
+              That's the lowest we've ever offered it. Plus, as a CK loyalist (3 buys this year 🙌), here's an extra <b>₹500 off</b>.<br><br>
+              Code: <b>CKLOVER500</b> · Final price: <b>₹4,499</b> 🔥
+              <div class="wa-btn-row">
+                <button class="wa-btn">Buy Now →</button>
+                <button class="wa-btn">View Wishlist</button>
+              </div>
+              <div class="time">7:42 AM ✓✓</div>
+            </div>
+          </div>
+          <div class="wa-input">
+            <div class="box">Message...</div>
+            <div class="send">▶</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Each nudge above uses <b>different content, different channel, different timing</b> — all auto-decided by Netcore's Smart Channel + Send-Time Optimization. Same journey definition serves every NNNOW shopper; AI personalizes the execution.
+</div>
+
+</body>
+</html>

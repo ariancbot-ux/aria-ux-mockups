@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NNNOW – Personalized Homepage</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter','Helvetica Neue',sans-serif; background:#fff; color:#1a1a1a; }
+  .back { position:fixed; top:14px; left:14px;
+    background:#fff; color:#000; text-decoration:none;
+    padding:8px 14px; border:1px solid #000; font-size:12px; font-weight:800;
+    z-index:200; letter-spacing:1px; }
+
+  .nc-badge {
+    position:absolute; top:8px; right:8px;
+    background:#A4E830; color:#000;
+    font-size:9px; font-weight:900; letter-spacing:1px;
+    padding:3px 7px; z-index:5; box-shadow:0 2px 6px rgba(0,0,0,.15);
+  }
+  .nc-block { position:relative; }
+  .nc-block::before {
+    content:""; position:absolute; inset:-3px;
+    border:2px dashed #A4E830; pointer-events:none; opacity:.7;
+  }
+
+  .topbar { background:#000; color:#fff;
+    text-align:center; padding:8px; font-size:11px; letter-spacing:2px; text-transform:uppercase; }
+  .topbar b { color:#FF3366; }
+  .nav { background:#fff; padding:18px 40px;
+    display:flex; align-items:center; gap:30px;
+    border-bottom:1px solid #000; }
+  .brand { font-weight:900; font-size:24px; color:#000; letter-spacing:-1px; }
+  .brand .dot { color:#FF3366; }
+  .menu { display:flex; gap:24px; font-size:12px; font-weight:600; color:#000;
+    text-transform:uppercase; letter-spacing:2px; margin-left:20px; }
+  .icons { margin-left:auto; display:flex; gap:18px; font-size:18px; align-items:center; }
+  .greeting { background:#000; color:#fff; padding:8px 14px;
+    font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; }
+
+  /* Personalized hero — black with brand-specific imagery */
+  .hero-wrap { position:relative; }
+  .hero {
+    background:linear-gradient(135deg,#0a2a3f 0%,#1a4060 100%);
+    color:#fff; padding:50px 60px;
+    display:flex; align-items:center; gap:40px;
+    position:relative; overflow:hidden;
+  }
+  .hero::after {
+    content:""; position:absolute; left:0; right:0; bottom:0; height:4px;
+    background:linear-gradient(90deg,#FF3366,#FFCC00,#00CCAA,#3366FF);
+  }
+  .hero-text { flex:1; }
+  .hero-text .small { font-size:11px; letter-spacing:6px; color:#FF3366; text-transform:uppercase; }
+  .hero-text h1 { font-size:46px; font-weight:900; margin-top:14px; line-height:1.1; letter-spacing:-1px; }
+  .hero-text h1 span { color:#FFCC00; }
+  .hero-text p { margin-top:12px; font-size:14px; opacity:.85; max-width:480px; letter-spacing:.5px; }
+  .hero-text .ctas { margin-top:24px; display:flex; gap:12px; }
+  .hero-text button {
+    padding:13px 26px; border:none; cursor:pointer;
+    font-weight:900; font-size:12px; letter-spacing:2px;
+    text-transform:uppercase;
+  }
+  .hero-text .btn-primary { background:#FF3366; color:#fff; }
+  .hero-text .btn-ghost { background:transparent; color:#fff; border:2px solid #fff; }
+  .hero-img { font-size:150px; opacity:.95; }
+
+  /* Brand strip — personalized order */
+  .brand-strip {
+    padding:18px 40px; max-width:1280px; margin:0 auto;
+    display:flex; gap:14px; flex-wrap:wrap;
+    border-bottom:1px solid #eee; position:relative;
+  }
+  .brand-strip .b {
+    font-size:13px; font-weight:800; padding:9px 18px;
+    border:1px solid #eee; letter-spacing:1px;
+    color:#444; text-transform:uppercase; cursor:pointer;
+  }
+  .brand-strip .b.fav { background:#000; color:#fff; border-color:#000; }
+  .brand-strip .b.fav::before { content:"♥ "; color:#FF3366; }
+
+  /* Rails */
+  .rail { padding:30px 40px; max-width:1280px; margin:0 auto; }
+  .rail-head {
+    display:flex; align-items:baseline; gap:14px; margin-bottom:14px;
+    position:relative;
+  }
+  .rail-head h2 { font-size:22px; font-weight:800; letter-spacing:-.5px; }
+  .rail-head .by-ai { font-size:11px; color:#666; font-style:italic; }
+  .row { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+  .pcard { background:#fff; position:relative; }
+  .pcard .img { height:280px; display:flex; align-items:center; justify-content:center;
+    font-size:70px; position:relative; }
+  .pcard .img.bg1 { background:linear-gradient(135deg,#0a2a3f,#1a4060); color:#fff; }
+  .pcard .img.bg2 { background:linear-gradient(135deg,#f8e4dd,#e6c2b0); color:#000; }
+  .pcard .img.bg3 { background:linear-gradient(135deg,#1a1a1a,#3a3a3a); color:#fff; }
+  .pcard .img.bg4 { background:linear-gradient(135deg,#fae3a7,#e9c477); color:#000; }
+  .pcard .img.bg5 { background:linear-gradient(135deg,#dfe5ea,#a6b5c4); color:#000; }
+  .pcard .img.bg6 { background:linear-gradient(135deg,#2b1818,#4a2828); color:#fff; }
+  .pcard .img.bg7 { background:linear-gradient(135deg,#e8f4dd,#a8d18a); color:#000; }
+  .pcard .img.bg8 { background:linear-gradient(135deg,#fff8d6,#e7c34c); color:#000; }
+  .pcard .tag {
+    position:absolute; top:10px; left:10px;
+    background:#FF3366; color:#fff;
+    font-size:9px; padding:4px 8px; font-weight:800; letter-spacing:1px;
+  }
+  .pcard .tag.fav { background:#A4E830; color:#000; }
+  .pcard .body { padding:14px 0; }
+  .pcard .brand-tag { font-size:11px; font-weight:800; color:#000; letter-spacing:1px;
+    text-transform:uppercase; }
+  .pcard .name { font-size:13px; color:#444; margin-top:4px;
+    height:34px; overflow:hidden; line-height:1.4; }
+  .pcard .price { margin-top:8px; font-weight:800; font-size:15px; }
+  .pcard .price s { color:#999; font-weight:400; margin-left:6px; font-size:12px; }
+  .pcard .price em { color:#FF3366; font-style:normal; font-size:11px; margin-left:6px; font-weight:800; }
+
+  /* Bento banners */
+  .bento {
+    max-width:1280px; margin:30px auto; padding:0 40px;
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;
+  }
+  .bento .b {
+    padding:24px; color:#fff;
+    position:relative; overflow:hidden; min-height:160px;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .bento .b1 { background:linear-gradient(135deg,#FF3366,#000); }
+  .bento .b2 { background:linear-gradient(135deg,#FFCC00,#FF6B35); color:#000; }
+  .bento .b3 { background:linear-gradient(135deg,#3366FF,#000); }
+  .bento h3 { font-size:20px; font-weight:900; letter-spacing:-.5px; }
+  .bento p { font-size:12px; opacity:.95; margin-top:6px; }
+  .bento .b2 p { opacity:.85; }
+  .bento .ic-bento { position:absolute; right:14px; bottom:10px; font-size:54px; opacity:.25; }
+  .bento .cta-line {
+    margin-top:auto; padding-top:10px;
+    font-size:11px; font-weight:900; letter-spacing:2px; text-transform:uppercase;
+  }
+
+  .panel-explainer {
+    margin:40px auto 60px; max-width:1280px; padding:30px 40px;
+    background:#000; color:#fff;
+  }
+  .panel-explainer h3 { color:#A4E830; font-size:14px; letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:14px; }
+  .panel-explainer .grid3 {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
+  }
+  .panel-explainer .item b { color:#FFCC00; }
+  .panel-explainer .item { font-size:13px; line-height:1.6; color:#ccc; }
+
+  @media (max-width:900px){
+    .hero { flex-direction:column; padding:30px 20px; gap:20px; }
+    .hero-img { font-size:80px; }
+    .hero-text h1 { font-size:30px; }
+    .row { grid-template-columns:repeat(2,1fr); }
+    .nav { padding:14px 20px; gap:14px; }
+    .menu { display:none; }
+    .bento { grid-template-columns:1fr; padding:0 20px; }
+    .panel-explainer .grid3 { grid-template-columns:1fr; }
+    .rail { padding:20px; }
+  }
+</style>
+</head>
+<body>
+<a class="back" href="nnnow-index.html">‹ Back to demo index</a>
+
+<div class="topbar">FREE SHIPPING ON ALL ORDERS · <b>EXTRA 15% OFF</b> FOR NEW USERS · EASY 30-DAY RETURNS</div>
+<div class="nav">
+  <div class="brand">NNNOW<span class="dot">.</span></div>
+  <div class="menu"><span>Men</span><span>Women</span><span>Kids</span><span>Beauty</span><span>Brands</span><span>Sale</span></div>
+  <div class="icons">
+    <div class="greeting">👋 Hi Sourabh</div>
+    🔍 ♡ 🛍
+  </div>
+</div>
+
+<!-- HERO — personalized to favourite brand -->
+<div class="hero-wrap nc-block">
+  <span class="nc-badge">PERSONALIZED · BRAND AFFINITY: TOMMY</span>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="small">Sourabh · Your favourite brand just dropped</div>
+      <h1>NEW TOMMY<br>SUMMER <span>EDIT.</span></h1>
+      <p>Slim chinos, sailing-inspired knits, and the pieces you've been viewing — all 30–50% off this week. Bengaluru free shipping.</p>
+      <div class="ctas">
+        <button class="btn-primary">SHOP TOMMY →</button>
+        <button class="btn-ghost">YOUR CART (1)</button>
+      </div>
+    </div>
+    <div class="hero-img">⛵</div>
+  </div>
+</div>
+
+<!-- Personalized brand strip — Tommy first because Sourabh loves it -->
+<div class="brand-strip nc-block">
+  <span class="nc-badge">PERSONALIZED · BRAND ORDER</span>
+  <div class="b fav">Tommy Hilfiger</div>
+  <div class="b fav">Calvin Klein</div>
+  <div class="b fav">GAP</div>
+  <div class="b">Arrow</div>
+  <div class="b">US Polo Assn</div>
+  <div class="b">Flying Machine</div>
+  <div class="b">Aeropostale</div>
+  <div class="b">Nautica</div>
+</div>
+
+<!-- RAIL 1 — Continue where you left off -->
+<div class="rail">
+  <div class="rail-head nc-block" style="padding:6px 10px;">
+    <span class="nc-badge">PERSONALIZED · WHY: BROWSE HISTORY</span>
+    <h2>Continue where you left off</h2>
+    <span class="by-ai">· based on what you viewed this week</span>
+  </div>
+  <div class="row">
+    <div class="pcard"><div class="img bg1">👔<span class="tag">BROWSED 2X</span></div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Slim Fit Chino Trousers</div>
+        <div class="price">₹3,499 <s>₹6,999</s> <em>50% OFF</em></div></div></div>
+    <div class="pcard"><div class="img bg2">💎<span class="tag">YOUR WISHLIST</span></div>
+      <div class="body"><div class="brand-tag">Calvin Klein</div>
+        <div class="name">Eternity For Men EDP 100ml</div>
+        <div class="price">₹4,999 <s>₹6,499</s> <em>23% OFF</em></div></div></div>
+    <div class="pcard"><div class="img bg3">👕<span class="tag fav">IN YOUR CART</span></div>
+      <div class="body"><div class="brand-tag">Arrow</div>
+        <div class="name">Sport Solid Slim Fit Shirt</div>
+        <div class="price">₹2,099 <s>₹3,499</s> <em>40% OFF</em></div></div></div>
+    <div class="pcard"><div class="img bg4">👖</div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Stretch Denim Slim Fit</div>
+        <div class="price">₹3,999 <s>₹7,999</s> <em>50% OFF</em></div></div></div>
+  </div>
+</div>
+
+<!-- BENTO — personalized banners -->
+<div class="bento">
+  <div class="b b1 nc-block">
+    <span class="nc-badge">PERSONALIZED · WISHLIST DROP</span>
+    <div>
+      <h3>Your CK Eternity just dropped 23%</h3>
+      <p>The fragrance on your wishlist for 3 weeks is finally at its best price.</p>
+    </div>
+    <div class="cta-line">BUY IT NOW →</div>
+    <div class="ic-bento">💎</div>
+  </div>
+  <div class="b b2 nc-block">
+    <span class="nc-badge">PERSONALIZED · LOYALTY</span>
+    <div>
+      <h3>You're ₹701 away from Gold</h3>
+      <p>Cross ₹15K spend this year to unlock 5% off + early sale access.</p>
+    </div>
+    <div class="cta-line">SEE GOLD PERKS →</div>
+    <div class="ic-bento">⭐</div>
+  </div>
+  <div class="b b3 nc-block">
+    <span class="nc-badge">PERSONALIZED · REPLENISHMENT</span>
+    <div>
+      <h3>Time for new basics?</h3>
+      <p>Your GAP hoodie from 90 days ago — your size is restocked in 2 new colours.</p>
+    </div>
+    <div class="cta-line">SHOP GAP →</div>
+    <div class="ic-bento">🧥</div>
+  </div>
+</div>
+
+<!-- RAIL 2 — Style picks -->
+<div class="rail">
+  <div class="rail-head nc-block" style="padding:6px 10px;">
+    <span class="nc-badge">PERSONALIZED · STYLE GRAPH</span>
+    <h2>Picked for your style</h2>
+    <span class="by-ai">· Raman AI · matched to your purchase + browse pattern</span>
+  </div>
+  <div class="row">
+    <div class="pcard"><div class="img bg5">🧥</div>
+      <div class="body"><div class="brand-tag">Tommy Hilfiger</div>
+        <div class="name">Pique Polo Navy Stripe</div>
+        <div class="price">₹2,799 <s>₹4,999</s> <em>44% OFF</em></div></div></div>
+    <div class="pcard"><div class="img bg6">🕶</div>
+      <div class="body"><div class="brand-tag">Calvin Klein</div>
+        <div class="name">Aviator Sunglasses Polarised</div>
+        <div class="price">₹4,599 <s>₹7,500</s> <em>39% OFF</em></div></div></div>
+    <div class="pcard"><div class="img bg7">👕</div>
+      <div class="body"><div class="brand-tag">GAP</div>
+        <div class="name">Organic Cotton Henley Tee</div>
+        <div class="price">₹1,299 <s>₹1,999</s> <em>35% OFF</em></div></div></div>
+    <div class="pcard"><div class="img bg8">👞</div>
+      <div class="body"><div class="brand-tag">US Polo Assn</div>
+        <div class="name">Slip-On Loafers Tan</div>
+        <div class="price">₹2,499 <s>₹3,999</s> <em>38% OFF</em></div></div></div>
+  </div>
+</div>
+
+<div class="panel-explainer">
+  <h3>How Netcore is personalizing this page</h3>
+  <div class="grid3">
+    <div class="item"><b>Hero banner</b><br>Sourabh's top-brand = Tommy Hilfiger (3 of 5 last purchases). AI swaps default hero to Tommy summer edit with sailing motif — different shopper sees CK, GAP, or Arrow.</div>
+    <div class="item"><b>Brand strip order</b><br>Default brand order is alphabetical. For Sourabh: Tommy → CK → GAP first (his top 3 by spend). "♥" indicator builds emotional connection.</div>
+    <div class="item"><b>Continue rail</b><br>Mix of viewed + wishlist + cart-resident SKUs. Cart-pinned to position 3 with bright tag so it can't be missed.</div>
+    <div class="item"><b>Wishlist drop banner</b><br>Auto-fires when a wishlist item's price drops more than 10%. Triggered for CK Eternity (was ₹5,999 → ₹4,999 today).</div>
+    <div class="item"><b>Loyalty banner</b><br>Calculates Sourabh's spend gap to next tier in real time. "₹701 away" creates concrete near-goal motivation. Different number for every shopper.</div>
+    <div class="item"><b>Replenishment banner</b><br>90-day replenishment model fires for GAP hoodie. AI surfaces same SKU restocked + same-size availability — converts at 4× generic recommendation rate.</div>
+  </div>
+</div>
+
+</body>
+</html>

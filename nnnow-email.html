@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NNNOW – Personalized Email</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter','Helvetica Neue',sans-serif;
+    background:#e9eef3; min-height:100vh; padding:30px 16px 60px; color:#1a1a1a; }
+  .back { position:fixed; top:14px; left:14px;
+    background:#fff; color:#000; text-decoration:none;
+    padding:8px 14px; border:1px solid #000; font-size:12px; font-weight:800;
+    z-index:200; letter-spacing:1px; }
+
+  .gmail-wrap {
+    max-width:760px; margin:30px auto;
+    background:#fff; border-radius:12px;
+    box-shadow:0 12px 40px rgba(0,0,0,.1); overflow:hidden;
+  }
+  .gmail-top { background:#f2f2f3; padding:12px 18px;
+    display:flex; gap:14px; align-items:center;
+    border-bottom:1px solid #e1e1e3; }
+  .gmail-top .ic { width:32px; height:32px; border-radius:50%;
+    background:#000; color:#FF3366;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:900; font-size:11px; letter-spacing:-.5px; }
+  .gmail-top .sender { flex:1; }
+  .gmail-top .sender b { font-size:14px; }
+  .gmail-top .sender small { color:#666; font-size:12px; display:block; }
+  .gmail-top .star { color:#FFCC00; font-size:18px; }
+  .gmail-subject { padding:12px 22px 0; font-size:22px; font-weight:700; }
+  .gmail-meta { padding:4px 22px 14px; color:#666; font-size:12px;
+    border-bottom:1px solid #f0f0f0; }
+  .gmail-meta b { color:#1a1a1a; }
+  .gmail-meta .tag { background:#A4E830; color:#000; font-size:9px; padding:2px 6px;
+    font-weight:800; margin-left:8px; letter-spacing:.5px; }
+
+  .email-inner { max-width:600px; margin:0 auto; background:#fff; }
+  .email-header { background:#000; padding:18px 22px; color:#fff;
+    display:flex; align-items:center; justify-content:space-between;
+    position:relative; }
+  .email-header::after {
+    content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
+    background:linear-gradient(90deg,#FF3366,#FFCC00,#00CCAA,#3366FF);
+  }
+  .email-brand { font-size:22px; font-weight:900; letter-spacing:-1px; color:#fff; }
+  .email-brand .dot { color:#FF3366; }
+  .email-header .tagline { font-size:10px; color:#FFCC00; letter-spacing:3px; text-transform:uppercase; }
+
+  .email-hero {
+    background:linear-gradient(135deg,#0a2a3f 0%,#1a4060 100%);
+    color:#fff; padding:36px 26px; text-align:center;
+  }
+  .email-hero .kicker { font-size:11px; letter-spacing:4px;
+    color:#FFCC00; text-transform:uppercase; }
+  .email-hero h1 { font-size:30px; font-weight:900; margin-top:10px; line-height:1.2; letter-spacing:-.5px; }
+  .email-hero h1 .you { color:#FF3366; }
+  .email-hero p { margin-top:8px; font-size:14px; opacity:.85; }
+
+  /* Cart product card */
+  .prod-block {
+    margin:30px 22px; border:1px solid #eee;
+    padding:16px; background:#fff;
+    position:relative; display:flex; gap:16px;
+  }
+  .prod-block .tag {
+    position:absolute; top:10px; right:10px;
+    background:#A4E830; color:#000;
+    font-size:9px; padding:3px 8px; font-weight:900; letter-spacing:1px;
+  }
+  .prod-block .img {
+    width:120px; height:140px; flex-shrink:0;
+    background:linear-gradient(135deg,#1a1a1a,#3a3a3a);
+    color:#fff; font-size:50px; display:flex; align-items:center; justify-content:center;
+  }
+  .prod-block .info { flex:1; }
+  .prod-block .info .b { font-size:10px; color:#000; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; }
+  .prod-block .info h3 { font-size:16px; margin-top:4px; line-height:1.3; font-weight:700; }
+  .prod-block .info .specs { font-size:11px; color:#666; margin-top:6px; }
+  .prod-block .info .specs b { color:#A4E830; background:#000; padding:2px 6px; }
+  .prod-block .info .pr {
+    margin-top:10px; font-size:18px; font-weight:800; color:#000;
+  }
+  .prod-block .info .pr s { color:#999; font-weight:400; margin-left:6px; font-size:13px; }
+  .prod-block .info .save { margin-top:4px; font-size:11px; color:#1a1a1a; }
+  .prod-block .info .save b { color:#FF3366; }
+
+  .cta-block { padding:0 22px; }
+  .cta {
+    display:block; width:100%; text-align:center;
+    background:#000; color:#fff;
+    padding:14px; text-decoration:none;
+    font-size:13px; font-weight:900; letter-spacing:2px;
+    text-transform:uppercase;
+  }
+
+  /* Brand affinity banner */
+  .brand-banner {
+    margin:24px 22px; padding:18px;
+    background:linear-gradient(135deg,#0a2a3f,#1a4060);
+    color:#fff;
+    display:flex; align-items:center; gap:14px;
+  }
+  .brand-banner .ic { font-size:34px; }
+  .brand-banner .txt b { color:#FFCC00; font-size:12px; letter-spacing:1.5px; }
+  .brand-banner .txt p { font-size:12px; margin-top:6px; line-height:1.5; opacity:.95; }
+
+  /* Outfit complete grid */
+  .outfit-block { padding:24px 22px; }
+  .outfit-block h3 {
+    font-size:13px; color:#000; letter-spacing:2.5px;
+    text-transform:uppercase; text-align:center;
+    margin-bottom:14px; font-weight:800;
+  }
+  .outfit-block h3 .by {
+    display:block; font-size:10px; color:#666; font-weight:400;
+    letter-spacing:1px; margin-top:4px; text-transform:none;
+  }
+  .outfit-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .outfit-card {
+    background:#fafafa; padding:14px; text-align:center;
+  }
+  .outfit-card .ic { font-size:40px; padding:10px 0; }
+  .outfit-card .ic.b1 { color:#0a2a3f; }
+  .outfit-card .ic.b2 { color:#000; }
+  .outfit-card .b { font-size:10px; font-weight:800; letter-spacing:1.5px;
+    text-transform:uppercase; color:#000; }
+  .outfit-card .name { font-size:12px; line-height:1.3; height:30px; overflow:hidden;
+    color:#444; margin-top:2px; }
+  .outfit-card .pr { margin-top:6px; font-size:13px; font-weight:800; }
+  .outfit-card .pr s { color:#999; font-weight:400; margin-left:4px; font-size:11px; }
+  .outfit-card a { display:block; margin-top:8px;
+    background:#000; color:#fff; padding:7px;
+    text-decoration:none; font-size:10px; font-weight:800;
+    letter-spacing:1.5px; text-transform:uppercase; }
+
+  .email-footer {
+    background:#000; padding:22px;
+    text-align:center; font-size:11px; color:#aaa; line-height:1.6;
+  }
+  .email-footer a { color:#FFCC00; text-decoration:none; }
+
+  .annot {
+    max-width:760px; margin:24px auto 0;
+    background:#000; color:#fff; padding:24px;
+  }
+  .annot h2 {
+    color:#A4E830; font-size:13px; letter-spacing:3px;
+    text-transform:uppercase; margin-bottom:14px;
+  }
+  .annot ul { list-style:none; }
+  .annot li {
+    padding:8px 0; font-size:13px; line-height:1.6; color:#ccc;
+    border-bottom:1px solid #2a2a2a;
+  }
+  .annot li b { color:#FFCC00; }
+  .annot li:last-child { border-bottom:0; }
+
+  @media (max-width:600px){
+    .prod-block { flex-direction:column; }
+    .prod-block .img { width:100%; }
+    .outfit-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<a class="back" href="nnnow-index.html">‹ Back</a>
+
+<div class="gmail-wrap">
+  <div class="gmail-top">
+    <div class="ic">N.</div>
+    <div class="sender">
+      <b>NNNOW</b>
+      <small>hello@nnnow.com · to Sourabh</small>
+    </div>
+    <div class="star">⭐</div>
+    <div style="color:#666; font-size:12px;">9:24 AM</div>
+  </div>
+  <div class="gmail-subject">Sourabh, your Arrow shirt is waiting — ₹2,099 + free shipping 👕</div>
+  <div class="gmail-meta">
+    <b>Personalized</b> subject · <b>Send-Time AI</b> picked 9:24 AM (your open peak)
+    <span class="tag">DYNAMIC EMAIL</span>
+  </div>
+
+  <div class="email-inner">
+    <div class="email-header">
+      <div class="email-brand">NNNOW<span class="dot">.</span></div>
+      <div class="tagline">Wear The World</div>
+    </div>
+
+    <div class="email-hero">
+      <div class="kicker">Sourabh · For you</div>
+      <h1>You left this <span class="you">shirt</span> behind 👕</h1>
+      <p>Size M reserved · Free shipping · Free returns within 30 days</p>
+    </div>
+
+    <div class="prod-block">
+      <span class="tag">YOUR CART</span>
+      <div class="img">👕</div>
+      <div class="info">
+        <div class="b">ARROW · IN YOUR CART</div>
+        <h3>Sport Solid Slim Fit Shirt</h3>
+        <div class="specs">Size: <b>M</b> · Colour: Sky Blue · 100% Cotton · Slim Fit</div>
+        <div class="pr">₹2,099 <s>₹3,499</s></div>
+        <div class="save">You save <b>₹1,400 (40%)</b> · Free shipping · 30-day returns</div>
+      </div>
+    </div>
+
+    <div class="cta-block">
+      <a class="cta" href="#">CHECKOUT NOW · 60 SECONDS →</a>
+    </div>
+
+    <div class="brand-banner">
+      <div class="ic">⛵</div>
+      <div class="txt">
+        <b>YOU'RE A TOMMY GUY</b>
+        <p>3 of your last 5 buys are Tommy. The new <b>Tommy Summer Edit</b> is live with sailing-inspired polos & chinos — fits your style perfectly.</p>
+      </div>
+    </div>
+
+    <div class="outfit-block">
+      <h3>Complete the outfit<span class="by">Picked by Raman AI · matched to your Arrow shirt + Tommy preference</span></h3>
+      <div class="outfit-grid">
+        <div class="outfit-card">
+          <div class="ic b1">👔</div>
+          <div class="b">Tommy Hilfiger</div>
+          <div class="name">Slim Fit Chino Trousers</div>
+          <div class="pr">₹3,499 <s>₹6,999</s></div>
+          <a href="#">ADD TO ORDER</a>
+        </div>
+        <div class="outfit-card">
+          <div class="ic b2">👞</div>
+          <div class="b">US Polo Assn</div>
+          <div class="name">Tan Slip-On Loafers</div>
+          <div class="pr">₹2,499 <s>₹3,999</s></div>
+          <a href="#">ADD TO ORDER</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="email-footer">
+      You're receiving this because you have a NNNOW account.<br>
+      <a href="#">Unsubscribe</a> · <a href="#">Update preferences</a> · <a href="#">View in browser</a><br><br>
+      Arvind Fashions Ltd · Bengaluru, India
+    </div>
+  </div>
+</div>
+
+<div class="annot">
+  <h2>Inside the personalization layer</h2>
+  <ul>
+    <li><b>Subject line</b> · Dynamic — uses first name + brand + product + price. AI picks variant with highest predicted open rate for Sourabh's cohort.</li>
+    <li><b>Send time</b> · 9:24 AM = Sourabh's individual open peak. 4M shoppers; 4M different send times.</li>
+    <li><b>Cart product block</b> · Pulled live at open time. If Sourabh checks out before opening, this email auto-mutes.</li>
+    <li><b>Brand affinity banner</b> · Detected Tommy = top brand by spend. Different shoppers see CK, GAP, Arrow, or US Polo Assn banners with brand-matched imagery.</li>
+    <li><b>Outfit-complete recs</b> · Raman AI styles a coherent look: chinos + loafers pair with the cart shirt. Different cart → different outfit.</li>
+    <li><b>Save value</b> · "You save ₹1,400 (40%)" pulled from live product price. No copy errors when prices shift mid-sale.</li>
+  </ul>
+</div>
+
+</body>
+</html>
