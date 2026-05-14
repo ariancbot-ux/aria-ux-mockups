@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vape and Go – Spin & Win</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    font-family:'Inter','Helvetica Neue',Arial,sans-serif;
+    background:#0a0a0a;
+    display:flex; justify-content:center;
+    min-height:100vh;
+  }
+  .phone {
+    width:390px; min-height:100vh;
+    background:#0d0d0d; position:relative; overflow:hidden;
+    box-shadow:0 10px 40px rgba(0,0,0,.4);
+    color:#fff;
+  }
+
+  /* Status bar */
+  .status {
+    height:44px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 22px; font-size:14px; font-weight:600; color:#fff;
+  }
+
+  /* Header */
+  .header {
+    display:flex; align-items:center; gap:14px;
+    padding:8px 16px 12px;
+    border-bottom:1px solid #1a1a1a;
+    background:#000;
+  }
+  .logo {
+    display:flex; align-items:center; gap:6px;
+    font-weight:900; font-size:20px;
+    color:#fff; letter-spacing:-.5px;
+  }
+  .logo .dot {
+    width:10px; height:10px; border-radius:50%;
+    background:#A4E830;
+    box-shadow:0 0 10px #A4E830;
+  }
+  .logo .accent { color:#A4E830; }
+  .icons { margin-left:auto; display:flex; gap:14px; color:#fff; }
+  .icons div {
+    width:24px; height:24px; display:flex; align-items:center; justify-content:center;
+    font-size:18px;
+  }
+
+  /* Age verification strip */
+  .age {
+    background:#1a1a1a;
+    color:#A4E830;
+    text-align:center;
+    font-size:10px; padding:6px;
+    font-weight:600; letter-spacing:1px;
+    border-bottom:1px solid #222;
+  }
+
+  /* Hero strip */
+  .hero {
+    padding:18px 16px;
+    background:linear-gradient(180deg,#0d0d0d 0%,#151515 100%);
+  }
+  .hero h2 {
+    font-size:13px; color:#A4E830; font-weight:600;
+    text-transform:uppercase; letter-spacing:1.5px;
+  }
+  .hero h1 {
+    font-size:22px; font-weight:800; color:#fff;
+    margin-top:4px;
+  }
+
+  /* Product grid */
+  .grid {
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:10px; padding:14px 16px 100px;
+    background:#0d0d0d;
+  }
+  .card {
+    background:#1a1a1a; border-radius:10px; overflow:hidden;
+    border:1px solid #222;
+  }
+  .card .img {
+    height:140px; display:flex; align-items:center; justify-content:center;
+    font-size:46px;
+    background:radial-gradient(circle at 30% 30%, #2a2a2a, #111);
+  }
+  .card .tag {
+    position:absolute; top:6px; right:6px;
+    background:#A4E830; color:#000;
+    font-size:9px; font-weight:800;
+    padding:3px 6px; border-radius:4px;
+  }
+  .card-wrap { position:relative; }
+  .card .body { padding:8px 10px 12px; }
+  .card .brand { font-size:10px; color:#A4E830; text-transform:uppercase; font-weight:700; }
+  .card .name { font-size:12px; color:#eee; line-height:1.3; margin-top:2px; height:32px; overflow:hidden; }
+  .card .price { font-size:13px; font-weight:700; color:#fff; margin-top:4px; }
+  .card .price s { color:#666; font-weight:400; margin-left:6px; font-size:11px; }
+
+  /* ---- NUDGE: SPIN WHEEL OVERLAY ---- */
+  .overlay {
+    position:fixed; inset:0;
+    background:rgba(0,0,0,.85);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    display:none; align-items:center; justify-content:center;
+    z-index:50;
+    animation:fadeIn .35s ease both;
+  }
+  .overlay.show { display:flex; }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+  .spin-modal {
+    width:340px; border-radius:22px;
+    background:linear-gradient(180deg,#0d0d0d 0%,#1a1a1a 100%);
+    padding:22px 18px 18px;
+    position:relative;
+    text-align:center;
+    border:1px solid #2a2a2a;
+    box-shadow:0 0 40px rgba(164,232,48,.2), 0 24px 60px rgba(0,0,0,.7);
+    animation:popIn .45s cubic-bezier(.2,.9,.3,1.3) both;
+  }
+  @keyframes popIn {
+    0% { transform:scale(.7) translateY(20px); opacity:0; }
+    100% { transform:scale(1) translateY(0); opacity:1; }
+  }
+
+  .close {
+    position:absolute; top:12px; right:14px;
+    width:28px; height:28px; border-radius:50%;
+    background:rgba(255,255,255,.1); color:#fff;
+    border:none; font-size:16px; cursor:pointer;
+  }
+
+  .spin-badge {
+    display:inline-block;
+    background:#A4E830;
+    color:#000; font-size:10px; font-weight:800;
+    padding:5px 12px; border-radius:20px;
+    letter-spacing:1.5px;
+  }
+  .spin-modal h2 {
+    color:#fff; font-size:24px; font-weight:900;
+    margin-top:12px; line-height:1.2;
+  }
+  .spin-modal h2 span { color:#A4E830; }
+  .spin-modal p.sub {
+    color:#aaa; font-size:12px; margin-top:6px;
+  }
+
+  /* Wheel */
+  .wheel-wrap {
+    margin:18px auto 0;
+    width:260px; height:260px;
+    position:relative;
+  }
+  .pointer {
+    position:absolute; top:-6px; left:50%;
+    transform:translateX(-50%);
+    width:0; height:0;
+    border-left:14px solid transparent;
+    border-right:14px solid transparent;
+    border-top:22px solid #A4E830;
+    filter:drop-shadow(0 4px 6px rgba(164,232,48,.5));
+    z-index:3;
+  }
+  .wheel {
+    width:100%; height:100%;
+    border-radius:50%;
+    background:conic-gradient(
+      #A4E830 0deg 45deg,
+      #1a1a1a 45deg 90deg,
+      #A4E830 90deg 135deg,
+      #1a1a1a 135deg 180deg,
+      #A4E830 180deg 225deg,
+      #1a1a1a 225deg 270deg,
+      #A4E830 270deg 315deg,
+      #1a1a1a 315deg 360deg
+    );
+    border:6px solid #A4E830;
+    box-shadow:0 0 0 4px #000, 0 0 30px rgba(164,232,48,.5);
+    position:relative;
+    transition:transform 4.5s cubic-bezier(.17,.67,.2,1);
+  }
+  .wheel.spinning { transform:rotate(1845deg); }
+
+  .wheel .label {
+    position:absolute; top:50%; left:50%;
+    transform-origin:0 0;
+    font-size:10px; font-weight:800;
+    white-space:nowrap;
+  }
+  .wheel .label.dark { color:#000; }
+  .wheel .label.light { color:#A4E830; }
+
+  /* Hub */
+  .hub {
+    position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:60px; height:60px; border-radius:50%;
+    background:#000;
+    color:#A4E830; font-weight:900; font-size:13px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 12px rgba(0,0,0,.6), 0 0 0 3px #A4E830;
+    z-index:2;
+  }
+
+  .spin-btn {
+    margin-top:18px;
+    width:100%; padding:14px;
+    border:none; border-radius:12px;
+    background:#A4E830;
+    color:#000; font-weight:900; font-size:15px;
+    cursor:pointer; letter-spacing:1px;
+    box-shadow:0 6px 20px rgba(164,232,48,.3);
+  }
+  .spin-btn:disabled { opacity:.6; cursor:default; }
+
+  .terms {
+    margin-top:10px; color:#666; font-size:10px;
+  }
+  .age-gate {
+    margin-top:8px; color:#888; font-size:10px;
+    text-transform:uppercase; letter-spacing:1px;
+  }
+
+  /* ---- Result reveal ---- */
+  .result {
+    display:none;
+    margin-top:14px;
+    animation:fadeIn .4s both;
+  }
+  .result.show { display:block; }
+  .prize-card {
+    background:#000; border-radius:14px;
+    padding:18px;
+    border:1px solid #A4E830;
+    box-shadow:0 0 20px rgba(164,232,48,.3);
+  }
+  .prize-card .big {
+    font-size:34px; font-weight:900;
+    color:#A4E830;
+    text-shadow:0 0 20px rgba(164,232,48,.5);
+  }
+  .prize-card .mid { font-size:14px; color:#fff; font-weight:700; margin-top:4px; }
+  .prize-card .code {
+    margin-top:12px;
+    background:#0d0d0d; border:1px dashed #A4E830;
+    padding:10px; border-radius:8px;
+    font-family:'Courier New',monospace; font-weight:800;
+    color:#A4E830; letter-spacing:3px; font-size:16px;
+  }
+  .claim-btn {
+    margin-top:12px;
+    width:100%; padding:13px;
+    background:#A4E830; color:#000;
+    border:none; border-radius:10px;
+    font-weight:900; font-size:14px;
+    cursor:pointer; letter-spacing:.5px;
+  }
+
+  /* Trigger button */
+  .demo-trigger {
+    position:fixed; bottom:14px; left:50%;
+    transform:translateX(-50%);
+    background:#A4E830; color:#000;
+    padding:11px 22px; border-radius:30px;
+    font-size:12px; font-weight:700;
+    border:none; cursor:pointer; z-index:30;
+    box-shadow:0 6px 16px rgba(164,232,48,.3);
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="status">
+    <span>9:41</span>
+    <span>•••• 5G</span>
+  </div>
+
+  <div class="header">
+    <div class="logo"><span class="dot"></span>Vape <span class="accent">&amp; Go</span></div>
+    <div class="icons">
+      <div>🔍</div><div>♡</div><div>🛒</div>
+    </div>
+  </div>
+
+  <div class="age">⚠ 18+ ONLY · UK VAPE SHOP</div>
+
+  <div class="hero">
+    <h2>Same-day dispatch ⚡</h2>
+    <h1>Disposable Vapes — up to 40% off</h1>
+  </div>
+
+  <div class="grid">
+    <div class="card-wrap"><div class="card">
+      <div class="img">💨<span class="tag">DEAL</span></div>
+      <div class="body">
+        <div class="brand">Lost Mary</div>
+        <div class="name">BM600 Blueberry Sour Raspberry</div>
+        <div class="price">£4.99 <s>£5.99</s></div>
+      </div>
+    </div></div>
+    <div class="card-wrap"><div class="card">
+      <div class="img">🌬</div>
+      <div class="body">
+        <div class="brand">Elf Bar</div>
+        <div class="name">600 V2 Watermelon Ice</div>
+        <div class="price">£4.99 <s>£5.99</s></div>
+      </div>
+    </div></div>
+    <div class="card-wrap"><div class="card">
+      <div class="img">💚<span class="tag">NEW</span></div>
+      <div class="body">
+        <div class="brand">SKE Crystal</div>
+        <div class="name">Bar Plus 800 Strawberry</div>
+        <div class="price">£5.49 <s>£6.99</s></div>
+      </div>
+    </div></div>
+    <div class="card-wrap"><div class="card">
+      <div class="img">🟢</div>
+      <div class="body">
+        <div class="brand">IVG</div>
+        <div class="name">Smart Bar Apple Peach</div>
+        <div class="price">£4.49 <s>£5.99</s></div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- Overlay nudge -->
+  <div class="overlay" id="overlay">
+    <div class="spin-modal">
+      <button class="close" onclick="closeWheel()">×</button>
+      <div class="spin-badge">FIRST-TIME OFFER</div>
+      <h2>Spin & <span>Win</span> 🎰</h2>
+      <p class="sub">Up to £15 off your next order · 1 free spin</p>
+
+      <div class="wheel-wrap">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel">
+          <span class="label dark" style="transform:rotate(22deg) translate(70px,-6px)">£5 OFF</span>
+          <span class="label light" style="transform:rotate(67deg) translate(70px,-6px)">FREE SHIP</span>
+          <span class="label dark" style="transform:rotate(112deg) translate(70px,-6px)">10% OFF</span>
+          <span class="label light" style="transform:rotate(157deg) translate(70px,-6px)">2X POINTS</span>
+          <span class="label dark" style="transform:rotate(202deg) translate(70px,-6px)">£10 OFF</span>
+          <span class="label light" style="transform:rotate(247deg) translate(70px,-6px)">TRY AGAIN</span>
+          <span class="label dark" style="transform:rotate(292deg) translate(70px,-6px)">£15 OFF</span>
+          <span class="label light" style="transform:rotate(337deg) translate(70px,-6px)">FREE GIFT</span>
+        </div>
+        <div class="hub">SPIN</div>
+      </div>
+
+      <button class="spin-btn" id="spinBtn" onclick="spin()">TAP TO SPIN</button>
+
+      <div class="result" id="result">
+        <div class="prize-card">
+          <div class="big">£10 OFF</div>
+          <div class="mid">You won, mate! 🎉</div>
+          <div class="code">VAPE10</div>
+          <button class="claim-btn" onclick="closeWheel()">CLAIM & SHOP NOW</button>
+        </div>
+      </div>
+
+      <div class="age-gate">18+ Only · Min order £25 · 24h valid</div>
+    </div>
+  </div>
+
+  <button class="demo-trigger" onclick="openWheel()">▶ Replay nudge</button>
+</div>
+
+<script>
+  const overlay = document.getElementById('overlay');
+  const wheel = document.getElementById('wheel');
+  const btn = document.getElementById('spinBtn');
+  const result = document.getElementById('result');
+
+  function openWheel(){
+    overlay.classList.add('show');
+    wheel.classList.remove('spinning');
+    wheel.style.transform = 'rotate(0deg)';
+    btn.disabled = false;
+    btn.style.display = 'block';
+    btn.textContent = 'TAP TO SPIN';
+    result.classList.remove('show');
+  }
+  function closeWheel(){
+    overlay.classList.remove('show');
+  }
+  function spin(){
+    btn.disabled = true;
+    btn.textContent = 'SPINNING...';
+    wheel.classList.add('spinning');
+    setTimeout(()=>{
+      result.classList.add('show');
+      btn.style.display='none';
+    },4600);
+  }
+
+  setTimeout(openWheel, 1200);
+</script>
+</body>
+</html>
