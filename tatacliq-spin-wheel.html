@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tata CLiQ – Spin & Win</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    font-family:'Inter','Helvetica Neue',Arial,sans-serif;
+    background:#f4f4f6;
+    display:flex; justify-content:center;
+    min-height:100vh;
+  }
+  .phone {
+    width:390px; min-height:100vh;
+    background:#fff; position:relative; overflow:hidden;
+    box-shadow:0 10px 40px rgba(0,0,0,.12);
+  }
+
+  /* Status bar */
+  .status {
+    height:44px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 22px; font-size:14px; font-weight:600; color:#000;
+  }
+
+  /* Header */
+  .header {
+    display:flex; align-items:center; gap:14px;
+    padding:8px 16px 12px; border-bottom:1px solid #eee;
+  }
+  .logo {
+    font-weight:900; font-size:22px;
+    background:linear-gradient(90deg,#F8A51B 0%,#E94B3C 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    letter-spacing:-.5px;
+  }
+  .logo span { color:#1a1a1a; -webkit-text-fill-color:#1a1a1a; }
+  .icons { margin-left:auto; display:flex; gap:14px; color:#333; }
+  .icons div {
+    width:24px; height:24px; display:flex; align-items:center; justify-content:center;
+    font-size:18px;
+  }
+
+  /* Hero strip */
+  .hero {
+    padding:18px 16px;
+    background:#fff;
+  }
+  .hero h2 {
+    font-size:15px; color:#555; font-weight:500;
+  }
+  .hero h1 {
+    font-size:20px; font-weight:800; color:#1a1a1a;
+    margin-top:2px;
+  }
+
+  /* Trigger card – before nudge */
+  .trigger-card {
+    margin:14px 16px 0;
+    border-radius:14px;
+    padding:14px;
+    background:linear-gradient(135deg,#FFF6E0 0%,#FFE3D6 100%);
+    display:flex; align-items:center; gap:12px;
+    border:1px solid #ffd9b0;
+  }
+  .trigger-card .emoji { font-size:34px; }
+  .trigger-card .text { flex:1; }
+  .trigger-card .text b { display:block; font-size:14px; color:#1a1a1a; }
+  .trigger-card .text small { color:#666; font-size:12px; }
+
+  /* Product grid */
+  .grid {
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:10px; padding:14px 16px 100px;
+  }
+  .card {
+    background:#fff; border-radius:10px; overflow:hidden;
+    box-shadow:0 1px 3px rgba(0,0,0,.06);
+  }
+  .card .img {
+    height:160px; display:flex; align-items:center; justify-content:center;
+    font-size:40px;
+  }
+  .c1 .img { background:linear-gradient(135deg,#fde0d2,#f5b5a3); }
+  .c2 .img { background:linear-gradient(135deg,#dde7ff,#a9bef5); }
+  .c3 .img { background:linear-gradient(135deg,#ffe9b5,#f5c97c); }
+  .c4 .img { background:linear-gradient(135deg,#dcf6e1,#9adfaf); }
+  .card .body { padding:8px 10px 12px; }
+  .card .brand { font-size:10px; color:#777; text-transform:uppercase; font-weight:600; }
+  .card .name { font-size:12px; color:#222; line-height:1.3; margin-top:2px; height:32px; overflow:hidden; }
+  .card .price { font-size:13px; font-weight:700; color:#1a1a1a; margin-top:4px; }
+  .card .price s { color:#999; font-weight:400; margin-left:6px; font-size:11px; }
+
+  /* ---- NUDGE: SPIN WHEEL OVERLAY ---- */
+  .overlay {
+    position:fixed; inset:0;
+    background:rgba(15,8,32,.78);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    display:none; align-items:center; justify-content:center;
+    z-index:50;
+    animation:fadeIn .35s ease both;
+  }
+  .overlay.show { display:flex; }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+  .spin-modal {
+    width:340px; border-radius:22px;
+    background:linear-gradient(180deg,#241046 0%,#4A1B7A 100%);
+    padding:22px 18px 18px;
+    position:relative;
+    text-align:center;
+    box-shadow:0 24px 60px rgba(0,0,0,.5);
+    animation:popIn .45s cubic-bezier(.2,.9,.3,1.3) both;
+  }
+  @keyframes popIn {
+    0% { transform:scale(.7) translateY(20px); opacity:0; }
+    100% { transform:scale(1) translateY(0); opacity:1; }
+  }
+
+  .close {
+    position:absolute; top:12px; right:14px;
+    width:28px; height:28px; border-radius:50%;
+    background:rgba(255,255,255,.15); color:#fff;
+    border:none; font-size:16px; cursor:pointer;
+  }
+
+  .spin-badge {
+    display:inline-block;
+    background:linear-gradient(90deg,#F8A51B,#E94B3C);
+    color:#fff; font-size:10px; font-weight:700;
+    padding:5px 12px; border-radius:20px;
+    letter-spacing:1px;
+  }
+  .spin-modal h2 {
+    color:#fff; font-size:22px; font-weight:800;
+    margin-top:10px; line-height:1.2;
+  }
+  .spin-modal p.sub {
+    color:#d9c8ff; font-size:12px; margin-top:6px;
+  }
+
+  /* Wheel */
+  .wheel-wrap {
+    margin:18px auto 0;
+    width:260px; height:260px;
+    position:relative;
+  }
+  .pointer {
+    position:absolute; top:-6px; left:50%;
+    transform:translateX(-50%);
+    width:0; height:0;
+    border-left:14px solid transparent;
+    border-right:14px solid transparent;
+    border-top:22px solid #F8A51B;
+    filter:drop-shadow(0 4px 4px rgba(0,0,0,.4));
+    z-index:3;
+  }
+  .wheel {
+    width:100%; height:100%;
+    border-radius:50%;
+    background:conic-gradient(
+      #F8A51B 0deg 45deg,
+      #FFFFFF 45deg 90deg,
+      #E94B3C 90deg 135deg,
+      #FFFFFF 135deg 180deg,
+      #6A2EAB 180deg 225deg,
+      #FFFFFF 225deg 270deg,
+      #2BB673 270deg 315deg,
+      #FFFFFF 315deg 360deg
+    );
+    border:6px solid #F8A51B;
+    box-shadow:0 0 0 4px #2A1352, 0 0 30px rgba(248,165,27,.4);
+    position:relative;
+    transition:transform 4.5s cubic-bezier(.17,.67,.2,1);
+  }
+  .wheel.spinning { transform:rotate(1845deg); }
+
+  .wheel .label {
+    position:absolute; top:50%; left:50%;
+    transform-origin:0 0;
+    color:#1a1a1a; font-size:10px; font-weight:800;
+    white-space:nowrap;
+  }
+  .wheel .label.alt { color:#1a1a1a; }
+  .wheel .label.dark { color:#fff; }
+
+  /* Hub */
+  .hub {
+    position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:54px; height:54px; border-radius:50%;
+    background:linear-gradient(135deg,#F8A51B,#E94B3C);
+    color:#fff; font-weight:800; font-size:14px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 12px rgba(0,0,0,.4);
+    z-index:2;
+    border:3px solid #fff;
+  }
+
+  .spin-btn {
+    margin-top:18px;
+    width:100%; padding:14px;
+    border:none; border-radius:12px;
+    background:linear-gradient(90deg,#F8A51B,#E94B3C);
+    color:#fff; font-weight:800; font-size:15px;
+    cursor:pointer; letter-spacing:.5px;
+    box-shadow:0 6px 16px rgba(233,75,60,.5);
+  }
+  .spin-btn:disabled { opacity:.6; cursor:default; }
+
+  .terms {
+    margin-top:10px; color:#bba6df; font-size:10px;
+  }
+
+  /* ---- Result overlay ---- */
+  .result {
+    display:none;
+    margin-top:12px;
+    animation:fadeIn .4s both;
+  }
+  .result.show { display:block; }
+  .prize-card {
+    background:#fff; border-radius:14px;
+    padding:16px;
+    box-shadow:0 4px 14px rgba(0,0,0,.2);
+  }
+  .prize-card .big {
+    font-size:32px; font-weight:900;
+    background:linear-gradient(90deg,#F8A51B,#E94B3C);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .prize-card .mid { font-size:14px; color:#333; font-weight:700; margin-top:2px; }
+  .prize-card .code {
+    margin-top:10px;
+    background:#FFF6E0; border:1px dashed #F8A51B;
+    padding:8px; border-radius:8px;
+    font-family:'Courier New',monospace; font-weight:700;
+    color:#1a1a1a; letter-spacing:2px;
+  }
+  .claim-btn {
+    margin-top:12px;
+    width:100%; padding:12px;
+    background:#1a1a1a; color:#fff;
+    border:none; border-radius:10px;
+    font-weight:700; font-size:14px;
+    cursor:pointer;
+  }
+
+  /* Trigger button */
+  .demo-trigger {
+    position:fixed; bottom:14px; left:50%;
+    transform:translateX(-50%);
+    background:#1a1a1a; color:#fff;
+    padding:11px 22px; border-radius:30px;
+    font-size:12px; font-weight:600;
+    border:none; cursor:pointer; z-index:30;
+    box-shadow:0 6px 16px rgba(0,0,0,.25);
+  }
+
+  /* Confetti */
+  .confetti {
+    position:absolute; width:8px; height:14px;
+    top:-20px; opacity:0;
+    pointer-events:none;
+  }
+  .overlay.show.won .confetti { animation:fall 2.5s linear forwards; }
+  @keyframes fall {
+    0% { transform:translateY(0) rotate(0); opacity:1; }
+    100% { transform:translateY(700px) rotate(720deg); opacity:0; }
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="status">
+    <span>9:41</span>
+    <span>•••• 5G</span>
+  </div>
+
+  <div class="header">
+    <div class="logo">Tata <span>CLiQ</span></div>
+    <div class="icons">
+      <div>🔍</div><div>♡</div><div>🛍</div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h2>Welcome back, Hari 👋</h2>
+    <h1>Luxury Edit · Up to 60% off</h1>
+  </div>
+
+  <div class="trigger-card" onclick="openWheel()">
+    <div class="emoji">🎡</div>
+    <div class="text">
+      <b>Your daily spin is ready</b>
+      <small>Win up to ₹5,000 off · 1 spin/day</small>
+    </div>
+    <div style="color:#E94B3C;font-size:22px;">›</div>
+  </div>
+
+  <div class="grid">
+    <div class="card c1">
+      <div class="img">👜</div>
+      <div class="body">
+        <div class="brand">Michael Kors</div>
+        <div class="name">Jet Set Crossbody Bag</div>
+        <div class="price">₹18,499 <s>₹26,999</s></div>
+      </div>
+    </div>
+    <div class="card c2">
+      <div class="img">👟</div>
+      <div class="body">
+        <div class="brand">Puma</div>
+        <div class="name">RS-X Reinvent Sneakers</div>
+        <div class="price">₹4,799 <s>₹7,999</s></div>
+      </div>
+    </div>
+    <div class="card c3">
+      <div class="img">⌚</div>
+      <div class="body">
+        <div class="brand">Fossil</div>
+        <div class="name">Gen 6 Smartwatch</div>
+        <div class="price">₹14,995 <s>₹23,995</s></div>
+      </div>
+    </div>
+    <div class="card c4">
+      <div class="img">👗</div>
+      <div class="body">
+        <div class="brand">Vero Moda</div>
+        <div class="name">Floral Wrap Midi Dress</div>
+        <div class="price">₹1,799 <s>₹3,599</s></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay nudge -->
+  <div class="overlay" id="overlay">
+    <div class="spin-modal">
+      <button class="close" onclick="closeWheel()">×</button>
+      <div class="spin-badge">EXCLUSIVE FOR YOU</div>
+      <h2>Spin & Win 🎉</h2>
+      <p class="sub">One free spin · Win flat off, free shipping or vouchers</p>
+
+      <div class="wheel-wrap">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel">
+          <span class="label" style="transform:rotate(22deg) translate(70px,-6px)">₹500 OFF</span>
+          <span class="label" style="transform:rotate(67deg) translate(70px,-6px)">FREE SHIP</span>
+          <span class="label" style="transform:rotate(112deg) translate(70px,-6px)">₹1000 OFF</span>
+          <span class="label" style="transform:rotate(157deg) translate(70px,-6px)">10% OFF</span>
+          <span class="label dark" style="transform:rotate(202deg) translate(70px,-6px)">₹2000 OFF</span>
+          <span class="label" style="transform:rotate(247deg) translate(70px,-6px)">TRY AGAIN</span>
+          <span class="label" style="transform:rotate(292deg) translate(70px,-6px)">₹5000 OFF</span>
+          <span class="label" style="transform:rotate(337deg) translate(70px,-6px)">15% OFF</span>
+        </div>
+        <div class="hub">SPIN</div>
+      </div>
+
+      <button class="spin-btn" id="spinBtn" onclick="spin()">TAP TO SPIN</button>
+
+      <div class="result" id="result">
+        <div class="prize-card">
+          <div class="big">₹2,000 OFF</div>
+          <div class="mid">Congratulations, Hari! 🎊</div>
+          <div class="code">CLIQ2000</div>
+          <button class="claim-btn" onclick="closeWheel()">SHOP NOW & CLAIM</button>
+        </div>
+      </div>
+
+      <div class="terms">Min order ₹4,999 · Valid for 24 hours</div>
+    </div>
+  </div>
+
+  <button class="demo-trigger" onclick="openWheel()">▶ Replay nudge</button>
+</div>
+
+<script>
+  const overlay = document.getElementById('overlay');
+  const wheel = document.getElementById('wheel');
+  const btn = document.getElementById('spinBtn');
+  const result = document.getElementById('result');
+
+  function openWheel(){
+    overlay.classList.add('show');
+    wheel.classList.remove('spinning');
+    wheel.style.transform = 'rotate(0deg)';
+    btn.disabled = false;
+    btn.textContent = 'TAP TO SPIN';
+    result.classList.remove('show');
+    overlay.classList.remove('won');
+  }
+  function closeWheel(){
+    overlay.classList.remove('show');
+  }
+  function spin(){
+    btn.disabled = true;
+    btn.textContent = 'SPINNING...';
+    wheel.classList.add('spinning');
+    setTimeout(()=>{
+      result.classList.add('show');
+      overlay.classList.add('won');
+      btn.style.display='none';
+    },4600);
+  }
+
+  // Auto-open after 1.2s
+  setTimeout(openWheel, 1200);
+</script>
+</body>
+</html>
