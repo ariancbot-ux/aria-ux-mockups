@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lenovo Deals – Personalized</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter','Helvetica Neue',sans-serif; background:#f4f4f4; color:#1a1a1a; }
+  .back { position:fixed; top:14px; left:14px;
+    background:#fff; color:#E2231A; text-decoration:none;
+    padding:8px 14px; border-radius:8px; font-size:12px; font-weight:700;
+    z-index:200; box-shadow:0 4px 12px rgba(0,0,0,.08); }
+
+  .nc-badge {
+    position:absolute; top:8px; right:8px;
+    background:#A4E830; color:#000;
+    font-size:9px; font-weight:900; letter-spacing:1px;
+    padding:3px 7px; border-radius:4px;
+    z-index:5; box-shadow:0 2px 6px rgba(0,0,0,.15);
+  }
+  .nc-block { position:relative; }
+  .nc-block::before {
+    content:""; position:absolute; inset:-3px;
+    border:2px dashed #A4E830; border-radius:8px; pointer-events:none;
+    opacity:.7;
+  }
+
+  /* Nav */
+  .topbar { background:#1a1a1a; color:#fff; text-align:center;
+    padding:7px; font-size:12px; letter-spacing:.5px; }
+  .topbar b { color:#E2231A; }
+  .nav { background:#fff; padding:14px 40px;
+    display:flex; align-items:center; gap:24px;
+    border-bottom:1px solid #eee; position:sticky; top:0; z-index:50; }
+  .brand { font-weight:900; font-size:22px;
+    background:#E2231A; color:#fff; padding:4px 12px;
+    transform:skewX(-8deg); }
+  .brand span { display:inline-block; transform:skewX(8deg); }
+  .menu { display:flex; gap:22px; font-size:13px; font-weight:600; color:#444;
+    text-transform:uppercase; letter-spacing:.5px; margin-left:18px; }
+  .menu .active { color:#E2231A; border-bottom:2px solid #E2231A; padding-bottom:4px; }
+  .icons { margin-left:auto; display:flex; gap:18px; font-size:16px; align-items:center; }
+  .greeting { background:#fff5f4; padding:8px 14px;
+    border-radius:20px; font-size:12px; color:#E2231A; font-weight:700; }
+
+  /* Page header */
+  .page-head {
+    background:linear-gradient(135deg,#1a1a1a 0%,#3a1010 100%);
+    color:#fff; padding:34px 40px; position:relative;
+  }
+  .page-head .kicker { font-size:11px; color:#FF6B35;
+    letter-spacing:4px; text-transform:uppercase; }
+  .page-head h1 { font-size:38px; font-weight:800; margin-top:10px; }
+  .page-head h1 span { color:#E2231A; }
+  .page-head p { margin-top:8px; opacity:.85; font-size:14px; }
+  .countdown-strip {
+    margin-top:18px; display:flex; gap:14px; align-items:center;
+    background:rgba(255,255,255,.08); padding:12px 16px; border-radius:10px;
+    width:fit-content;
+  }
+  .countdown-strip .label { font-size:11px; letter-spacing:2px; color:#A4E830; }
+  .countdown-strip .timer { display:flex; gap:10px; margin-left:10px; }
+  .countdown-strip .unit { text-align:center; }
+  .countdown-strip .num {
+    background:#000; padding:6px 10px; border-radius:6px;
+    font-weight:900; font-size:20px; min-width:42px; color:#FF6B35;
+    border:1px solid #444;
+  }
+  .countdown-strip .lb { font-size:9px; opacity:.7; margin-top:3px; letter-spacing:1px; }
+
+  /* Filter bar */
+  .filter-bar {
+    background:#fff; padding:16px 40px;
+    display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+    border-bottom:1px solid #eee;
+  }
+  .pill {
+    padding:7px 14px; border:1px solid #ddd; border-radius:20px;
+    font-size:12px; font-weight:600; cursor:pointer;
+    background:#fff; color:#444;
+  }
+  .pill.active { background:#E2231A; color:#fff; border-color:#E2231A; }
+  .pill.ai { background:#A4E830; color:#000; border:0; font-weight:800; }
+  .pill.ai::before { content:"✨ "; }
+  .filter-bar .right {
+    margin-left:auto; font-size:12px; color:#666;
+  }
+  .filter-bar .right b { color:#1a1a1a; }
+
+  /* For You hero — top personalized deal */
+  .for-you {
+    max-width:1280px; margin:30px auto 0; padding:0 40px;
+  }
+  .for-you-card {
+    background:linear-gradient(135deg,#1a3a8c 0%,#2c5cc5 100%);
+    color:#fff; border-radius:14px;
+    display:flex; align-items:center; gap:30px;
+    padding:28px;
+    position:relative; overflow:hidden;
+  }
+  .for-you-card .lhs { flex:1; }
+  .for-you-card .kicker {
+    background:#FF6B35; color:#fff; padding:4px 10px;
+    font-size:10px; letter-spacing:2px; font-weight:800;
+    border-radius:4px; display:inline-block;
+  }
+  .for-you-card h2 { font-size:28px; font-weight:800; margin-top:10px; line-height:1.2; }
+  .for-you-card .why {
+    margin-top:6px; font-size:12px; color:#A4E830; font-style:italic;
+  }
+  .for-you-card .price {
+    margin-top:16px; font-size:18px; font-weight:700;
+  }
+  .for-you-card .price .big { font-size:34px; color:#FF6B35; }
+  .for-you-card .price s { color:#aaa; font-weight:400; font-size:16px; margin-left:8px; }
+  .for-you-card .save { font-size:12px; margin-top:4px; }
+  .for-you-card .save b { color:#A4E830; }
+  .for-you-card .stockbar {
+    margin-top:14px; background:rgba(0,0,0,.3); padding:10px; border-radius:8px;
+    font-size:11px; color:#fff;
+  }
+  .for-you-card .stockbar b { color:#FF6B35; }
+  .for-you-card .bar { margin-top:6px; height:6px; background:rgba(255,255,255,.15);
+    border-radius:4px; overflow:hidden; }
+  .for-you-card .bar i { display:block; height:100%; width:18%;
+    background:linear-gradient(90deg,#FF6B35,#E2231A); }
+  .for-you-card .ctas { margin-top:18px; display:flex; gap:10px; }
+  .for-you-card .btn-p, .for-you-card .btn-g {
+    padding:12px 22px; border:none; cursor:pointer;
+    font-weight:800; font-size:12px; letter-spacing:1.5px;
+    text-transform:uppercase; border-radius:6px;
+  }
+  .for-you-card .btn-p { background:#E2231A; color:#fff; }
+  .for-you-card .btn-g { background:transparent; color:#fff; border:2px solid #fff; }
+  .for-you-card .img { font-size:120px; opacity:.85; flex-shrink:0; }
+
+  /* Stack sections */
+  .section { max-width:1280px; margin:0 auto; padding:30px 40px; }
+  .section-head {
+    display:flex; align-items:baseline; gap:14px; margin-bottom:14px;
+    position:relative;
+  }
+  .section-head h2 { font-size:22px; font-weight:800; }
+  .section-head .why-ai {
+    font-size:11px; color:#666; font-style:italic;
+  }
+  .row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .pcard { background:#fff; border:1px solid #eee; border-radius:10px;
+    overflow:hidden; position:relative; }
+  .pcard .img { height:170px; display:flex; align-items:center; justify-content:center;
+    font-size:60px; background:#fafafa; position:relative; }
+  .pcard .badge {
+    position:absolute; top:8px; left:8px;
+    background:#E2231A; color:#fff; font-size:10px; font-weight:800;
+    padding:3px 7px; border-radius:4px;
+  }
+  .pcard .badge.deal { background:#A4E830; color:#000; }
+  .pcard .badge.score {
+    top:8px; right:8px; left:auto;
+    background:#000; color:#A4E830;
+    display:flex; align-items:center; gap:3px;
+  }
+  .pcard .body { padding:12px; }
+  .pcard .fam { font-size:10px; color:#E2231A; letter-spacing:1px;
+    text-transform:uppercase; font-weight:700; }
+  .pcard .name { font-size:13px; line-height:1.3; height:36px; overflow:hidden; margin-top:3px; }
+  .pcard .specs { font-size:11px; color:#777; margin-top:4px; height:28px; overflow:hidden; }
+  .pcard .price { margin-top:6px; font-weight:700; font-size:15px; color:#1a1a1a; }
+  .pcard .price s { color:#999; font-weight:400; margin-left:5px; font-size:12px; }
+  .pcard .price em { color:#E2231A; font-style:normal; font-size:11px; margin-left:5px; font-weight:700; }
+  .pcard .why-row {
+    background:#fff8e1; color:#7a5800;
+    padding:6px 10px; font-size:10px; line-height:1.3;
+    border-top:1px solid #f5e5b8;
+  }
+  .pcard .why-row b { color:#1a1a1a; }
+
+  /* Urgency banner mid-page */
+  .urgency {
+    margin:30px 40px; max-width:1280px;
+    margin-left:auto; margin-right:auto;
+    background:linear-gradient(90deg,#E2231A,#FF6B35);
+    color:#fff; padding:18px 24px;
+    border-radius:12px;
+    display:flex; align-items:center; gap:14px;
+    position:relative; overflow:hidden;
+  }
+  .urgency .ic { font-size:30px; }
+  .urgency .txt { flex:1; }
+  .urgency .txt b { font-size:14px; }
+  .urgency .txt p { font-size:12px; opacity:.95; margin-top:3px; }
+  .urgency button {
+    background:#000; color:#fff; padding:10px 18px;
+    border:none; border-radius:6px;
+    font-weight:800; font-size:11px; letter-spacing:1.5px; cursor:pointer;
+  }
+
+  /* Bottom panel */
+  .panel-explainer {
+    margin:40px auto 60px; max-width:1280px; padding:30px 40px;
+    background:#1a1a1a; color:#fff; border-radius:14px;
+  }
+  .panel-explainer h3 { color:#A4E830; font-size:14px; letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:14px; }
+  .panel-explainer .grid3 {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
+  }
+  .panel-explainer .item b { color:#FF6B35; }
+  .panel-explainer .item { font-size:13px; line-height:1.6; color:#ccc; }
+
+  @media (max-width:900px){
+    .for-you-card { flex-direction:column; padding:22px; }
+    .for-you-card .img { font-size:80px; }
+    .for-you-card h2 { font-size:24px; }
+    .row { grid-template-columns:repeat(2,1fr); }
+    .nav { padding:14px 20px; gap:14px; } .menu { display:none; }
+    .page-head, .section, .filter-bar { padding-left:20px; padding-right:20px; }
+    .panel-explainer .grid3 { grid-template-columns:1fr; }
+    .urgency { flex-direction:column; text-align:center; }
+  }
+</style>
+</head>
+<body>
+<a class="back" href="lenovo-index.html">‹ Back</a>
+
+<div class="topbar">🚚 FREE SHIPPING ON LAPTOPS · <b>EXTRA 9% BACK</b> WITH MY LENOVO REWARDS · GST INVOICE AVAILABLE</div>
+<div class="nav">
+  <div class="brand"><span>Lenovo</span></div>
+  <div class="menu"><span>Laptops</span><span>Desktops</span><span>Workstations</span><span>Lenovo Pro</span><span class="active">Deals</span></div>
+  <div class="icons">
+    <div class="greeting">👋 Hi Sourabh · IT Admin</div>
+    🔍 ♡ 🛍
+  </div>
+</div>
+
+<!-- Page header with countdown -->
+<div class="page-head">
+  <div class="kicker">Summer Sale · Limited time</div>
+  <h1>Deals, ranked <span>for Sourabh.</span></h1>
+  <p>Your top 20 deals are sorted by how well they match your work needs, team size, and recent browse activity.</p>
+  <div class="countdown-strip">
+    <div class="label">SALE ENDS IN</div>
+    <div class="timer">
+      <div class="unit"><div class="num">02</div><div class="lb">DAYS</div></div>
+      <div class="unit"><div class="num">14</div><div class="lb">HRS</div></div>
+      <div class="unit"><div class="num">22</div><div class="lb">MINS</div></div>
+      <div class="unit"><div class="num">47</div><div class="lb">SECS</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter bar -->
+<div class="filter-bar">
+  <span class="pill ai">For You</span>
+  <span class="pill active">All deals</span>
+  <span class="pill">ThinkPad</span>
+  <span class="pill">Yoga</span>
+  <span class="pill">Legion</span>
+  <span class="pill">Under ₹60K</span>
+  <span class="pill">Under ₹1L</span>
+  <span class="pill">Premium ₹1L+</span>
+  <div class="right">Showing <b>248 deals</b> · Sorted by <b>Best for you</b> ▾</div>
+</div>
+
+<!-- FOR YOU hero -->
+<div class="for-you nc-block" style="margin-top:40px;">
+  <span class="nc-badge" style="top:14px; right:14px;">PERSONALIZED · #1 MATCH</span>
+  <div class="for-you-card">
+    <div class="lhs">
+      <span class="kicker">✦ TOP DEAL FOR SOURABH</span>
+      <h2>ThinkPad X1 Carbon Gen 12 — the one you've been eyeing.</h2>
+      <div class="why">✨ You viewed this 2× this week · 96/100 match score for IT admins</div>
+      <div class="price"><span class="big">₹1,42,990</span><s>₹1,89,000</s></div>
+      <div class="save">You save <b>₹46,010 (24%)</b> · Free 3-yr ADP + Lenovo Pro perk available</div>
+      <div class="stockbar">
+        ⚡ <b>Selling fast</b> — Only <b>3 units</b> left at this price in Bengaluru warehouse
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="ctas">
+        <button class="btn-p">CONFIGURE & BUY →</button>
+        <button class="btn-g">Add to Wishlist</button>
+      </div>
+    </div>
+    <div class="img">💻</div>
+  </div>
+</div>
+
+<!-- Rail 1: deals matched to me -->
+<div class="section">
+  <div class="section-head nc-block" style="padding:6px 10px;">
+    <span class="nc-badge">PERSONALIZED · RAMAN AI</span>
+    <h2>Top deals for your profile</h2>
+    <span class="why-ai">· Ranked by match score · Refreshed every hour</span>
+  </div>
+  <div class="row">
+    <div class="pcard">
+      <div class="img">💼<span class="badge">YOUR FIT</span><span class="badge score">✨ 94</span></div>
+      <div class="body"><div class="fam">ThinkPad</div>
+        <div class="name">ThinkPad T14s AI Gen 1</div>
+        <div class="specs">Snapdragon X · 32GB · 1TB</div>
+        <div class="price">₹1,12,990 <s>₹1,49,000</s> <em>24% OFF</em></div></div>
+      <div class="why-row">✨ <b>Why for you:</b> matches your X1 Carbon browse + Copilot+ AI you flagged interest in</div>
+    </div>
+    <div class="pcard">
+      <div class="img">🔄<span class="badge">YOUR FIT</span><span class="badge score">✨ 88</span></div>
+      <div class="body"><div class="fam">Yoga</div>
+        <div class="name">Yoga 9i 2-in-1 OLED 14"</div>
+        <div class="specs">Core Ultra 7 · 16GB · 1TB OLED</div>
+        <div class="price">₹1,39,990 <s>₹1,79,990</s> <em>22% OFF</em></div></div>
+      <div class="why-row">✨ <b>Why for you:</b> premium ultrabook, similar price to X1 — pen + touch use case for client demos</div>
+    </div>
+    <div class="pcard">
+      <div class="img">🖥️<span class="badge deal">BUNDLE</span><span class="badge score">✨ 86</span></div>
+      <div class="body"><div class="fam">Workstation</div>
+        <div class="name">ThinkVision P27 4K + USB-C Hub</div>
+        <div class="specs">27" 4K · USB-C 90W PD · 7-in-1 hub</div>
+        <div class="price">₹44,990 <s>₹64,000</s> <em>30% OFF</em></div></div>
+      <div class="why-row">✨ <b>Why for you:</b> 92% of ThinkPad X1 buyers add a 4K monitor within 30 days</div>
+    </div>
+    <div class="pcard">
+      <div class="img">🎧<span class="badge">ACCESSORY</span><span class="badge score">✨ 82</span></div>
+      <div class="body"><div class="fam">Lenovo</div>
+        <div class="name">ThinkPad X1 ANC Headphones</div>
+        <div class="specs">Active noise cancel · 28h battery</div>
+        <div class="price">₹12,990 <s>₹17,990</s> <em>28% OFF</em></div></div>
+      <div class="why-row">✨ <b>Why for you:</b> popular with hybrid-work IT admins; bundles well with X1</div>
+    </div>
+  </div>
+</div>
+
+<!-- Urgency banner — trade-in -->
+<div class="urgency nc-block" style="margin-top:10px;">
+  <span class="nc-badge" style="top:14px; right:14px;">PERSONALIZED · TRADE-IN</span>
+  <div class="ic">♻️</div>
+  <div class="txt">
+    <b>Sourabh, your ThinkPad E14 is worth ₹18,500 right now</b>
+    <p>Trade-in valuation refreshed today. Apply instantly to any laptop above ₹60K. Free pickup in Bengaluru.</p>
+  </div>
+  <button>CHECK MY TRADE-IN →</button>
+</div>
+
+<!-- Rail 2: built for your team -->
+<div class="section">
+  <div class="section-head nc-block" style="padding:6px 10px;">
+    <span class="nc-badge">PERSONALIZED · B2B INTENT</span>
+    <h2>Built for your 120-person team</h2>
+    <span class="why-ai">· Lenovo Pro bulk pricing · GST invoice ready</span>
+  </div>
+  <div class="row">
+    <div class="pcard">
+      <div class="img">💼<span class="badge deal">BULK PRICE</span></div>
+      <div class="body"><div class="fam">ThinkPad</div>
+        <div class="name">ThinkPad E14 Gen 5 (Bulk 10+)</div>
+        <div class="specs">i5 · 16GB · 512GB · 3-yr ADP</div>
+        <div class="price">₹54,990<em> · per unit</em></div></div>
+      <div class="why-row">✨ <b>Why for you:</b> your team's current E14 fleet is end-of-warranty — direct replacement</div>
+    </div>
+    <div class="pcard">
+      <div class="img">📱<span class="badge deal">BULK PRICE</span></div>
+      <div class="body"><div class="fam">ThinkPad</div>
+        <div class="name">ThinkPad L14 Gen 5 (Bulk 25+)</div>
+        <div class="specs">i7 · 16GB · 512GB · 3-yr ADP</div>
+        <div class="price">₹68,990<em> · per unit</em></div></div>
+      <div class="why-row">✨ <b>Why for you:</b> developer-grade for engineering teams; matches startup IT admin pattern</div>
+    </div>
+    <div class="pcard">
+      <div class="img">🖱️</div>
+      <div class="body"><div class="fam">Accessories</div>
+        <div class="name">ThinkPad TrackPoint Keyboard II</div>
+        <div class="specs">Wireless · BT · USB-C charge · BulkBuy</div>
+        <div class="price">₹14,990 <s>₹19,990</s> <em>25% OFF</em></div></div>
+      <div class="why-row">✨ <b>Why for you:</b> bulk discount available on 10+ units</div>
+    </div>
+    <div class="pcard">
+      <div class="img">🔒</div>
+      <div class="body"><div class="fam">Software</div>
+        <div class="name">ThinkShield Endpoint Security</div>
+        <div class="specs">120-seat licence · 1-yr</div>
+        <div class="price">₹1,299<em> · per seat/year</em></div></div>
+      <div class="why-row">✨ <b>Why for you:</b> 80% of Lenovo Pro IT admins add endpoint security at fleet refresh</div>
+    </div>
+  </div>
+</div>
+
+<!-- Rail 3: gaming/personal (de-prioritized for B2B Sourabh) -->
+<div class="section">
+  <div class="section-head nc-block" style="padding:6px 10px;">
+    <span class="nc-badge">DE-PRIORITIZED · LOW MATCH</span>
+    <h2>Hot deals other shoppers love</h2>
+    <span class="why-ai">· Lower match for your profile — but the prices are great</span>
+  </div>
+  <div class="row">
+    <div class="pcard">
+      <div class="img">🎮<span class="badge score">✨ 58</span></div>
+      <div class="body"><div class="fam">Legion</div>
+        <div class="name">Legion 5 Pro 16 RTX 4060</div>
+        <div class="specs">Ryzen 7 · 16GB · 1TB · RTX 4060</div>
+        <div class="price">₹1,29,990 <s>₹1,74,990</s> <em>26% OFF</em></div></div>
+    </div>
+    <div class="pcard">
+      <div class="img">🖼️<span class="badge score">✨ 52</span></div>
+      <div class="body"><div class="fam">Yoga</div>
+        <div class="name">Yoga Tab 11" Pen + Folio</div>
+        <div class="specs">Snapdragon 8 · 8GB · 256GB</div>
+        <div class="price">₹39,990 <s>₹54,000</s> <em>26% OFF</em></div></div>
+    </div>
+    <div class="pcard">
+      <div class="img">🎓<span class="badge score">✨ 48</span></div>
+      <div class="body"><div class="fam">IdeaPad</div>
+        <div class="name">IdeaPad Slim 3i Student Edition</div>
+        <div class="specs">i3 · 8GB · 512GB · Office bundle</div>
+        <div class="price">₹38,990 <s>₹52,000</s> <em>25% OFF</em></div></div>
+    </div>
+    <div class="pcard">
+      <div class="img">🎯<span class="badge score">✨ 44</span></div>
+      <div class="body"><div class="fam">Legion</div>
+        <div class="name">Legion Tower 5i Gaming Desktop</div>
+        <div class="specs">i7 · 32GB · 1TB · RTX 4070</div>
+        <div class="price">₹1,49,990 <s>₹1,99,000</s> <em>25% OFF</em></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Panel -->
+<div class="panel-explainer">
+  <h3>How Netcore is personalizing this deals page</h3>
+  <div class="grid3">
+    <div class="item"><b>Page ranking</b><br>Default deals page shows 248 products by discount %. For Sourabh, Raman AI re-ranks by match score — top deal is the X1 Carbon he's been viewing, not a generic blowout.</div>
+    <div class="item"><b>Match scores (#94, #88)</b><br>Composite of browse intent + B2B persona + price range + product family preference. Visible badges build trust in the recommendation.</div>
+    <div class="item"><b>"Why for you" lines</b><br>Explainable AI — every recommendation shows the reason. Builds trust, reduces "creepy" feeling, and converts at 2× the rate of unexplained recs.</div>
+    <div class="item"><b>Stock urgency on hero</b><br>Computed live against Bengaluru warehouse stock for Sourabh's pin code. Drives action without fake scarcity.</div>
+    <div class="item"><b>Trade-in mid-page</b><br>Triggered because Sourabh's E14 nears warranty end. Real-time trade-in valuation refreshed daily.</div>
+    <div class="item"><b>De-prioritized rail</b><br>Low-match SKUs still shown — but moved to the bottom and visually de-emphasized. AI doesn't hide products; it just orders them right.</div>
+  </div>
+</div>
+
+</body>
+</html>
