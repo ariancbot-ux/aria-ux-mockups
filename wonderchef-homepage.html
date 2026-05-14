@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wonderchef – Personalized Homepage</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter','Helvetica Neue',sans-serif; background:#fafafa; color:#1a1a1a; }
+  .back { position:fixed; top:14px; left:14px;
+    background:#fff; color:#D32027; text-decoration:none;
+    padding:8px 14px; border-radius:8px; font-size:12px; font-weight:700;
+    z-index:200; box-shadow:0 4px 12px rgba(0,0,0,.08); }
+
+  /* ---- Personalization annotations (Netcore badge) ---- */
+  .nc-badge {
+    position:absolute; top:8px; right:8px;
+    background:#A4E830; color:#000;
+    font-size:9px; font-weight:900; letter-spacing:1px;
+    padding:3px 7px; border-radius:4px;
+    z-index:5; box-shadow:0 2px 6px rgba(0,0,0,.15);
+  }
+  .nc-block { position:relative; }
+  .nc-block::before {
+    content:""; position:absolute; inset:-3px;
+    border:2px dashed #A4E830; border-radius:8px; pointer-events:none;
+    opacity:.7;
+  }
+
+  .topbar { background:#1a1a1a; color:#fff;
+    text-align:center; padding:6px; font-size:12px; letter-spacing:1px; }
+  .topbar b { color:#FFB347; }
+  .nav { background:#fff; padding:14px 40px;
+    display:flex; align-items:center; gap:24px;
+    border-bottom:1px solid #eee; }
+  .brand { font-weight:900; font-size:24px;
+    color:#D32027; letter-spacing:-.5px; }
+  .brand i { color:#1a1a1a; font-style:normal; }
+  .menu { display:flex; gap:24px; font-size:13px; font-weight:600; color:#444;
+    text-transform:uppercase; letter-spacing:1px; margin-left:24px; }
+  .icons { margin-left:auto; display:flex; gap:18px; font-size:18px; align-items:center; }
+  .greeting { background:#fff3ee; padding:8px 14px;
+    border-radius:20px; font-size:12px; color:#D32027; font-weight:700; }
+
+  /* Hero — personalized */
+  .hero-wrap { position:relative; }
+  .hero {
+    background:linear-gradient(135deg,#D32027 0%,#7B0F14 100%);
+    color:#fff; padding:50px 60px;
+    display:flex; align-items:center; gap:40px;
+  }
+  .hero-text { flex:1; }
+  .hero-text .small { font-size:11px; letter-spacing:4px; color:#FFB347;
+    text-transform:uppercase; }
+  .hero-text h1 { font-size:38px; font-weight:800; margin-top:10px; line-height:1.15; }
+  .hero-text h1 span { color:#FFB347; }
+  .hero-text p { margin-top:10px; font-size:15px; opacity:.95; }
+  .hero-text button { margin-top:18px; padding:13px 32px;
+    background:#FFB347; color:#1a1a1a; border:none; font-weight:800;
+    font-size:13px; letter-spacing:2px; cursor:pointer; }
+  .hero-img { font-size:140px; }
+
+  /* Rails */
+  .rail { padding:30px 40px; max-width:1280px; margin:0 auto; }
+  .rail-head {
+    display:flex; align-items:baseline; gap:14px; margin-bottom:14px;
+    position:relative;
+  }
+  .rail-head h2 { font-size:22px; font-weight:800; }
+  .rail-head .why {
+    font-size:11px; background:#A4E830; color:#000;
+    padding:3px 8px; border-radius:4px; font-weight:800; letter-spacing:.5px;
+  }
+  .rail-head .by-ai {
+    font-size:11px; color:#666; font-style:italic;
+  }
+  .row {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:16px;
+  }
+  .pcard { background:#fff; border:1px solid #eee; border-radius:10px;
+    overflow:hidden; position:relative; }
+  .pcard .img { height:180px; display:flex; align-items:center; justify-content:center;
+    font-size:60px; background:#fff8f3; position:relative; }
+  .pcard .tag {
+    position:absolute; top:8px; left:8px;
+    background:#D32027; color:#fff; font-size:10px; font-weight:800;
+    padding:3px 8px; border-radius:4px;
+  }
+  .pcard .body { padding:12px; }
+  .pcard .name { font-size:13px; line-height:1.3; height:36px; overflow:hidden; }
+  .pcard .price { margin-top:8px; font-weight:700; font-size:15px; color:#D32027; }
+  .pcard .price s { color:#999; font-weight:400; margin-left:5px; font-size:12px; }
+  .pcard .price em { color:#444; font-style:normal; font-size:11px; margin-left:5px; }
+
+  /* Banner strip */
+  .banner-row {
+    display:grid; grid-template-columns:1fr 1fr; gap:16px;
+    padding:0 40px; max-width:1280px; margin:0 auto;
+  }
+  .banner { padding:30px; border-radius:14px; color:#fff;
+    position:relative; overflow:hidden; }
+  .banner h3 { font-size:22px; font-weight:800; }
+  .banner p { margin-top:6px; font-size:13px; opacity:.95; }
+  .banner button { margin-top:12px; padding:9px 18px;
+    background:#fff; color:#1a1a1a; border:none; font-weight:800;
+    font-size:11px; letter-spacing:1.5px; cursor:pointer; border-radius:4px; }
+  .banner.b1 { background:linear-gradient(135deg,#2a2a2a,#1a1a1a); }
+  .banner.b2 { background:linear-gradient(135deg,#FF8A00,#D32027); }
+  .banner-emoji { position:absolute; right:20px; top:50%; transform:translateY(-50%);
+    font-size:70px; opacity:.3; }
+
+  /* Footer note */
+  .panel-explainer {
+    margin:40px auto 0; max-width:1280px; padding:30px 40px;
+    background:#1a1a1a; color:#fff; border-radius:14px;
+  }
+  .panel-explainer h3 { color:#A4E830; font-size:14px; letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:14px; }
+  .panel-explainer .grid3 {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
+  }
+  .panel-explainer .item b { color:#FFB347; }
+  .panel-explainer .item { font-size:13px; line-height:1.6; color:#ccc; }
+  .footer-spacer { height:60px; }
+
+  @media (max-width:900px){
+    .hero { flex-direction:column; padding:30px 20px; }
+    .hero-img { font-size:80px; }
+    .hero-text h1 { font-size:28px; }
+    .row { grid-template-columns:repeat(2,1fr); }
+    .nav { padding:14px 20px; gap:14px; }
+    .menu { display:none; }
+    .banner-row { grid-template-columns:1fr; padding:0 20px; }
+    .panel-explainer .grid3 { grid-template-columns:1fr; }
+    .rail { padding:20px; }
+  }
+</style>
+</head>
+<body>
+<a class="back" href="wonderchef-index.html">‹ Back to demo index</a>
+
+<div class="topbar">FREE SHIPPING ON ORDERS ABOVE ₹999 · <b>EXTRA 10% OFF ON PREPAID</b></div>
+<div class="nav">
+  <div class="brand">Wonder<i>chef</i></div>
+  <div class="menu"><span>Cookware</span><span>Appliances</span><span>Bakeware</span><span>Sale</span></div>
+  <div class="icons">
+    <div class="greeting">👋 Hi Sourabh</div>
+    🔍 ♡ 🛍
+  </div>
+</div>
+
+<!-- HERO — personalized -->
+<div class="hero-wrap nc-block">
+  <span class="nc-badge">PERSONALIZED · WHY: BROWSE INTENT</span>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="small">Picked Just For You · Sourabh</div>
+      <h1>Your Air Fryer is <span>50% off</span> — and 2,300 people grabbed one this week.</h1>
+      <p>The Neo Digital Air Fryer you browsed yesterday is selling fast. ₹3,799 instead of ₹7,500.</p>
+      <button>Buy Neo Air Fryer →</button>
+    </div>
+    <div class="hero-img">🍳</div>
+  </div>
+</div>
+
+<!-- RAIL 1 — Continue where you left off -->
+<div class="rail">
+  <div class="rail-head nc-block" style="padding:6px 10px;">
+    <span class="nc-badge">PERSONALIZED · WHY: BROWSE HISTORY</span>
+    <h2>Continue where you left off</h2>
+    <span class="by-ai">· based on what you viewed this week</span>
+  </div>
+  <div class="row">
+    <div class="pcard"><div class="img">🍳<span class="tag">BROWSED 2X</span></div>
+      <div class="body"><div class="name">Neo Digital Air Fryer 3.5L</div>
+        <div class="price">₹3,699 <s>₹7,500</s> <em>50% OFF</em></div></div></div>
+    <div class="pcard"><div class="img">⚡<span class="tag">IN YOUR CART</span></div>
+      <div class="body"><div class="name">Vista Plus Mixer Grinder 500W</div>
+        <div class="price">₹1,899 <s>₹4,000</s> <em>52% OFF</em></div></div></div>
+    <div class="pcard"><div class="img">🥤</div>
+      <div class="body"><div class="name">Twister Portable Blender 500ml</div>
+        <div class="price">₹2,099 <s>₹4,000</s> <em>47% OFF</em></div></div></div>
+    <div class="pcard"><div class="img">🍴</div>
+      <div class="body"><div class="name">Regal Food Processor 1000W</div>
+        <div class="price">₹10,999 <s>₹18,500</s> <em>40% OFF</em></div></div></div>
+  </div>
+</div>
+
+<!-- BANNER ROW -->
+<div class="banner-row">
+  <div class="banner b1 nc-block">
+    <span class="nc-badge">PERSONALIZED · LOYALTY TIER</span>
+    <h3>Welcome back, Gold member 🌟</h3>
+    <p>Your member-only 15% off applies on appliances above ₹3,000. Auto-applied at checkout.</p>
+    <button>Use My Perk</button>
+    <div class="banner-emoji">⭐</div>
+  </div>
+  <div class="banner b2 nc-block">
+    <span class="nc-badge">PERSONALIZED · REPLENISHMENT</span>
+    <h3>Your Eco-Glide Kadhai needs a friend</h3>
+    <p>You bought it 60 days ago. Pair it with the matching Tawa for the perfect breakfast setup.</p>
+    <button>Show Me Tawa</button>
+    <div class="banner-emoji">🥘</div>
+  </div>
+</div>
+
+<!-- RAIL 2 — Recommended -->
+<div class="rail">
+  <div class="rail-head nc-block" style="padding:6px 10px;">
+    <span class="nc-badge">PERSONALIZED · COLLABORATIVE FILTER</span>
+    <h2>Customers like you also bought</h2>
+    <span class="by-ai">· Raman AI · 91% match score</span>
+  </div>
+  <div class="row">
+    <div class="pcard"><div class="img">🥘</div>
+      <div class="body"><div class="name">Ferro Cast-Iron Dosa Tawa 26cm</div>
+        <div class="price">₹1,549 <s>₹2,200</s> <em>30% OFF</em></div></div></div>
+    <div class="pcard"><div class="img">🔥</div>
+      <div class="body"><div class="name">Smart Cook Infrared Cooktop</div>
+        <div class="price">₹3,799 <s>₹8,000</s> <em>52% OFF</em></div></div></div>
+    <div class="pcard"><div class="img">🍵</div>
+      <div class="body"><div class="name">Nutri-Pot Pressure Cooker 5L</div>
+        <div class="price">₹2,299 <s>₹3,800</s> <em>39% OFF</em></div></div></div>
+    <div class="pcard"><div class="img">🍞</div>
+      <div class="body"><div class="name">Crimson Edge Bread Toaster</div>
+        <div class="price">₹1,499 <s>₹2,500</s> <em>40% OFF</em></div></div></div>
+  </div>
+</div>
+
+<!-- Behind the scenes -->
+<div class="panel-explainer">
+  <h3>How Netcore is personalizing this page</h3>
+  <div class="grid3">
+    <div class="item"><b>Hero banner</b><br>Driven by browse intent — Sourabh viewed Neo Air Fryer twice this week. AI swaps the hero to highlight it with urgency social proof.</div>
+    <div class="item"><b>Continue rail</b><br>Mix of viewed + cart-resident SKUs. Re-ranked in real time as Sourabh browses; cart items pinned to position 2.</div>
+    <div class="item"><b>Replenishment banner</b><br>Triggered because last purchase (Eco-Glide Kadhai) crossed 60 days — Wonderchef cookware avg repurchase window. AI surfaces matched accessories.</div>
+    <div class="item"><b>Loyalty banner</b><br>Personalized to Sourabh's loyalty tier from Capillary integration. Perk auto-applied at checkout — no coupon needed.</div>
+    <div class="item"><b>Recommendation rail</b><br>Collaborative filter + content-based hybrid. Recommends what users with similar 90-day behaviour purchased next.</div>
+    <div class="item"><b>Greeting + name</b><br>Real-time identity stitching from Shopify login. Same Sourabh across web, app, WhatsApp — one profile, every surface.</div>
+  </div>
+</div>
+<div class="footer-spacer"></div>
+
+</body>
+</html>

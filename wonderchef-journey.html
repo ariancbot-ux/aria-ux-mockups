@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wonderchef – Personalization Journey</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter','Helvetica Neue',sans-serif;
+    background:#0d0d0d; color:#fff; min-height:100vh;
+    background-image:
+      radial-gradient(circle at 15% 30%, rgba(211,32,39,.15), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(164,232,48,.06), transparent 50%);
+  }
+  .back { position:fixed; top:14px; left:14px;
+    background:#fff; color:#D32027; text-decoration:none;
+    padding:8px 14px; border-radius:8px; font-size:12px; font-weight:700;
+    z-index:200; box-shadow:0 4px 12px rgba(0,0,0,.08); }
+
+  .head { text-align:center; padding:50px 20px 30px; }
+  .head .small { font-size:11px; letter-spacing:6px; color:#A4E830;
+    text-transform:uppercase; }
+  .head h1 { font-size:36px; font-weight:800; margin-top:10px; }
+  .head p { margin-top:10px; color:#aaa; font-size:14px; max-width:600px; margin-left:auto; margin-right:auto; line-height:1.6; }
+
+  .persona-strip {
+    max-width:900px; margin:0 auto 30px;
+    background:rgba(255,255,255,.04); border:1px solid #2a2a2a;
+    border-radius:12px; padding:18px 24px;
+    display:flex; align-items:center; gap:20px;
+    font-size:13px; color:#ccc;
+  }
+  .persona-strip .avatar {
+    width:50px; height:50px; border-radius:50%;
+    background:linear-gradient(135deg,#D32027,#7B0F14);
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:22px; font-weight:900;
+  }
+  .persona-strip b { color:#FFB347; }
+
+  /* Timeline */
+  .timeline {
+    max-width:900px; margin:30px auto 80px; padding:0 20px;
+    position:relative;
+  }
+  .timeline::before {
+    content:""; position:absolute; top:30px; bottom:30px; left:40px;
+    width:2px; background:linear-gradient(180deg, #A4E830, #D32027, #FFB347, #A4E830);
+    opacity:.4;
+  }
+  .step {
+    position:relative; padding-left:90px; padding-bottom:50px;
+  }
+  .step .dot {
+    position:absolute; left:24px; top:6px;
+    width:36px; height:36px; border-radius:50%;
+    background:#0d0d0d; border:3px solid #A4E830;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; font-weight:900;
+    box-shadow:0 0 20px rgba(164,232,48,.4);
+    z-index:2;
+  }
+  .step .when {
+    font-size:11px; color:#A4E830; letter-spacing:2px; font-weight:800;
+  }
+  .step h3 { font-size:20px; margin-top:6px; }
+  .step .why {
+    margin-top:6px; color:#888; font-size:12px; font-style:italic;
+  }
+
+  .touchpoint {
+    margin-top:16px; background:#1a1a1a;
+    border:1px solid #2a2a2a; border-radius:12px;
+    padding:18px;
+    display:flex; gap:16px; align-items:center;
+  }
+  .touchpoint .chan {
+    width:54px; height:54px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; flex-shrink:0;
+  }
+  .tp-wa .chan { background:#005c4b; }
+  .tp-push .chan { background:#D32027; }
+  .tp-web .chan { background:#FF8A00; }
+  .tp-email .chan { background:#1f3a5f; }
+
+  .touchpoint .body { flex:1; }
+  .touchpoint .label {
+    font-size:10px; letter-spacing:2px; color:#FFB347; font-weight:800;
+  }
+  .touchpoint .msg { font-size:14px; margin-top:6px; line-height:1.5; color:#eee; }
+  .touchpoint .msg b { color:#fff; }
+  .touchpoint .meta {
+    margin-top:8px; display:flex; flex-wrap:wrap; gap:6px;
+  }
+  .touchpoint .meta span {
+    font-size:10px; padding:3px 8px; border-radius:4px;
+    background:rgba(164,232,48,.15); color:#A4E830; font-weight:700;
+  }
+
+  /* Outcome card */
+  .outcome {
+    max-width:900px; margin:0 auto 80px; padding:0 20px;
+  }
+  .outcome-card {
+    background:linear-gradient(135deg, rgba(164,232,48,.1), rgba(211,32,39,.1));
+    border:1px solid #A4E830;
+    border-radius:14px; padding:30px;
+    text-align:center;
+    box-shadow:0 0 40px rgba(164,232,48,.1);
+  }
+  .outcome-card .l { font-size:11px; letter-spacing:3px; color:#A4E830; }
+  .outcome-card h2 {
+    font-size:32px; font-weight:900; margin-top:8px;
+    color:#fff;
+  }
+  .outcome-card h2 .num { color:#A4E830; }
+  .outcome-card .stats {
+    margin-top:20px; display:grid; grid-template-columns:repeat(4,1fr);
+    gap:14px;
+  }
+  .outcome-card .stat {
+    background:rgba(0,0,0,.4); padding:16px 10px;
+    border-radius:10px; border:1px solid #2a2a2a;
+  }
+  .outcome-card .stat .big { font-size:24px; font-weight:900; color:#A4E830; }
+  .outcome-card .stat .lbl { font-size:11px; color:#aaa; margin-top:4px; line-height:1.3; }
+
+  /* Footer */
+  .footer {
+    text-align:center; color:#666; font-size:12px;
+    padding:30px 20px 50px;
+  }
+  .footer b { color:#A4E830; }
+
+  @media (max-width:700px){
+    .persona-strip { flex-direction:column; text-align:center; }
+    .timeline::before { left:24px; }
+    .step { padding-left:70px; }
+    .step .dot { left:8px; }
+    .outcome-card .stats { grid-template-columns:repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+<a class="back" href="wonderchef-index.html">‹ Back</a>
+
+<div class="head">
+  <div class="small">Wonderchef × Netcore · Day-by-day journey</div>
+  <h1>One Journey. Five Touchpoints. One Customer.</h1>
+  <p>Sourabh's lifecycle from cart abandon to loyal repeat buyer — every channel, message, and timing chosen by Netcore's AI based on real-time signals.</p>
+</div>
+
+<div class="persona-strip">
+  <div class="avatar">S</div>
+  <div>
+    <b>Sourabh, 34 · Bengaluru</b> · Gold loyalty · WhatsApp affinity 3x email · AOV ₹2,400<br>
+    <span style="color:#888;">Browsed Neo Air Fryer (2x), cart has Vista Plus Mixer, last purchase Eco-Glide Kadhai 60 days ago</span>
+  </div>
+</div>
+
+<div class="timeline">
+
+  <div class="step">
+    <div class="dot">1</div>
+    <div class="when">DAY 0 · 7:30 PM · CART ABANDON</div>
+    <h3>Sourabh adds Vista Plus to cart, exits without paying</h3>
+    <div class="why">Trigger fires under 5 seconds. AI evaluates: best channel for Sourabh right now?</div>
+    <div class="touchpoint tp-push">
+      <div class="chan">🔔</div>
+      <div class="body">
+        <div class="label">CHANNEL: PUSH · T+45min</div>
+        <div class="msg"><b>Your Vista Plus is waiting 🛍</b><br>Hi Sourabh — your cart total ₹1,899 is still saved. Free shipping locked in. Tap to checkout in 30 seconds.</div>
+        <div class="meta"><span>Channel chosen by AI</span><span>14% CTR cohort</span><span>Personalized</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="dot">2</div>
+    <div class="when">DAY 1 · 9:24 AM · STILL NO PURCHASE</div>
+    <h3>Push didn't convert. AI escalates to email at Sourabh's open peak.</h3>
+    <div class="why">Send-Time Optimization picked 9:24 AM — Sourabh's individual peak open window (verified over 90 days of opens).</div>
+    <div class="touchpoint tp-email">
+      <div class="chan">📧</div>
+      <div class="body">
+        <div class="label">CHANNEL: EMAIL · DAY 1 9:24 AM</div>
+        <div class="msg"><b>Subject:</b> "Sourabh, your Vista Plus is still waiting — ₹1,899 + free shipping 🛍"<br>Dynamic email with cart product, Gold member 10% perk auto-applied, 2 AI-recommended add-ons.</div>
+        <div class="meta"><span>Send-Time AI</span><span>Dynamic Content</span><span>Gold tier perk</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="dot">3</div>
+    <div class="when">DAY 1 · 6:18 PM · OPENS, BROWSES, EXITS</div>
+    <h3>Sourabh opens email, lands on site, browses Air Fryer again, leaves.</h3>
+    <div class="why">Browse-abandon signal added on top of cart-abandon. AI suppresses redundant push, picks WhatsApp for next nudge.</div>
+    <div class="touchpoint tp-wa">
+      <div class="chan">💬</div>
+      <div class="body">
+        <div class="label">CHANNEL: WHATSAPP · DAY 2 8:00 AM</div>
+        <div class="msg"><b>Wonderchef Official:</b> "Hi Sourabh 👋 Your Vista Plus + the Neo Air Fryer you were eyeing are still on sale. Here's a bundle deal: <b>flat ₹400 off</b> if you grab both. Code: <b>BUNDLE400</b>."</div>
+        <div class="meta"><span>WhatsApp affinity 3x</span><span>Bundle recommendation</span><span>Limited code</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="dot">4</div>
+    <div class="when">DAY 2 · 11:42 AM · PURCHASES BUNDLE</div>
+    <h3>Sourabh buys Vista Plus + Neo Air Fryer using BUNDLE400 code.</h3>
+    <div class="why">Order placed event flows back to Netcore in <5s. Cart-abandon journey exits. Post-purchase journey enters.</div>
+    <div class="touchpoint tp-wa">
+      <div class="chan">💬</div>
+      <div class="body">
+        <div class="label">CHANNEL: WHATSAPP · DAY 2 11:43 AM</div>
+        <div class="msg"><b>🎉 Order confirmed, Sourabh!</b> Your Vista Plus + Neo Air Fryer is on the way. Estimated delivery: <b>Saturday, May 17</b>. Track here ↗</div>
+        <div class="meta"><span>Transactional</span><span>Real-time</span><span>Order tracking</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="dot">5</div>
+    <div class="when">DAY 32 · POST-PURCHASE → REPLENISHMENT</div>
+    <h3>30 days post-delivery. Time to deepen the relationship.</h3>
+    <div class="why">Replenishment model flags Sourabh's last big purchase as "complete the kitchen" candidate. AI surfaces recipe content + matched accessories.</div>
+    <div class="touchpoint tp-web">
+      <div class="chan">🌐</div>
+      <div class="body">
+        <div class="label">CHANNEL: WEB PERSONALIZATION · ON-SITE</div>
+        <div class="msg">Homepage hero swapped for Sourabh: <b>"Make perfect dosa to match your Vista Plus chutney 🥘"</b> — featuring Ferro Cast-Iron Tawa with recipe video CTA. Loyalty banner: 20 reward points credited.</div>
+        <div class="meta"><span>Web Personalization</span><span>Replenishment model</span><span>Loyalty integrated</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="outcome">
+  <div class="outcome-card">
+    <div class="l">PROJECTED OUTCOME · INDUSTRY BENCHMARK</div>
+    <h2>From <span class="num">4.2%</span> recovery → <span class="num">6.8%</span> recovery</h2>
+    <div class="stats">
+      <div class="stat"><div class="big">+62%</div><div class="lbl">Cart recovery uplift (relative)</div></div>
+      <div class="stat"><div class="big">+9%</div><div class="lbl">Revenue per recovered cart</div></div>
+      <div class="stat"><div class="big">+71%</div><div class="lbl">Combined journey revenue lift</div></div>
+      <div class="stat"><div class="big">0</div><div class="lbl">Manual A/B setup required</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Every channel, timing, and message above was <b>decided by Netcore AI</b> — not hand-coded. The marketer defines the journey rules once; Raman AI personalizes the execution for every user, every time.
+</div>
+
+</body>
+</html>

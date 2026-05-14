@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wonderchef – Spin & Win</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter','Helvetica Neue',sans-serif;
+    background:#fafafa; min-height:100vh; color:#1a1a1a; }
+  .back { position:fixed; top:14px; left:14px;
+    background:#fff; color:#D32027; text-decoration:none;
+    padding:8px 14px; border-radius:8px;
+    font-size:12px; font-weight:700; z-index:200;
+    box-shadow:0 4px 12px rgba(0,0,0,.08); }
+  /* Wonderchef storefront */
+  .nav { background:#fff; padding:14px 40px;
+    display:flex; align-items:center; gap:24px;
+    border-bottom:1px solid #eee; }
+  .brand { font-weight:900; font-size:24px;
+    color:#D32027; letter-spacing:-.5px; }
+  .brand i { color:#1a1a1a; font-style:normal; }
+  .menu { display:flex; gap:24px; font-size:13px; font-weight:600; color:#444;
+    text-transform:uppercase; letter-spacing:1px; margin-left:24px; }
+  .icons { margin-left:auto; display:flex; gap:18px; font-size:18px; }
+  .topbar { background:#1a1a1a; color:#fff;
+    text-align:center; padding:6px; font-size:12px; letter-spacing:1px; }
+  .topbar b { color:#FFB347; }
+  .hero {
+    background:linear-gradient(135deg,#D32027 0%,#7B0F14 100%);
+    color:#fff; padding:60px 40px; text-align:center;
+  }
+  .hero .kicker { font-size:12px; letter-spacing:4px;
+    color:#FFB347; text-transform:uppercase; }
+  .hero h1 { font-size:42px; font-weight:800; margin-top:12px; }
+  .hero p { margin-top:14px; font-size:16px; opacity:.95; }
+  .hero button { margin-top:22px; padding:14px 36px;
+    background:#FFB347; color:#1a1a1a; border:none; font-weight:800;
+    font-size:13px; letter-spacing:2px; text-transform:uppercase; cursor:pointer; }
+  .grid-section { padding:40px; max-width:1200px; margin:0 auto; }
+  .grid-section h2 { font-size:24px; margin-bottom:20px; }
+  .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  .card { background:#fff; border:1px solid #eee; border-radius:10px; overflow:hidden; }
+  .card .img { height:200px; display:flex; align-items:center; justify-content:center;
+    font-size:64px; background:#fff8f3; }
+  .card .body { padding:14px; }
+  .card .name { font-size:13px; height:36px; overflow:hidden; line-height:1.3; }
+  .card .price { margin-top:10px; font-weight:700; font-size:15px; }
+  .card .price s { color:#999; font-weight:400; margin-left:6px; font-size:12px; }
+  .card .price em { color:#D32027; font-style:normal; font-size:11px; margin-left:6px; font-weight:700; }
+
+  /* SPIN OVERLAY - ARIA Standard */
+  .overlay { position:fixed; inset:0; background:rgba(0,0,0,.85);
+    backdrop-filter:blur(8px); display:none; align-items:center; justify-content:center;
+    z-index:100; animation:fadeIn .35s ease both; }
+  .overlay.show { display:flex; }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  .spin-modal { width:380px; border-radius:22px;
+    background:linear-gradient(180deg,#0d0d0d,#1a1a1a);
+    padding:26px 22px 22px; text-align:center; position:relative;
+    border:1px solid #2a2a2a;
+    box-shadow:0 0 40px rgba(164,232,48,.2), 0 24px 60px rgba(0,0,0,.7);
+    animation:popIn .45s cubic-bezier(.2,.9,.3,1.3) both; }
+  @keyframes popIn { 0% { transform:scale(.7) translateY(20px); opacity:0; }
+    100% { transform:scale(1); opacity:1; } }
+  .close { position:absolute; top:14px; right:16px;
+    width:30px; height:30px; border-radius:50%;
+    background:rgba(255,255,255,.1); color:#fff;
+    border:none; font-size:18px; cursor:pointer; }
+  .spin-badge { display:inline-block;
+    background:linear-gradient(90deg,#D32027,#7B0F14);
+    color:#FFB347; font-size:10px; font-weight:800;
+    padding:6px 14px; border-radius:20px;
+    letter-spacing:2px; border:1px solid #FFB347; }
+  .spin-modal h2 { color:#fff; font-size:26px; font-weight:900; margin-top:14px; }
+  .spin-modal h2 span { color:#A4E830; }
+  .spin-modal p.sub { color:#aaa; font-size:12px; margin-top:8px; }
+  .wheel-wrap { margin:20px auto 0; width:280px; height:280px; position:relative; }
+  .pointer { position:absolute; top:-6px; left:50%; transform:translateX(-50%);
+    width:0; height:0; border-left:14px solid transparent; border-right:14px solid transparent;
+    border-top:22px solid #A4E830;
+    filter:drop-shadow(0 4px 6px rgba(164,232,48,.5)); z-index:3; }
+  .wheel { width:100%; height:100%; border-radius:50%; position:relative;
+    background:conic-gradient(
+      #A4E830 0deg 45deg, #1a1a1a 45deg 90deg,
+      #A4E830 90deg 135deg, #1a1a1a 135deg 180deg,
+      #A4E830 180deg 225deg, #1a1a1a 225deg 270deg,
+      #A4E830 270deg 315deg, #1a1a1a 315deg 360deg);
+    border:6px solid #A4E830;
+    box-shadow:0 0 0 4px #000, 0 0 30px rgba(164,232,48,.5);
+    transform:rotate(0deg); transition:transform 5s cubic-bezier(.17,.67,.2,1); }
+  .wheel .label { position:absolute; top:50%; left:50%;
+    transform-origin:0 0; font-size:10px; font-weight:800; white-space:nowrap; }
+  .wheel .label.dark { color:#000; }
+  .wheel .label.light { color:#A4E830; }
+  .hub { position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%); width:60px; height:60px; border-radius:50%;
+    background:#000; color:#A4E830; font-weight:900; font-size:13px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 12px rgba(0,0,0,.6), 0 0 0 3px #A4E830; z-index:2; }
+  .spin-btn { margin-top:20px; width:100%; padding:15px;
+    border:none; border-radius:12px; background:#A4E830;
+    color:#000; font-weight:900; font-size:15px;
+    cursor:pointer; letter-spacing:1px;
+    box-shadow:0 6px 20px rgba(164,232,48,.3); }
+  .terms { margin-top:12px; color:#666; font-size:10px; }
+  .result { display:none; margin-top:14px; }
+  .result.show { display:block; animation:fadeIn .4s both; }
+  .prize-card { background:#000; border-radius:14px; padding:20px;
+    border:1px solid #A4E830; box-shadow:0 0 20px rgba(164,232,48,.3); }
+  .prize-card .big { font-size:34px; font-weight:900; color:#A4E830;
+    text-shadow:0 0 20px rgba(164,232,48,.5); }
+  .prize-card .mid { font-size:14px; color:#fff; font-weight:700; margin-top:6px; }
+  .prize-card .code { margin-top:14px; background:#0d0d0d;
+    border:1px dashed #A4E830; padding:12px; border-radius:8px;
+    font-family:'Courier New',monospace; font-weight:800;
+    color:#A4E830; letter-spacing:3px; font-size:16px; }
+  .claim-btn { margin-top:14px; width:100%; padding:14px;
+    background:#A4E830; color:#000; border:none; border-radius:10px;
+    font-weight:900; cursor:pointer; letter-spacing:1px; }
+  .demo-trigger { position:fixed; bottom:24px; right:24px;
+    background:#D32027; color:#fff; padding:11px 22px;
+    border-radius:30px; font-size:12px; font-weight:700;
+    border:none; cursor:pointer; z-index:30;
+    box-shadow:0 6px 16px rgba(211,32,39,.3); }
+  @media (max-width:900px) {
+    .grid { grid-template-columns:repeat(2,1fr); }
+    .nav { padding:14px 20px; gap:14px; } .menu { display:none; }
+    .hero { padding:40px 20px; } .hero h1 { font-size:30px; }
+    .grid-section { padding:20px; }
+  }
+</style>
+</head>
+<body>
+<a class="back" href="wonderchef-index.html">‹ Back</a>
+
+<div class="topbar">FREE SHIPPING ON ORDERS ABOVE ₹999 · <b>EXTRA 10% OFF ON PREPAID</b></div>
+<div class="nav">
+  <div class="brand">Wonder<i>chef</i></div>
+  <div class="menu"><span>Cookware</span><span>Appliances</span><span>Bakeware</span><span>Sale</span></div>
+  <div class="icons">🔍 ♡ 🛍</div>
+</div>
+
+<div class="hero">
+  <div class="kicker">Festival Sale · 50% Off Everything</div>
+  <h1>Cook With Joy.</h1>
+  <p>India's most loved cookware brand · 2-year warranty · 20,000+ stores</p>
+  <button>Shop The Sale</button>
+</div>
+
+<div class="grid-section">
+  <h2>New Launches</h2>
+  <div class="grid">
+    <div class="card"><div class="img">🍳</div>
+      <div class="body"><div class="name">Neo Digital Air Fryer 3.5L</div>
+        <div class="price">₹3,699 <s>₹7,500</s> <em>50% OFF</em></div></div></div>
+    <div class="card"><div class="img">⚡</div>
+      <div class="body"><div class="name">Vista Plus Mixer Grinder 500W</div>
+        <div class="price">₹1,899 <s>₹4,000</s> <em>52% OFF</em></div></div></div>
+    <div class="card"><div class="img">🔥</div>
+      <div class="body"><div class="name">Smart Cook Infrared Cooktop</div>
+        <div class="price">₹3,799 <s>₹8,000</s> <em>52% OFF</em></div></div></div>
+    <div class="card"><div class="img">🥘</div>
+      <div class="body"><div class="name">Eco-Glide Ceramic Kadhai 24cm</div>
+        <div class="price">₹1,799 <s>₹2,340</s> <em>23% OFF</em></div></div></div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="spin-modal">
+    <button class="close" onclick="closeWheel()">×</button>
+    <div class="spin-badge">FIRST VISIT OFFER</div>
+    <h2>Spin & <span>Win</span> 🎉</h2>
+    <p class="sub">Drop your email · Get a discount you'll love</p>
+    <div class="wheel-wrap">
+      <div class="pointer"></div>
+      <div class="wheel" id="wheel">
+        <span class="label dark"  style="transform:rotate(22.5deg)  translate(75px,-6px)">₹200 OFF</span>
+        <span class="label light" style="transform:rotate(67.5deg)  translate(75px,-6px)">FREE SHIP</span>
+        <span class="label dark"  style="transform:rotate(112.5deg) translate(75px,-6px)">₹500 OFF</span>
+        <span class="label light" style="transform:rotate(157.5deg) translate(75px,-6px)">10% OFF</span>
+        <span class="label dark"  style="transform:rotate(202.5deg) translate(75px,-6px)">₹1000 OFF</span>
+        <span class="label light" style="transform:rotate(247.5deg) translate(75px,-6px)">TRY AGAIN</span>
+        <span class="label dark"  style="transform:rotate(292.5deg) translate(75px,-6px)">₹2000 OFF</span>
+        <span class="label light" style="transform:rotate(337.5deg) translate(75px,-6px)">FREE SPATULA</span>
+      </div>
+      <div class="hub">SPIN</div>
+    </div>
+    <button class="spin-btn" id="spinBtn">TAP TO SPIN</button>
+    <div class="result" id="result">
+      <div class="prize-card">
+        <div class="big" id="prizeBig">₹1,000 OFF</div>
+        <div class="mid">Welcome to Wonderchef! 🎊</div>
+        <div class="code" id="prizeCode">WCHEF1000</div>
+        <button class="claim-btn" onclick="closeWheel()">SHOP NOW &amp; CLAIM</button>
+      </div>
+    </div>
+    <div class="terms">Min order ₹2,499 · Valid 48 hours · T&amp;C apply</div>
+  </div>
+</div>
+
+<button class="demo-trigger" onclick="openWheel()">▶ Replay Nudge</button>
+
+<script>
+  const segments = [
+    { code:"WCHEF200",  big:"₹200 OFF" },
+    { code:"FREESHIP",  big:"FREE SHIPPING" },
+    { code:"WCHEF500",  big:"₹500 OFF" },
+    { code:"WCHEF10",   big:"10% OFF" },
+    { code:"WCHEF1000", big:"₹1,000 OFF" },
+    { code:"-",         big:"So Close!" },
+    { code:"WCHEF2000", big:"₹2,000 OFF" },
+    { code:"FREEGIFT",  big:"FREE SPATULA" }
+  ];
+  const weights = [3, 4, 3, 2, 4, 1, 1, 2];
+  const overlay = document.getElementById('overlay');
+  const wheel = document.getElementById('wheel');
+  const btn = document.getElementById('spinBtn');
+  const result = document.getElementById('result');
+  let currentRotation = 0, spinning = false;
+  function pickSegment(){ const total=weights.reduce((a,b)=>a+b,0); let r=Math.random()*total;
+    for(let i=0;i<segments.length;i++){ r-=weights[i]; if(r<=0) return i; } return 0; }
+  function openWheel(){ overlay.classList.add('show'); currentRotation=0;
+    wheel.style.transition='none'; wheel.style.transform='rotate(0deg)';
+    void wheel.offsetWidth; wheel.style.transition='transform 5s cubic-bezier(.17,.67,.2,1)';
+    btn.disabled=false; btn.style.display='block'; btn.textContent='TAP TO SPIN';
+    result.classList.remove('show'); spinning=false; }
+  function closeWheel(){ overlay.classList.remove('show'); }
+  function spin(){ if(spinning) return; spinning=true; btn.disabled=true; btn.textContent='SPINNING…';
+    const idx=pickSegment(); const segCenter=idx*45+22.5;
+    const target=currentRotation+(5*360)+(360-segCenter)+(Math.random()-.5)*36;
+    currentRotation=target; wheel.style.transform=`rotate(${target}deg)`;
+    setTimeout(()=>{ document.getElementById('prizeBig').textContent=segments[idx].big;
+      document.getElementById('prizeCode').textContent=segments[idx].code;
+      result.classList.add('show'); btn.style.display='none'; spinning=false; }, 5100); }
+  btn.addEventListener('click', spin);
+  setTimeout(openWheel, 1200);
+</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wonderchef – Personalization Demo by Netcore</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter','Helvetica Neue',Arial,sans-serif;
+    background:#fff; color:#1a1a1a; min-height:100vh; }
+  .header {
+    background:linear-gradient(135deg,#D32027 0%,#7B0F14 100%);
+    color:#fff; padding:50px 40px; text-align:center;
+  }
+  .header .small { font-size:11px; letter-spacing:6px;
+    text-transform:uppercase; opacity:.85; }
+  .header h1 { font-size:38px; font-weight:800; margin-top:10px; }
+  .header p { margin-top:12px; font-size:16px; opacity:.95; }
+  .container { max-width:1100px; margin:0 auto; padding:50px 30px 80px; }
+  .intro {
+    background:#fff8f3; border-left:4px solid #D32027;
+    padding:20px 24px; border-radius:8px; margin-bottom:30px;
+  }
+  .intro b { color:#D32027; }
+  .intro .persona {
+    margin-top:12px; padding:14px;
+    background:#fff; border:1px dashed #ffc0a3; border-radius:8px;
+    font-size:14px; line-height:1.6;
+  }
+  h2 { font-size:24px; color:#1a1a1a; margin:30px 0 16px; font-weight:700; }
+  .grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:20px;
+  }
+  .card {
+    background:#fff; border:1px solid #e5e5e5; border-radius:14px;
+    overflow:hidden; transition:transform .2s, box-shadow .2s;
+    cursor:pointer; display:block; text-decoration:none; color:inherit;
+  }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 30px rgba(0,0,0,.1); }
+  .card .preview {
+    height:140px; display:flex; align-items:center; justify-content:center;
+    font-size:56px; color:#fff;
+  }
+  .p1 { background:linear-gradient(135deg,#D32027,#7B0F14); }
+  .p2 { background:linear-gradient(135deg,#FF8A00,#D32027); }
+  .p3 { background:linear-gradient(135deg,#2A2A2A,#1a1a1a); }
+  .p4 { background:linear-gradient(135deg,#E94B3C,#C12A1F); }
+  .p5 { background:linear-gradient(135deg,#FFB347,#FF8A00); }
+  .card .body { padding:18px; }
+  .card .label {
+    font-size:10px; letter-spacing:2px; color:#D32027;
+    text-transform:uppercase; font-weight:700;
+  }
+  .card h3 { font-size:17px; margin-top:6px; line-height:1.3; }
+  .card p { font-size:13px; color:#666; margin-top:8px; line-height:1.5; }
+  .stack {
+    margin-top:10px; display:flex; flex-wrap:wrap; gap:6px;
+  }
+  .stack span {
+    font-size:10px; padding:3px 8px; border-radius:4px;
+    background:#fff3ee; color:#D32027; font-weight:700;
+  }
+  .footer {
+    text-align:center; color:#888; font-size:12px;
+    margin-top:50px; padding-top:20px; border-top:1px solid #eee;
+  }
+  .footer b { color:#D32027; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="small">Netcore Cloud · Personalization Showcase</div>
+  <h1>Wonderchef × Netcore</h1>
+  <p>Five personalization moments — across one user's lifecycle.</p>
+</div>
+
+<div class="container">
+  <div class="intro">
+    <b>The Persona</b>
+    <div class="persona">
+      <b>Sourabh, 34, Bengaluru</b> — Wonderchef customer for 8 months.<br>
+      Last purchase: Eco-Glide Ceramic Kadhai (₹1,799) — 60 days ago.<br>
+      Browsed twice this week: Neo Digital Air Fryer, Vista Plus Mixer Grinder.<br>
+      Currently in cart, not checked out: Vista Plus Mixer Grinder.<br>
+      Channel affinity: WhatsApp ▸ Push ▸ Email. AOV: ₹2,400. Replenishment-prone.
+    </div>
+  </div>
+
+  <h2>The 5 Personalization Moments</h2>
+  <div class="grid">
+
+    <a class="card" href="wonderchef-spin.html">
+      <div class="preview p1">🎡</div>
+      <div class="body">
+        <div class="label">Mockup 1</div>
+        <h3>Spin & Win Popup</h3>
+        <p>First-visit acquisition nudge. Captures email/WhatsApp opt-in via gamified coupon.</p>
+        <div class="stack"><span>Acquisition</span><span>Web Popup</span></div>
+      </div>
+    </a>
+
+    <a class="card" href="wonderchef-homepage.html">
+      <div class="preview p2">🛒</div>
+      <div class="body">
+        <div class="label">Mockup 2</div>
+        <h3>Personalized Homepage</h3>
+        <p>Hero, product rail, and offers tailored to Sourabh's browse + purchase history.</p>
+        <div class="stack"><span>Web Personalization</span><span>Raman AI</span></div>
+      </div>
+    </a>
+
+    <a class="card" href="wonderchef-nudges.html">
+      <div class="preview p3">🔔</div>
+      <div class="body">
+        <div class="label">Mockup 3</div>
+        <h3>Nudge Series</h3>
+        <p>Three live nudges: cart abandon, browse abandon, replenishment reminder.</p>
+        <div class="stack"><span>Nudges</span><span>Journey AI</span></div>
+      </div>
+    </a>
+
+    <a class="card" href="wonderchef-email.html">
+      <div class="preview p4">📧</div>
+      <div class="body">
+        <div class="label">Mockup 4</div>
+        <h3>Personalized Email</h3>
+        <p>Cart-recovery email with name, product image, dynamic price, and AI-recommended add-ons.</p>
+        <div class="stack"><span>Email</span><span>Dynamic Content</span></div>
+      </div>
+    </a>
+
+    <a class="card" href="wonderchef-journey.html">
+      <div class="preview p5">🎯</div>
+      <div class="body">
+        <div class="label">Mockup 5</div>
+        <h3>Full Personalization Journey</h3>
+        <p>Day-by-day view of 4 touchpoints — channel, timing, and content all AI-optimized.</p>
+        <div class="stack"><span>Multichannel</span><span>Path Optimizer</span></div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="footer">
+    Powered by <b>Netcore Cloud</b> · Customer Engagement + Raman AI<br>
+    All mockups are illustrative — built to showcase platform capability.
+  </div>
+</div>
+
+</body>
+</html>
