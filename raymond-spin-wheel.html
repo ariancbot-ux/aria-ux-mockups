@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raymond – Spin & Win</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Georgia','Times New Roman',serif;
+    background:#f5f1ea;
+    min-height:100vh;
+    color:#1c1c1c;
+  }
+  /* ---- Raymond storefront (desktop web) ---- */
+  .topbar {
+    background:#0a1832; color:#f5f1ea;
+    text-align:center; padding:8px 16px;
+    font-size:12px; letter-spacing:2px; font-family:'Helvetica Neue',sans-serif;
+  }
+  .nav {
+    background:#fff; padding:18px 60px;
+    display:flex; align-items:center; gap:40px;
+    border-bottom:1px solid #e7e0d4;
+  }
+  .brand {
+    font-family:'Georgia',serif;
+    font-size:30px; font-weight:400;
+    color:#0a1832; letter-spacing:6px;
+  }
+  .menu {
+    display:flex; gap:30px; margin-left:30px;
+    font-family:'Helvetica Neue',sans-serif;
+    font-size:13px; letter-spacing:2px; text-transform:uppercase;
+    color:#1c1c1c;
+  }
+  .menu span { cursor:pointer; }
+  .menu span:hover { color:#8B0000; }
+  .nav-icons {
+    margin-left:auto; display:flex; gap:22px;
+    font-size:18px; color:#1c1c1c;
+  }
+
+  /* Hero banner */
+  .hero {
+    background:
+      linear-gradient(rgba(10,24,50,.55), rgba(10,24,50,.55)),
+      linear-gradient(135deg,#1a2a52 0%,#2b1818 100%);
+    color:#f5f1ea;
+    padding:90px 60px 110px;
+    text-align:center;
+    position:relative;
+  }
+  .hero .kicker {
+    font-family:'Helvetica Neue',sans-serif;
+    font-size:12px; letter-spacing:6px;
+    color:#d4af37; text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  .hero h1 {
+    font-size:54px; font-weight:400;
+    line-height:1.15; letter-spacing:1px;
+    font-family:'Georgia',serif;
+  }
+  .hero h1 em { color:#d4af37; font-style:italic; }
+  .hero p {
+    margin-top:18px; font-size:15px;
+    color:#e7e0d4; font-family:'Helvetica Neue',sans-serif;
+    letter-spacing:1px;
+  }
+  .hero .cta {
+    margin-top:30px; display:inline-block;
+    background:#d4af37; color:#0a1832;
+    padding:14px 38px; font-family:'Helvetica Neue',sans-serif;
+    font-size:12px; letter-spacing:3px; text-transform:uppercase;
+    font-weight:700; cursor:pointer;
+    border:none;
+  }
+
+  /* Product grid */
+  .grid-section { padding:50px 60px 80px; }
+  .grid-title {
+    text-align:center; font-size:13px; letter-spacing:6px;
+    color:#8B0000; font-family:'Helvetica Neue',sans-serif;
+    text-transform:uppercase; margin-bottom:8px;
+  }
+  .grid-section h2 {
+    text-align:center; font-size:32px; color:#0a1832;
+    font-weight:400; margin-bottom:40px;
+  }
+  .grid {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:24px;
+  }
+  .card {
+    background:#fff; cursor:pointer;
+    border:1px solid #e7e0d4;
+  }
+  .card .img {
+    height:280px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:80px;
+  }
+  .c1 .img { background:linear-gradient(135deg,#1a2a52,#2c3e6b); color:#d4af37; }
+  .c2 .img { background:linear-gradient(135deg,#2b1818,#4a2828); color:#f5f1ea; }
+  .c3 .img { background:linear-gradient(135deg,#4a4035,#6b5d4a); color:#f5f1ea; }
+  .c4 .img { background:linear-gradient(135deg,#1c2628,#2d3a3d); color:#d4af37; }
+  .card .body { padding:14px 16px 18px; }
+  .card .brand-tag {
+    font-size:10px; letter-spacing:2px; color:#8B0000;
+    text-transform:uppercase;
+    font-family:'Helvetica Neue',sans-serif; font-weight:700;
+  }
+  .card .name {
+    font-family:'Georgia',serif; font-size:16px;
+    color:#1c1c1c; margin-top:6px; line-height:1.3;
+    height:42px; overflow:hidden;
+  }
+  .card .price {
+    margin-top:10px; font-family:'Helvetica Neue',sans-serif;
+    font-size:15px; color:#1c1c1c; font-weight:600;
+  }
+  .card .price s {
+    color:#888; font-weight:400; font-size:13px;
+    margin-left:8px;
+  }
+  .card .price em {
+    font-style:normal; color:#8B0000; font-size:12px;
+    margin-left:8px; font-weight:700;
+  }
+
+  /* ============ ARIA STANDARD SPIN OVERLAY ============ */
+  .overlay {
+    position:fixed; inset:0;
+    background:rgba(0,0,0,.85);
+    backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+    display:none; align-items:center; justify-content:center;
+    z-index:100; animation:fadeIn .35s ease both;
+  }
+  .overlay.show { display:flex; }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+  .spin-modal {
+    width:380px; border-radius:22px;
+    background:linear-gradient(180deg,#0d0d0d 0%,#1a1a1a 100%);
+    padding:26px 22px 22px; position:relative; text-align:center;
+    border:1px solid #2a2a2a;
+    box-shadow:0 0 40px rgba(164,232,48,.2), 0 24px 60px rgba(0,0,0,.7);
+    animation:popIn .45s cubic-bezier(.2,.9,.3,1.3) both;
+    font-family:'Helvetica Neue',sans-serif;
+  }
+  @keyframes popIn {
+    0% { transform:scale(.7) translateY(20px); opacity:0; }
+    100% { transform:scale(1) translateY(0); opacity:1; }
+  }
+  .close {
+    position:absolute; top:14px; right:16px;
+    width:30px; height:30px; border-radius:50%;
+    background:rgba(255,255,255,.1); color:#fff;
+    border:none; font-size:18px; cursor:pointer;
+  }
+  /* Brand badge — Raymond navy + gold */
+  .spin-badge {
+    display:inline-block;
+    background:linear-gradient(90deg,#0a1832,#1a2a52);
+    color:#d4af37; font-size:10px; font-weight:700;
+    padding:6px 14px; border-radius:20px;
+    letter-spacing:3px; border:1px solid #d4af37;
+  }
+  .spin-modal h2 {
+    color:#fff; font-size:26px; font-weight:800;
+    margin-top:14px; line-height:1.2;
+    font-family:'Georgia',serif;
+  }
+  .spin-modal h2 span { color:#A4E830; font-style:italic; }
+  .spin-modal p.sub { color:#aaa; font-size:12px; margin-top:8px; letter-spacing:.5px; }
+
+  /* Wheel — LOCKED STANDARD */
+  .wheel-wrap { margin:20px auto 0; width:280px; height:280px; position:relative; }
+  .pointer { position:absolute; top:-6px; left:50%; transform:translateX(-50%);
+    width:0; height:0; border-left:14px solid transparent; border-right:14px solid transparent;
+    border-top:22px solid #A4E830;
+    filter:drop-shadow(0 4px 6px rgba(164,232,48,.5)); z-index:3; }
+  .wheel { width:100%; height:100%; border-radius:50%; position:relative;
+    background:conic-gradient(
+      #A4E830 0deg 45deg,
+      #1a1a1a 45deg 90deg,
+      #A4E830 90deg 135deg,
+      #1a1a1a 135deg 180deg,
+      #A4E830 180deg 225deg,
+      #1a1a1a 225deg 270deg,
+      #A4E830 270deg 315deg,
+      #1a1a1a 315deg 360deg);
+    border:6px solid #A4E830;
+    box-shadow:0 0 0 4px #000, 0 0 30px rgba(164,232,48,.5);
+    transform:rotate(0deg);
+    transition:transform 5s cubic-bezier(.17,.67,.2,1);
+  }
+  .wheel .label { position:absolute; top:50%; left:50%;
+    transform-origin:0 0; font-size:10px; font-weight:800; white-space:nowrap; }
+  .wheel .label.dark { color:#000; }
+  .wheel .label.light { color:#A4E830; }
+  .hub { position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%); width:60px; height:60px; border-radius:50%;
+    background:#000; color:#A4E830; font-weight:900; font-size:13px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 12px rgba(0,0,0,.6), 0 0 0 3px #A4E830; z-index:2; }
+  .spin-btn { margin-top:20px; width:100%; padding:15px;
+    border:none; border-radius:12px; background:#A4E830;
+    color:#000; font-weight:900; font-size:15px;
+    cursor:pointer; letter-spacing:2px;
+    box-shadow:0 6px 20px rgba(164,232,48,.3); transition:transform .15s; }
+  .spin-btn:active { transform:scale(.97); }
+  .spin-btn:disabled { opacity:.6; cursor:default; }
+  .terms { margin-top:12px; color:#666; font-size:10px; letter-spacing:.5px; }
+
+  /* Result */
+  .result { display:none; margin-top:14px; animation:fadeIn .4s both; }
+  .result.show { display:block; }
+  .prize-card { background:#000; border-radius:14px; padding:20px;
+    border:1px solid #A4E830; box-shadow:0 0 20px rgba(164,232,48,.3); }
+  .prize-card .big { font-size:36px; font-weight:900; color:#A4E830;
+    text-shadow:0 0 20px rgba(164,232,48,.5);
+    font-family:'Georgia',serif; letter-spacing:1px; }
+  .prize-card .mid { font-size:14px; color:#fff; font-weight:700; margin-top:6px; }
+  .prize-card .code { margin-top:14px;
+    background:#0d0d0d; border:1px dashed #A4E830;
+    padding:12px; border-radius:8px;
+    font-family:'Courier New',monospace; font-weight:800;
+    color:#A4E830; letter-spacing:3px; font-size:16px; }
+  .claim-btn { margin-top:14px; width:100%; padding:14px;
+    background:#A4E830; color:#000; border:none; border-radius:10px;
+    font-weight:900; font-size:14px; cursor:pointer; letter-spacing:1.5px; }
+
+  /* Replay trigger */
+  .demo-trigger {
+    position:fixed; bottom:24px; right:24px;
+    background:#0a1832; color:#d4af37;
+    padding:12px 26px; border-radius:0;
+    font-family:'Helvetica Neue',sans-serif;
+    font-size:11px; letter-spacing:3px; text-transform:uppercase;
+    border:1px solid #d4af37; cursor:pointer; z-index:30;
+    box-shadow:0 6px 20px rgba(0,0,0,.25);
+  }
+
+  @media (max-width:900px){
+    .grid { grid-template-columns:repeat(2,1fr); }
+    .nav { padding:16px 20px; gap:14px; }
+    .menu { display:none; }
+    .hero { padding:60px 20px; }
+    .hero h1 { font-size:34px; }
+    .grid-section { padding:30px 20px 60px; }
+    .spin-modal { width:90%; max-width:380px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">FREE SHIPPING ON ORDERS ABOVE ₹1,499 · EASY 30-DAY RETURNS</div>
+
+  <div class="nav">
+    <div class="brand">RAYMOND</div>
+    <div class="menu">
+      <span>Men</span><span>Women</span><span>Wedding</span>
+      <span>Made to Measure</span><span>New Arrivals</span><span>Sale</span>
+    </div>
+    <div class="nav-icons"><span>🔍</span><span>♡</span><span>👤</span><span>🛍</span></div>
+  </div>
+
+  <div class="hero">
+    <div class="kicker">The Complete Man</div>
+    <h1>Crafted in <em>Tradition.</em><br>Tailored for <em>Today.</em></h1>
+    <p>The Spring Edit — Premium Suits, Shirts & Bespoke Tailoring</p>
+    <button class="cta">Shop The Edit</button>
+  </div>
+
+  <div class="grid-section">
+    <div class="grid-title">Bestsellers</div>
+    <h2>Featured for You</h2>
+    <div class="grid">
+      <div class="card c1">
+        <div class="img">🤵</div>
+        <div class="body">
+          <div class="brand-tag">Raymond</div>
+          <div class="name">Navy Wool-Blend Slim Fit Suit</div>
+          <div class="price">₹24,999 <s>₹34,999</s> <em>29% OFF</em></div>
+        </div>
+      </div>
+      <div class="card c2">
+        <div class="img">👔</div>
+        <div class="body">
+          <div class="brand-tag">Park Avenue</div>
+          <div class="name">Burgundy Stripe Slim Cotton Shirt</div>
+          <div class="price">₹1,499 <s>₹2,624</s> <em>43% OFF</em></div>
+        </div>
+      </div>
+      <div class="card c3">
+        <div class="img">🧥</div>
+        <div class="body">
+          <div class="brand-tag">ColorPlus</div>
+          <div class="name">Olive Linen Regular Fit Casual Shirt</div>
+          <div class="price">₹1,899 <s>₹2,799</s> <em>32% OFF</em></div>
+        </div>
+      </div>
+      <div class="card c4">
+        <div class="img">👖</div>
+        <div class="body">
+          <div class="brand-tag">Parx</div>
+          <div class="name">Charcoal Slim Tapered Chinos</div>
+          <div class="price">₹1,799 <s>₹2,499</s> <em>28% OFF</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========== SPIN OVERLAY (ARIA Standard) =========== -->
+  <div class="overlay" id="overlay">
+    <div class="spin-modal">
+      <button class="close" onclick="closeWheel()">×</button>
+      <div class="spin-badge">A GIFT FROM RAYMOND</div>
+      <h2>Spin & <span>Win</span></h2>
+      <p class="sub">One free spin · Up to ₹5,000 off your next order</p>
+
+      <div class="wheel-wrap">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel">
+          <span class="label dark"  style="transform:rotate(22.5deg)  translate(75px,-6px)">₹500 OFF</span>
+          <span class="label light" style="transform:rotate(67.5deg)  translate(75px,-6px)">FREE SHIP</span>
+          <span class="label dark"  style="transform:rotate(112.5deg) translate(75px,-6px)">₹1500 OFF</span>
+          <span class="label light" style="transform:rotate(157.5deg) translate(75px,-6px)">10% OFF</span>
+          <span class="label dark"  style="transform:rotate(202.5deg) translate(75px,-6px)">₹2500 OFF</span>
+          <span class="label light" style="transform:rotate(247.5deg) translate(75px,-6px)">TRY AGAIN</span>
+          <span class="label dark"  style="transform:rotate(292.5deg) translate(75px,-6px)">₹5000 OFF</span>
+          <span class="label light" style="transform:rotate(337.5deg) translate(75px,-6px)">FREE TIE</span>
+        </div>
+        <div class="hub">SPIN</div>
+      </div>
+
+      <button class="spin-btn" id="spinBtn">TAP TO SPIN</button>
+
+      <div class="result" id="result">
+        <div class="prize-card">
+          <div class="big" id="prizeBig">₹2,500 OFF</div>
+          <div class="mid">Welcome to Raymond ✦</div>
+          <div class="code" id="prizeCode">RAYMOND2500</div>
+          <button class="claim-btn" onclick="closeWheel()">SHOP NOW &amp; CLAIM</button>
+        </div>
+      </div>
+
+      <div class="terms">Min order ₹4,999 · Valid for 48 hours · T&amp;C apply</div>
+    </div>
+  </div>
+
+  <button class="demo-trigger" onclick="openWheel()">▶ Replay Nudge</button>
+
+<script>
+  // ---- ARIA STANDARD SPIN ENGINE ----
+  const segments = [
+    { label:"₹500 OFF",  code:"RAYMOND500",  big:"₹500 OFF" },
+    { label:"FREE SHIP", code:"FREESHIP",    big:"FREE SHIPPING" },
+    { label:"₹1500 OFF", code:"RAYMOND1500", big:"₹1,500 OFF" },
+    { label:"10% OFF",   code:"RAYMOND10",   big:"10% OFF" },
+    { label:"₹2500 OFF", code:"RAYMOND2500", big:"₹2,500 OFF" },
+    { label:"TRY AGAIN", code:"-",           big:"So Close!" },
+    { label:"₹5000 OFF", code:"RAYMOND5000", big:"₹5,000 OFF" },
+    { label:"FREE TIE",  code:"FREETIE",     big:"FREE SILK TIE" }
+  ];
+  const weights = [3, 4, 3, 2, 4, 1, 1, 2];
+
+  const overlay = document.getElementById('overlay');
+  const wheel = document.getElementById('wheel');
+  const btn = document.getElementById('spinBtn');
+  const result = document.getElementById('result');
+  const prizeBig = document.getElementById('prizeBig');
+  const prizeCode = document.getElementById('prizeCode');
+
+  let currentRotation = 0;
+  let spinning = false;
+
+  function pickSegment() {
+    const total = weights.reduce((a,b)=>a+b,0);
+    let r = Math.random() * total;
+    for (let i=0; i<segments.length; i++){
+      r -= weights[i];
+      if (r <= 0) return i;
+    }
+    return 0;
+  }
+  function openWheel(){
+    overlay.classList.add('show');
+    currentRotation = 0;
+    wheel.style.transition = 'none';
+    wheel.style.transform = 'rotate(0deg)';
+    void wheel.offsetWidth;
+    wheel.style.transition = 'transform 5s cubic-bezier(.17,.67,.2,1)';
+    btn.disabled = false;
+    btn.style.display = 'block';
+    btn.textContent = 'TAP TO SPIN';
+    result.classList.remove('show');
+    spinning = false;
+  }
+  function closeWheel(){ overlay.classList.remove('show'); }
+  function spin(){
+    if (spinning) return;
+    spinning = true;
+    btn.disabled = true;
+    btn.textContent = 'SPINNING…';
+    const idx = pickSegment();
+    const segCenter = idx * 45 + 22.5;
+    const fullSpins = 5;
+    const jitter = (Math.random() - 0.5) * 36;
+    const target = currentRotation + (fullSpins * 360) + (360 - segCenter) + jitter;
+    currentRotation = target;
+    wheel.style.transform = `rotate(${target}deg)`;
+    setTimeout(()=>{
+      const seg = segments[idx];
+      prizeBig.textContent = seg.big;
+      prizeCode.textContent = seg.code;
+      result.classList.add('show');
+      btn.style.display='none';
+      spinning = false;
+    }, 5100);
+  }
+  btn.addEventListener('click', spin);
+  setTimeout(openWheel, 1200);
+</script>
+</body>
+</html>
